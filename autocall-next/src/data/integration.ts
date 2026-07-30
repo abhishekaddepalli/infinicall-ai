@@ -1,0 +1,22 @@
+export const transportOptions = [
+    { label: 'Auto', value: 'auto' },
+    { label: 'UDP', value: 'udp' },
+    { label: 'TCP', value: 'tcp' },
+    { label: 'TLS', value: 'tls' },
+]
+
+export const predefinedProviders = [
+    { label: 'Custom Configuration', value: 'custom', config: {} },
+    { label: 'Bandwidth', value: 'bandwidth', config: { name: 'Bandwidth Trunk', provider: 'Bandwidth', engine: 'elevenlabs_sip', sip_host: '<YOUR_BANDWIDTH_HOST>.ot.bandwidth.com', port: 5060, transport: 'udp', auth_realm: '<YOUR_BANDWIDTH_HOST>.ot.bandwidth.com', default_caller_id: '+91123456789', region: 'US', username: 'trunk_user', password: '********' } },
+    { label: 'Cloudonix', value: 'cloudonix', config: { name: 'Cloudonix Trunk', provider: 'Cloudonix', engine: 'elevenlabs_sip', sip_host: '<YOUR_DOMAIN>.sip.cloudonix.io', port: 5061, transport: 'tls', auth_realm: '<YOUR_DOMAIN>.sip.cloudonix.io', default_caller_id: '+91123456789', region: 'US', username: 'trunk_user', password: '********' } },
+    { label: 'DIDWW', value: 'didww', config: { name: 'DIDWW Trunk', provider: 'DIDWW', engine: 'elevenlabs_sip', sip_host: '<YOUR_ACCOUNT>.sip.didww.com', port: 5060, transport: 'udp', auth_realm: '<YOUR_ACCOUNT>.sip.didww.com', default_caller_id: '+91123456789', region: 'US', username: 'trunk_user', password: '********' } },
+    { label: 'Exotel', value: 'exotel', config: { name: 'Exotel Trunk', provider: 'Exotel', engine: 'elevenlabs_sip', sip_host: '<YOUR_EXOTEL_HOST>.sip.exotel.com', port: 5060, transport: 'udp', auth_realm: '<YOUR_EXOTEL_HOST>.sip.exotel.com', default_caller_id: '+91123456789', region: 'US', username: 'trunk_user', password: '********' } },
+    { label: 'Infobip', value: 'infobip', config: { name: 'Infobip Trunk', provider: 'Infobip', engine: 'elevenlabs_sip', sip_host: '<YOUR_INFOBIP_DOMAIN>.sip.infobip.com', port: 5061, transport: 'tls', auth_realm: '<YOUR_INFOBIP_DOMAIN>.sip.infobip.com', default_caller_id: '+91123456789', region: 'US', username: 'trunk_user', password: '********' } },
+    { label: 'Plivo', value: 'plivo', config: { name: 'Plivo Trunk', provider: 'Plivo', engine: 'elevenlabs_sip', sip_host: '<YOUR_DOMAIN>.phone.plivo.com', port: 5061, transport: 'tls', auth_realm: '<YOUR_DOMAIN>.phone.plivo.com', default_caller_id: '+91123456789', region: 'US', username: 'trunk_user', password: '********' } },
+    { label: 'RingCentral', value: 'ringcentral', config: { name: 'RingCentral Trunk', provider: 'RingCentral', engine: 'elevenlabs_sip', sip_host: '<YOUR_DOMAIN>.sip.ringcentral.com', port: 5061, transport: 'tls', auth_realm: '<YOUR_DOMAIN>.sip.ringcentral.com', default_caller_id: '+91123456789', region: 'US', username: 'trunk_user', password: '********' } },
+    { label: 'Sinch', value: 'sinch', config: { name: 'Sinch Trunk', provider: 'Sinch', engine: 'elevenlabs_sip', sip_host: '<YOUR_DOMAIN>.pstn.sinch.com', port: 5060, transport: 'udp', auth_realm: '<YOUR_DOMAIN>.pstn.sinch.com', default_caller_id: '+91123456789', region: 'US', username: 'trunk_user', password: '********' } },
+    { label: 'Telnyx', value: 'telnyx', config: { name: 'Telnyx Trunk', provider: 'Telnyx', engine: 'elevenlabs_sip', sip_host: '<YOUR_DOMAIN>.sip.telnyx.com', port: 5061, transport: 'tls', auth_realm: '<YOUR_DOMAIN>.sip.telnyx.com', default_caller_id: '+91123456789', region: 'US', username: 'trunk_user', password: '********' } },
+    { label: 'Twilio', value: 'twilio', config: { name: 'Twilio Trunk', provider: 'Twilio', engine: 'elevenlabs_sip', sip_host: '<YOUR_TRUNK_DOMAIN>.pstn.twilio.com', port: 5061, transport: 'tls', auth_realm: '<YOUR_TRUNK_DOMAIN>.pstn.twilio.com', default_caller_id: '+91123456789', region: 'US', username: 'trunk_user', password: '********' } },
+    { label: 'Vonage', value: 'vonage', config: { name: 'Vonage Trunk', provider: 'Vonage', engine: 'elevenlabs_sip', sip_host: '<VONAGE_PROVIDED_SIP_HOST>.nexmo.com', port: 5060, transport: 'tcp', auth_realm: '<VONAGE_PROVIDED_SIP_HOST>.nexmo.com', default_caller_id: '+91123456789', region: 'US', username: 'trunk_user', password: '********' } },
+    { label: 'Zadarma', value: 'zadarma', config: { name: 'Zadarma Trunk', provider: 'Zadarma', engine: 'elevenlabs_sip', sip_host: '<YOUR_DOMAIN>.sip.zadarma.com', port: 5060, transport: 'udp', auth_realm: '<YOUR_DOMAIN>.sip.zadarma.com', default_caller_id: '+91123456789', region: 'US', username: 'trunk_user', password: '********' } },
+]

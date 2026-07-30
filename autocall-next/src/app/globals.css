@@ -1,0 +1,455 @@
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";
+@import "swiper/css/zoom";
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-primary: var(--primary);
+  --white: var(--white);
+  --bg-body: var(--bg-body);
+  --bg-card: var(--bg-card);
+  --primary-rgb: var(--primary-rgb);
+  --color-sidebar-border: var(--sidebar-border);
+  --sidebar-active: var(--sidebar-active);
+  --input-color: var(--input-color);
+  --color-title: var(--title-color);
+  --sidebar-bg: var(--sidebar-bg);
+  --title: var(--title);
+  --subtitle-color: var(--subtitle-color);
+  --input-border-color: var(--input-border-color);
+  --destructive: var(--destructive);
+  --edit: var(--edit);
+  --pagination: var(--pagination);
+  --table-border: var(--table-border);
+  --import: var(--import);
+  --slate-300: var(--slate-300);
+  --landing-light: var(--landing-light);
+  --card-color: var(--card-color);
+  --table-input-color: var(--table-input-color);
+  --header: var(--header);
+  --subcard: var(--subcard);
+  --incoming: var(--incoming);
+  --incoming-color: var(--incoming-color);
+  --outgoing: var(--outgoing);
+  --outgoing-color: var(--outgoing-color);
+  --campaign: var(--campaign);
+  --campaign-color: var(--campaign-color);
+  --build: var(--build);
+  --build-color: var(--build-color);
+  /* font-family */
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  /* font-size */
+  --text-base: var(--text-base);
+  --text-sm: var(--text-sm);
+  --text-md: var(--text-md);
+  --text-lg: var(--text-lg);
+  --text-xl: var(--text-xl);
+  --text-3xl: var(--text-3xl);
+  --sidebar-heading: var(--sidebar-heading);
+  /* radius */
+  --radius: var(--radius);
+  --rounded-lg: var(--custom-lg);
+  --modal-radius: var(--modal-radius);
+  /* padding */
+  --padding: var(--padding);
+}
+
+
+:root {
+  --primary: #015482;
+  --primary-rgb: 1, 84, 130;
+  /* --bg-body: #f7fcff; */
+  --bg-body: #fafafa;
+  --white: #ffffff;
+  --bg-card: #fff;
+  --sidebar-bg: #fff;
+  --sidebar-border: #e2e8f0;
+  --sidebar-active: #6994acf5;
+  --sidebar-heading: #67717e;
+  --input-color: #fff;
+  --table-input-color: #d1d3d7;
+  --header: #000E18;
+  --subcard: #f5f6f7;
+  --title-color: #1d293d;
+  --card-color: #8080800a;
+  --title: #1d293d;
+  --subtitle-color: #646464;
+  --pagination: #e2e8f0;
+  --input-border-color: #ededed;
+  --destructive: #dc2626;
+  --edit: #16a34a;
+  --table-border: #80808033;
+  --slate-300: #cbd5e173;
+  --landing-light: #fafcff;
+  --incoming: #e6f5ee;
+  --incoming-color: #0a6b3d;
+  --outgoing: #f5e6e6;
+  --outgoing-color: #8a1c1c;
+  --campaign: #f5f0e6;
+  --campaign-color: #8a5c0a;
+  --build: #f4eef7;
+  --build-color: #7c3d8a;
+  /* font-size */
+  --text-sm: 13px;
+  --text-md: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-3xl: 26px;
+  /* radius */
+  --radius: 10px;
+  --modal-radius: 12px;
+  --rounded-lg: 12px;
+  /* padding */
+  --padding: 10px 20px;
+}
+
+
+
+.custom-scrollbar {
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    cursor: grab;
+  }
+
+  &::-webkit-scrollbar {
+    @apply w-[2px] h-[2px];
+    cursor: grab;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    @apply bg-primary;
+    cursor: grab;
+    /* background-color: none; */
+  }
+}
+
+.table-custom-scrollbar {
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    cursor: grab;
+  }
+
+  &::-webkit-scrollbar {
+    @apply w-[4px] h-[4px];
+    cursor: grab;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    @apply bg-primary;
+    cursor: grab;
+    /* background-color: none; */
+  }
+}
+
+.table-custom-scrollbar {
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    cursor: grab;
+  }
+
+  &::-webkit-scrollbar {
+    @apply w-[2px] h-[3px];
+    cursor: grab;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    @apply bg-primary;
+    cursor: grab;
+    /* background-color: none; */
+  }
+}
+
+.react-flow__controls-button {
+  background: var(--subcard) !important;
+  border-bottom: var(--input-border-color) !important;
+}
+
+
+
+
+
+
+
+.no-scrollbar::-webkit-scrollbar {
+  @apply hidden;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+}
+
+.dark {
+  --primary: #015482;
+  --primary-rgb: 56, 189, 248;
+  --white: #ffffff;
+  --sidebar-bg: #05131D;
+  --sidebar-border: rgba(255, 255, 255, 0.05);
+  --sidebar-active: #015482;
+  --sidebar-heading: #94a3b8;
+  --title-color: #f1f5f9;
+  --card-color: #ffffff08;
+  --title: #f1f5f9;
+  --subtitle-color: #b9b9b9;
+  --input-color: #ffffff0f;
+  --input-border-color: #0F1C26;
+  --pagination: #334155;
+  --table-border: #ffffff1a;
+  --slate-300: #334155;
+  --landing-light: #0f172a;
+  --bg-body: #000E18;
+  --bg-card: #05131D;
+  --header: #0F1C26;
+  --subcard: #0F1C26;
+  --incoming: #73e8b1 !important;
+  --outgoing: #f65b5b !important;
+  --campaign: #ffcb64 !important;
+  --build: #c050f8 !important;
+}
+
+button {
+  cursor: pointer;
+}
+
+*:focus,
+*:focus-visible,
+a:focus,
+a:focus-visible,
+button:focus,
+button:focus-visible,
+[tabindex]:focus,
+[tabindex]:focus-visible {
+  outline: none !important;
+  box-shadow: none;
+  /* Just in case it's a default ring, though we don't want to override custom button shadows forcefully with !important */
+}
+
+
+/* View Transition API Styles */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
+@utility bg-grid-pattern {
+  background-image: linear-gradient(to right, rgba(1, 84, 130, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(1, 84, 130, 0.03) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 65% 65% at 50% 50%, black 50%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 65% 65% at 50% 50%, black 50%, transparent 100%);
+}
+
+@utility bg-grid-pattern-light {
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 65% 65% at 50% 50%, black 50%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 65% 65% at 50% 50%, black 50%, transparent 100%);
+}
+
+@utility bg-grid-pattern-hero {
+  background-image: linear-gradient(to right, rgba(1, 84, 130, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(1, 84, 130, 0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 50%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 50%, transparent 100%);
+}
+
+@utility bg-dot-pattern {
+  background-image: radial-gradient(circle, #0155827c 1px, transparent 1px);
+  background-size: 25px 25px;
+  mask-image: radial-gradient(ellipse 65% 65% at 50% 50%, black 50%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 65% 65% at 50% 50%, black 50%, transparent 100%);
+}
+
+@utility bg-dot-pattern-lg {
+  background-image: radial-gradient(circle, #015482 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 50%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 50%, transparent 100%);
+}
+
+.ck.ck-toolbar {
+  background: var(--bg-card) !important;
+}
+
+/* Limit the background override so it doesn't break color picker tiles */
+.ck.ck-toolbar .ck-button:not(.ck-color-grid__tile) {
+  background: var(--subcard);
+}
+
+.dark :is(.ck.ck-button, :where(a).ck.ck-button):not(.ck-button_with-text) {
+  color: var(--white) !important;
+}
+
+.ck.ck-dropdown .ck-button.ck-dropdown__button {
+  color: var(--title) !important;
+}
+
+.dark .ck.ck-dropdown .ck-button.ck-dropdown__button {
+  color: var(--white) !important;
+}
+
+.dark .ck-editor__editable_inline,
+.dark .ck-editor__editable {
+  color: var(--white);
+}
+
+.dark .ck.ck-editor__editable.ck-placeholder::before,
+.dark .ck.ck-editor__editable_inline[data-placeholder]::before {
+  color: var(--white) !important;
+  opacity: 0.7;
+}
+
+/* Custom Swiper Pagination Styles */
+.swiper-pagination {
+  position: absolute !important;
+  bottom: -3px !important;
+  top: auto !important;
+}
+
+.swiper-pagination-bullet {
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 9999px !important;
+  background-color: var(--primary) !important;
+  opacity: 0.3 !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.swiper-pagination-bullet:hover {
+  opacity: 0.5 !important;
+  transform: scale(1.1);
+}
+
+.swiper-pagination-bullet-active {
+  width: 32px !important;
+  opacity: 1 !important;
+  background-color: var(--primary) !important;
+}
+
+.dark .swiper-pagination-bullet {
+  background-color: #f1f5f9 !important;
+  opacity: 0.2 !important;
+}
+
+.dark .swiper-pagination-bullet-active {
+  background-color: var(--primary) !important;
+  opacity: 1 !important;
+}
+
+/* Custom FullCalendar Styles */
+.fc {
+  font-family: inherit;
+  --fc-border-color: rgba(226, 232, 240, 0.5);
+  --fc-today-bg-color: rgba(1, 84, 130, 0.05);
+}
+
+.dark .fc {
+  --fc-border-color: rgba(255, 255, 255, 0.06);
+  --fc-today-bg-color: rgba(255, 255, 255, 0.02);
+}
+
+.fc .fc-button-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  font-weight: 700;
+  border-radius: 8px;
+  text-transform: capitalize;
+  padding: 6px 12px;
+  transition: all 0.2s;
+}
+
+.fc .fc-button-primary:hover {
+  background-color: rgb(1, 70, 110);
+  border-color: rgb(1, 70, 110);
+}
+
+.fc .fc-button-primary:focus,
+.fc .fc-button-primary:focus-visible,
+.fc .fc-button-primary:active,
+.fc .fc-button-primary:not(:disabled):active,
+.fc .fc-button-primary:not(:disabled):active:focus,
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled).fc-button-active:focus,
+.fc .fc-button:focus,
+.fc .fc-button:active {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.fc .fc-scrollgrid-section-sticky>* {
+  background: var(--bg-card) !important;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.fc .fc-button-primary:disabled {
+  background-color: var(--primary);
+  opacity: 0.6;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-title);
+}
+
+.fc .fc-col-header-cell-cushion {
+  font-weight: 700;
+  color: var(--color-title);
+  padding: 10px 2px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.fc .fc-event {
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  border: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fc .fc-event-title,
+.fc .fc-event-main {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Specific override for AI Assistants Create page sticky header */
+main:has(#ai-assistants-create-page) {
+  padding-top: 0 !important;
+}
