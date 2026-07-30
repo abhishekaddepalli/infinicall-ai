@@ -66,15 +66,22 @@ class SarvamService {
     ];
   }
 
-  async getApiKey() {
-    if (process.env.SARVAM_API_KEY) {
-      return process.env.SARVAM_API_KEY;
-    }
+  async getApiKey(userId = null) {
     try {
+      if (userId) {
+        const UserSettings = require('../models/user-settings.model');
+        const userSetting = await UserSettings.findOne({ user: userId });
+        if (userSetting?.sarvam_api_key) {
+          return userSetting.sarvam_api_key;
+        }
+      }
+      if (process.env.SARVAM_API_KEY) {
+        return process.env.SARVAM_API_KEY;
+      }
       const setting = await Setting.findOne();
       return setting?.sarvam_api_key || null;
     } catch (e) {
-      return null;
+      return process.env.SARVAM_API_KEY || null;
     }
   }
 
@@ -83,7 +90,7 @@ class SarvamService {
   }
 
   async generateSpeech(text, voiceId, options = {}) {
-    const apiKey = await this.getApiKey();
+    const apiKey = await this.getApiKey(options.userId || options.user_id);
     const voice = this.defaultVoices.find(v => v.voice_id === voiceId || v.speaker === voiceId) || this.defaultVoices[0];
     const speaker = voice.speaker || 'meera';
     const targetLanguageCode = voice.target_language_code || options.target_language_code || 'te-IN';
@@ -127,7 +134,7 @@ class SarvamService {
   }
 
   async transcribeAudio(audioBuffer, options = {}) {
-    const apiKey = await this.getApiKey();
+    const apiKey = await this.getApiKey(options.userId || options.user_id);
     if (!apiKey) {
       return { transcript: '', language_code: options.language_code || 'te-IN' };
     }
