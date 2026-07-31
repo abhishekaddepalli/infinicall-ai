@@ -180,7 +180,25 @@ class SarvamService {
 
     const validBulbulV2Speakers = ['vidya', 'arya', 'karun', 'abhilash', 'manisha', 'anushka', 'hitesh'];
     const speaker = speakerMap[cleanSpeaker] || (validBulbulV2Speakers.includes(cleanSpeaker) ? cleanSpeaker : 'vidya');
-    const targetLanguageCode = ['manisha', 'anushka', 'hitesh'].includes(speaker) ? 'hi-IN' : 'te-IN';
+    const speakerLanguageMap = {
+      vidya: 'te-IN',
+      arya: 'te-IN',
+      karun: 'te-IN',
+      abhilash: 'te-IN',
+      manisha: 'hi-IN',
+      anushka: 'hi-IN',
+      hitesh: 'hi-IN'
+    };
+
+    let targetLanguageCode = options.target_language_code || options.language_code || voice?.target_language_code;
+    if (!targetLanguageCode) {
+      targetLanguageCode = speakerLanguageMap[speaker] || 'te-IN';
+    }
+
+    let formattedText = text ? text.trim() : '';
+    if (/^[A-Za-z]/.test(formattedText) && (targetLanguageCode === 'te-IN' || targetLanguageCode === 'hi-IN' || targetLanguageCode === 'ta-IN')) {
+      formattedText = ` ${formattedText}`;
+    }
 
     if (!apiKey) {
       throw new Error('Sarvam AI API Key is not configured. Please enter your Sarvam Subscription Key in System Settings (AI & Voice Providers).');
@@ -188,7 +206,7 @@ class SarvamService {
 
     try {
       const payload = {
-        inputs: [text],
+        inputs: [formattedText],
         target_language_code: targetLanguageCode,
         speaker: speaker,
         pitch: typeof options.pitch === 'number' ? options.pitch : 0,

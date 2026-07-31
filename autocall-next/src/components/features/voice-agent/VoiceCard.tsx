@@ -62,12 +62,35 @@ export const VoiceCard = ({ voice }: VoiceCardProps) => {
 
     try {
       let sampleText = "Namaskaram! InfiniCall AI Voice assistant."
-      if (voice.labels?.accent === 'Telugu' || voice.voice_id?.includes('-te') || voice.provider === 'sarvam') {
-        const cleanName = voice.name.replace(/\s*\(.*?\)\s*/g, '')
-        sampleText = `నమస్కారం! నేను ${cleanName}. ఇన్ఫిని కాల్ ఏఐ వాయిస్ అసిస్టెంట్ కి స్వాగతం.`
-      } else if (voice.labels?.accent === 'Hindi' || voice.voice_id?.includes('-hi')) {
-        const cleanName = voice.name.replace(/\s*\(.*?\)\s*/g, '')
-        sampleText = `नमस्ते! मैं ${cleanName} हूँ. इन्फिनिकॉल एआई वॉयस असिस्टेंट में आपका स्वागत है.`
+      if (voice.labels?.accent === 'Telugu' || voice.voice_id?.includes('-te') || (voice.provider === 'sarvam' && (voice.target_language_code === 'te-IN' || !voice.target_language_code))) {
+        const teluguNames: Record<string, string> = {
+          'Vidya': 'విద్యా',
+          'Arya': 'ఆర్య',
+          'Karun': 'కరుణ్',
+          'Abhilash': 'అభిలాష్',
+          'Roopa': 'రూపా',
+          'Kavitha': 'కవిత',
+          'Vijay': 'విజయ్',
+          'Gokul': 'గోకుల్'
+        }
+        const cleanName = voice.name.replace(/\s*\(.*?\)\s*/g, '').trim()
+        const nativeName = teluguNames[cleanName] || cleanName
+        sampleText = `నమస్కారం! నేను ${nativeName}. ఇన్ఫిని కాల్ ఏఐ వాయిస్ అసిస్టెంట్ కి స్వాగతం.`
+      } else if (voice.labels?.accent === 'Hindi' || voice.voice_id?.includes('-hi') || (voice.provider === 'sarvam' && voice.target_language_code === 'hi-IN')) {
+        const hindiNames: Record<string, string> = {
+          'Manisha': 'मनीषा',
+          'Anushka': 'अनुष्का',
+          'Hitesh': 'हितेश',
+          'Kavya': 'काव्या',
+          'Pooja': 'पूजा',
+          'Priya': 'प्रिया',
+          'Rahul': 'राहुल',
+          'Rohan': 'रोहन',
+          'Amit': 'अमित'
+        }
+        const cleanName = voice.name.replace(/\s*\(.*?\)\s*/g, '').trim()
+        const nativeName = hindiNames[cleanName] || cleanName
+        sampleText = `नमस्ते! मैं ${nativeName} हूँ. इन्फिनिकॉल एआई वॉयस असिस्टेंट में आपका स्वागत है.`
       } else {
         sampleText = `Hello! I am ${voice.name}, your AI Voice assistant.`
       }
