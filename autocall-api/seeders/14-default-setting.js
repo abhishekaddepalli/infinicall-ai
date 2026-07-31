@@ -117,9 +117,9 @@ async function up(dbConnection, mongoose) {
           isModified = true;
         }
       }
-      if (isModified) {
-        await existingSetting.save();
-      }
+      existingSetting.is_demo_mode = false;
+      await existingSetting.save();
+      console.log('Settings updated (is_demo_mode set to false)!');
     }
   } catch (error) {
     console.error('Error seeding settings:', error);

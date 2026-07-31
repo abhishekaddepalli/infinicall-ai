@@ -27,6 +27,7 @@ const ALLOWED_PATHS = [
   '/api/auth/login',
   '/api/auth/logout',
   '/api/auth/team-member/login',
+  '/api/setting',
 ];
 
 function isAllowedPath(path) {
@@ -40,8 +41,29 @@ const denyMutationInDemo = async (req, res, next) => {
     return next();
   }
   if (isAllowedPath(req.originalUrl)) {
+    cached = { value: null, at: 0 }; // Clear cache when settings/allowed routes mutate
     return next();
   }
+
+  // Check if request carries JWT token for superadmin
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    try {
+      const jwt = require('jsonwebtoken');
+      const token = authHeader.split(' ')[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      if (decoded && decoded.id) {
+        const User = db.User;
+        const user = await User.findById(decoded.id).populate('roleId');
+        if (user && (user.roleId?.name === 'super_admin' || user.email === process.env.ADMIN_EMAIL)) {
+          return next();
+        }
+      }
+    } catch (e) {
+      // Continue to demo check if token fails
+    }
+  }
+
   const demo = await isDemoMode();
   if (!demo) {
     return next();
