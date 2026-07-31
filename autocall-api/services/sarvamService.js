@@ -102,8 +102,7 @@ class SarvamService {
     const targetLanguageCode = voice.target_language_code || options.target_language_code || 'te-IN';
 
     if (!apiKey) {
-      console.warn('[SarvamService] SARVAM_API_KEY missing. Returning dummy speech fallback.');
-      return Buffer.from('RIFF....WAVEfmt ....data....');
+      throw new Error('Sarvam AI API Key is not configured. Please enter your Sarvam Subscription Key in System Settings (AI & Voice Providers).');
     }
 
     try {
@@ -116,14 +115,14 @@ class SarvamService {
           pitch: options.pitch || 0,
           pace: options.pace || 1.0,
           loudness: options.loudness || 1.5,
-          speech_sample_rate: options.sample_rate || 8000,
+          speech_sample_rate: options.sample_rate || 24000,
           enable_preprocessing: true,
           model: 'bulbul:v1'
         },
         {
           headers: {
             'Content-Type': 'application/json',
-            'api-subscription-key': apiKey
+            'api-subscription-key': apiKey.trim()
           }
         }
       );
@@ -134,8 +133,9 @@ class SarvamService {
         throw new Error('No audio output returned from Sarvam AI');
       }
     } catch (error) {
+      const apiErr = error?.response?.data?.message || error?.response?.data?.error || error.message;
       console.error('[SarvamService] Speech generation failed:', error?.response?.data || error.message);
-      throw new Error(error?.response?.data?.message || 'Sarvam AI Speech Synthesis Failed');
+      throw new Error(`Sarvam AI Error: ${apiErr}`);
     }
   }
 
