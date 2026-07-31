@@ -10,53 +10,63 @@ class SarvamService {
     this.baseUrl = 'https://api.sarvam.ai';
     this.defaultVoices = [
       {
-        voice_id: 'sarvam-meera-te',
-        name: 'Meera (Telugu)',
+        voice_id: 'sarvam-roopa-te',
+        name: 'Roopa (Telugu)',
         provider: 'sarvam',
         category: 'Indian Regional',
-        labels: { gender: 'Female', age: 'Young', accent: 'Telugu', description: 'Clear and natural Telugu voice' },
+        labels: { gender: 'Female', age: 'Middle-aged', accent: 'Telugu', description: 'Clear and natural Telugu female voice' },
         target_language_code: 'te-IN',
-        speaker: 'meera',
+        speaker: 'roopa',
         status: 'active'
       },
       {
-        voice_id: 'sarvam-pavithra-te',
-        name: 'Pavithra (Telugu)',
+        voice_id: 'sarvam-kavitha-te',
+        name: 'Kavitha (Telugu)',
         provider: 'sarvam',
         category: 'Indian Regional',
-        labels: { gender: 'Female', age: 'Middle-aged', accent: 'Telugu', description: 'Warm and expressive Telugu voice' },
+        labels: { gender: 'Female', age: 'Young', accent: 'Telugu', description: 'Warm and expressive Telugu female voice' },
         target_language_code: 'te-IN',
-        speaker: 'pavithra',
+        speaker: 'kavitha',
         status: 'active'
       },
       {
-        voice_id: 'sarvam-arvind-te',
-        name: 'Arvind (Telugu)',
+        voice_id: 'sarvam-vidya-te',
+        name: 'Vidya (Telugu)',
         provider: 'sarvam',
         category: 'Indian Regional',
-        labels: { gender: 'Male', age: 'Middle-aged', accent: 'Telugu', description: 'Professional Telugu voice' },
+        labels: { gender: 'Female', age: 'Young', accent: 'Telugu', description: 'Soft melodic Telugu female voice' },
         target_language_code: 'te-IN',
-        speaker: 'arvind',
+        speaker: 'vidya',
         status: 'active'
       },
       {
-        voice_id: 'sarvam-amrutha-te',
-        name: 'Amrutha (Telugu)',
+        voice_id: 'sarvam-shruti-te',
+        name: 'Shruti (Telugu)',
         provider: 'sarvam',
         category: 'Indian Regional',
-        labels: { gender: 'Female', age: 'Young', accent: 'Telugu', description: 'Soft melodic Telugu voice' },
+        labels: { gender: 'Female', age: 'Young', accent: 'Telugu', description: 'Fluent Telugu female voice' },
         target_language_code: 'te-IN',
-        speaker: 'amrutha',
+        speaker: 'shruti',
         status: 'active'
       },
       {
-        voice_id: 'sarvam-ananya-hi',
-        name: 'Ananya (Hindi)',
+        voice_id: 'sarvam-vijay-te',
+        name: 'Vijay (Telugu)',
         provider: 'sarvam',
         category: 'Indian Regional',
-        labels: { gender: 'Female', age: 'Young', accent: 'Hindi', description: 'Fluent Hindi voice' },
-        target_language_code: 'hi-IN',
-        speaker: 'ananya',
+        labels: { gender: 'Male', age: 'Middle-aged', accent: 'Telugu', description: 'Professional Telugu male voice' },
+        target_language_code: 'te-IN',
+        speaker: 'vijay',
+        status: 'active'
+      },
+      {
+        voice_id: 'sarvam-gokul-te',
+        name: 'Gokul (Telugu)',
+        provider: 'sarvam',
+        category: 'Indian Regional',
+        labels: { gender: 'Male', age: 'Young', accent: 'Telugu', description: 'Energetic Telugu male voice' },
+        target_language_code: 'te-IN',
+        speaker: 'gokul',
         status: 'active'
       },
       {
@@ -64,9 +74,49 @@ class SarvamService {
         name: 'Kavya (Hindi)',
         provider: 'sarvam',
         category: 'Indian Regional',
-        labels: { gender: 'Female', age: 'Middle-aged', accent: 'Hindi', description: 'Professional Hindi voice' },
+        labels: { gender: 'Female', age: 'Middle-aged', accent: 'Hindi', description: 'Professional Hindi female voice' },
         target_language_code: 'hi-IN',
         speaker: 'kavya',
+        status: 'active'
+      },
+      {
+        voice_id: 'sarvam-pooja-hi',
+        name: 'Pooja (Hindi)',
+        provider: 'sarvam',
+        category: 'Indian Regional',
+        labels: { gender: 'Female', age: 'Young', accent: 'Hindi', description: 'Fluent Hindi female voice' },
+        target_language_code: 'hi-IN',
+        speaker: 'pooja',
+        status: 'active'
+      },
+      {
+        voice_id: 'sarvam-priya-hi',
+        name: 'Priya (Hindi)',
+        provider: 'sarvam',
+        category: 'Indian Regional',
+        labels: { gender: 'Female', age: 'Young', accent: 'Hindi', description: 'Clear Hindi female voice' },
+        target_language_code: 'hi-IN',
+        speaker: 'priya',
+        status: 'active'
+      },
+      {
+        voice_id: 'sarvam-rahul-hi',
+        name: 'Rahul (Hindi)',
+        provider: 'sarvam',
+        category: 'Indian Regional',
+        labels: { gender: 'Male', age: 'Young', accent: 'Hindi', description: 'Professional Hindi male voice' },
+        target_language_code: 'hi-IN',
+        speaker: 'rahul',
+        status: 'active'
+      },
+      {
+        voice_id: 'sarvam-rohan-hi',
+        name: 'Rohan (Hindi)',
+        provider: 'sarvam',
+        category: 'Indian Regional',
+        labels: { gender: 'Male', age: 'Middle-aged', accent: 'Hindi', description: 'Deep Hindi male voice' },
+        target_language_code: 'hi-IN',
+        speaker: 'rohan',
         status: 'active'
       }
     ];
@@ -84,6 +134,7 @@ class SarvamService {
       if (process.env.SARVAM_API_KEY) {
         return process.env.SARVAM_API_KEY;
       }
+      const Setting = require('../models/setting.model');
       const setting = await Setting.findOne();
       return setting?.sarvam_api_key || null;
     } catch (e) {
@@ -98,8 +149,18 @@ class SarvamService {
   async generateSpeech(text, voiceId, options = {}) {
     const apiKey = await this.getApiKey(options.userId || options.user_id);
     const voice = this.defaultVoices.find(v => v.voice_id === voiceId || v.speaker === voiceId) || this.defaultVoices[0];
-    const speaker = voice.speaker || 'meera';
-    const targetLanguageCode = voice.target_language_code || options.target_language_code || 'te-IN';
+    
+    const speakerMap = {
+      meera: 'roopa',
+      pavithra: 'kavitha',
+      amrutha: 'vidya',
+      arvind: 'vijay',
+      ananya: 'pooja'
+    };
+
+    const rawSpeaker = voice?.speaker || voiceId || 'roopa';
+    const speaker = speakerMap[rawSpeaker] || (['roopa', 'kavitha', 'vidya', 'shruti', 'vijay', 'gokul', 'kavya', 'pooja', 'priya', 'rahul', 'rohan', 'amit'].includes(rawSpeaker) ? rawSpeaker : 'roopa');
+    const targetLanguageCode = voice?.target_language_code || options.target_language_code || (['kavya', 'pooja', 'priya', 'rahul', 'rohan', 'amit'].includes(speaker) ? 'hi-IN' : 'te-IN');
 
     if (!apiKey) {
       throw new Error('Sarvam AI API Key is not configured. Please enter your Sarvam Subscription Key in System Settings (AI & Voice Providers).');
