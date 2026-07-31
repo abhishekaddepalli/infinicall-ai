@@ -667,12 +667,12 @@ const seedPermissions = async (dbConnection, mongoose) => {
     if (!adminEmail) {
       console.log('ADMIN_EMAIL not set, skipping default admin creation');
     } else {
+      const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+      const hashedPassword = await bcrypt.hash(adminPassword, 10);
+      const superAdminRole = await Role.findOne({ name: 'super_admin' });
       const existingAdmin = await User.findOne({ email: adminEmail });
-      if (!existingAdmin) {
-        const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
-        const hashedPassword = await bcrypt.hash(adminPassword, 10);
-        const superAdminRole = await Role.findOne({ name: 'super_admin' });
 
+      if (!existingAdmin) {
         await User.create({
           name: process.env.ADMIN_NAME || 'Admin',
           email: adminEmail,
@@ -683,14 +683,12 @@ const seedPermissions = async (dbConnection, mongoose) => {
         });
         console.log(`Default admin created: ${adminEmail}`);
       } else {
-        if (!existingAdmin.roleId) {
-          const superAdminRole = await Role.findOne({ name: 'super_admin' });
-          if (superAdminRole) {
-            await User.findByIdAndUpdate(existingAdmin._id, { roleId: superAdminRole._id });
-          }
-        } else {
-          console.log('Default admin already exists.');
-        }
+        existingAdmin.password = hashedPassword;
+        if (superAdminRole) existingAdmin.roleId = superAdminRole._id;
+        existingAdmin.isVerified = true;
+        existingAdmin.isActive = true;
+        await existingAdmin.save();
+        console.log(`Default admin updated/synced: ${adminEmail}`);
       }
     }
 
@@ -699,30 +697,28 @@ const seedPermissions = async (dbConnection, mongoose) => {
     if (!defaultUserEmail) {
       console.log('DEFAULT_USER_EMAIL not set, skipping default user creation');
     } else {
+      const userPassword = process.env.DEFAULT_USER_PASSWORD || 'user123';
+      const hashedUserPassword = await bcrypt.hash(userPassword, 10);
+      const userRole = await Role.findOne({ name: 'user' });
       const existingUser = await User.findOne({ email: defaultUserEmail });
-      if (!existingUser) {
-        const defaultUserPassword = process.env.DEFAULT_USER_PASSWORD || 'user123';
-        const hashedPassword = await bcrypt.hash(defaultUserPassword, 10);
-        const userRole = await Role.findOne({ name: 'user' });
 
+      if (!existingUser) {
         await User.create({
-          name: process.env.DEFAULT_USER_NAME || 'Default User',
+          name: process.env.DEFAULT_USER_NAME || 'User',
           email: defaultUserEmail,
-          password: hashedPassword,
+          password: hashedUserPassword,
           roleId: userRole ? userRole._id : null,
           isVerified: true,
           isActive: true,
         });
         console.log(`Default user created: ${defaultUserEmail}`);
       } else {
-        if (!existingUser.roleId) {
-          const userRole = await Role.findOne({ name: 'user' });
-          if (userRole) {
-            await User.findByIdAndUpdate(existingUser._id, { roleId: userRole._id });
-          }
-        } else {
-          console.log('Default user already exists.');
-        }
+        existingUser.password = hashedUserPassword;
+        if (userRole) existingUser.roleId = userRole._id;
+        existingUser.isVerified = true;
+        existingUser.isActive = true;
+        await existingUser.save();
+        console.log(`Default user updated/synced: ${defaultUserEmail}`);
       }
     }
 
