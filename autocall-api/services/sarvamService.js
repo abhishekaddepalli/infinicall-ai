@@ -176,7 +176,7 @@ class SarvamService {
         loudness: typeof options.loudness === 'number' ? options.loudness : 1.5,
         speech_sample_rate: options.sample_rate || 16000,
         enable_preprocessing: true,
-        model: 'bulbul:v1'
+        model: 'bulbul:v2'
       };
 
       const response = await axios.post(
