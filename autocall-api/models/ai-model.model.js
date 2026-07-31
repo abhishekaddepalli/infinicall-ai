@@ -18,7 +18,7 @@ const AIModelSchema = new Schema(
     provider: {
       type: String,
       required: true,
-      enum: ['openai', 'anthropic', 'google', 'gemini', 'cohere', 'mistral', 'groq', 'deepseek', 'xai', 'custom'],
+      enum: ['openai', 'anthropic', 'google', 'gemini', 'cohere', 'mistral', 'groq', 'deepseek', 'xai', 'sarvam', 'custom'],
       lowercase: true
     },
     model_id: {
