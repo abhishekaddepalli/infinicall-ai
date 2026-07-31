@@ -40,23 +40,28 @@ exports.synthesizeSpeech = async (req, res) => {
     }
 
     let audioBuffer;
+    let fileExt = 'mp3';
+
     if (voice_id.startsWith('sarvam-')) {
-      audioBuffer = await sarvamService.generateSpeech(text, voice_id);
+      audioBuffer = await sarvamService.generateSpeech(text, voice_id, { userId: req.user?._id });
+      fileExt = 'wav';
     } else {
       audioBuffer = await elevenlabsService.generateSpeech(text, voice_id, {
         stability,
-        similarity_boost
+        similarity_boost,
+        userId: req.user?._id
       });
+      fileExt = 'mp3';
     }
 
     const uploadDir = path.join(__dirname, '../uploads/tts');
     await fs.ensureDir(uploadDir);
 
-    const fileName = `tts-${crypto.randomUUID()}.mp3`;
+    const fileName = `tts-${crypto.randomUUID()}.${fileExt}`;
     const filePath = path.join(uploadDir, fileName);
     await fs.writeFile(filePath, audioBuffer);
 
-    const fileUrl = `${req.protocol}://${req.get('host')}/uploads/tts/${fileName}`;
+    const fileUrl = `/uploads/tts/${fileName}`;
 
     return res.status(200).json({
       success: true,
@@ -87,7 +92,7 @@ exports.syncVoices = async (req, res) => {
 
     // Sync ElevenLabs Voices if available
     try {
-      const elevenLabsVoices = await elevenlabsService.fetchVoices();
+      const elevenLabsVoices = await elevenlabsService.fetchVoices(null, req.user?._id);
       if (Array.isArray(elevenLabsVoices)) {
         for (const ev of elevenLabsVoices) {
           const voiceData = {

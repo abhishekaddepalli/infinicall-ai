@@ -9,14 +9,33 @@ class ElevenLabsService {
     this.baseUrl = 'https://api.elevenlabs.io/v1';
   }
 
+  async getApiKey(userId = null) {
+    try {
+      if (userId) {
+        const UserSettings = require('../models/user-settings.model');
+        const userSetting = await UserSettings.findOne({ user: userId });
+        if (userSetting?.elevenlabs_api_key) {
+          return userSetting.elevenlabs_api_key;
+        }
+      }
+      if (process.env.ELEVENLABS_API_KEY) {
+        return process.env.ELEVENLABS_API_KEY;
+      }
+      const Setting = require('../models/setting.model');
+      const setting = await Setting.findOne();
+      return setting?.elevenlabs_api_key || null;
+    } catch (e) {
+      return process.env.ELEVENLABS_API_KEY || null;
+    }
+  }
+
   async generateSpeech(text, voiceId, voiceSettings = {}, apiKey = null) {
-    const activeApiKey = apiKey || this.apiKey;
+    const activeApiKey = apiKey || await this.getApiKey(voiceSettings.userId);
     if (!activeApiKey) {
-      throw new Error('ElevenLabs API Key not configured');
+      throw new Error('ElevenLabs API Key not configured in System or User Settings');
     }
     try {
-
-      const outputFormat = 'pcm_16000';
+      const outputFormat = 'mp3_44100_128';
       const response = await axios({
         method: 'POST',
         url: `${this.baseUrl}/text-to-speech/${voiceId}?output_format=${outputFormat}`,
@@ -37,11 +56,7 @@ class ElevenLabsService {
         responseType: 'arraybuffer'
       });
 
-      const audioBuffer = Buffer.from(response.data);
-
-      await this.saveAudio(this.wrapPcmInWav(audioBuffer), `tts_${Date.now()}.mp3`);
-
-      return audioBuffer;
+      return Buffer.from(response.data);
     } catch (error) {
       const errorMessage = error.response ?
         Buffer.from(error.response.data).toString() :
@@ -79,8 +94,11 @@ class ElevenLabsService {
     }
   }
 
-  async fetchVoices(apiKey = null) {
-    const activeApiKey = apiKey || this.apiKey;
+  async fetchVoices(apiKey = null, userId = null) {
+    const activeApiKey = apiKey || await this.getApiKey(userId);
+    if (!activeApiKey) {
+      return [];
+    }
     try {
       const response = await axios({
         method: 'GET',
@@ -90,7 +108,7 @@ class ElevenLabsService {
       return response.data.voices;
     } catch (error) {
       console.error('ElevenLabs Fetch Voices Error:', error.message);
-      throw error;
+      return [];
     }
   }
 
