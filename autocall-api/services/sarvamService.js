@@ -106,19 +106,21 @@ class SarvamService {
     }
 
     try {
+      const payload = {
+        inputs: [text],
+        target_language_code: targetLanguageCode,
+        speaker: speaker,
+        pitch: typeof options.pitch === 'number' ? options.pitch : 0,
+        pace: typeof options.pace === 'number' ? options.pace : 1.0,
+        loudness: typeof options.loudness === 'number' ? options.loudness : 1.5,
+        speech_sample_rate: options.sample_rate || 16000,
+        enable_preprocessing: true,
+        model: 'bulbul:v1'
+      };
+
       const response = await axios.post(
         `${this.baseUrl}/text-to-speech`,
-        {
-          inputs: [text],
-          target_language_code: targetLanguageCode,
-          speaker: speaker,
-          pitch: options.pitch || 0,
-          pace: options.pace || 1.0,
-          loudness: options.loudness || 1.5,
-          speech_sample_rate: options.sample_rate || 24000,
-          enable_preprocessing: true,
-          model: 'bulbul:v1'
-        },
+        payload,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -133,9 +135,12 @@ class SarvamService {
         throw new Error('No audio output returned from Sarvam AI');
       }
     } catch (error) {
-      const apiErr = error?.response?.data?.message || error?.response?.data?.error || error.message;
+      let rawErr = error?.response?.data?.message || error?.response?.data?.error || error?.response?.data || error.message;
+      if (typeof rawErr === 'object') {
+        rawErr = rawErr.message || rawErr.detail || JSON.stringify(rawErr);
+      }
       console.error('[SarvamService] Speech generation failed:', error?.response?.data || error.message);
-      throw new Error(`Sarvam AI Error: ${apiErr}`);
+      throw new Error(`Sarvam AI Error: ${rawErr}`);
     }
   }
 
