@@ -7,6 +7,8 @@ export interface Voice {
   provider: string;
   category: string;
   preview_url: string | null;
+  target_language_code?: string;
+  speaker?: string;
   labels: {
     gender: string | null;
     age: string | null;
