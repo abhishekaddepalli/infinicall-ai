@@ -138,14 +138,14 @@ export const getMediaUrl = (
   if (!path) return undefined;
   if (path.startsWith("http") || path.startsWith("data:")) return path;
 
-  const baseUrl = process.env.NEXT_PUBLIC_STORAGE_URL || "";
+  const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+  const fallbackOrigin = apiBase ? apiBase.replace(/\/api\/?$/, "") : "";
+  const baseUrl = process.env.NEXT_PUBLIC_STORAGE_URL || fallbackOrigin || "";
 
-  const normalizedPath =
-    path.startsWith("uploads") || path.startsWith("/uploads")
-      ? path
-      : `uploads/${path}`;
+  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  const normalizedPath = cleanPath.startsWith("/uploads") ? cleanPath : `/uploads${cleanPath}`;
 
-  return `${baseUrl}/${normalizedPath.startsWith("/") ? normalizedPath : `${normalizedPath}`}`;
+  return `${baseUrl}${normalizedPath}`;
 };
 
 export const formatDate = (

@@ -156,7 +156,7 @@ exports.updateSettings = async (req, res) => {
             const oldPath = path.join(process.cwd(), settings[dbField]);
             if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
           }
-          updateData[dbField] = file.path;
+          updateData[dbField] = file.path.replace(/\\/g, '/');
         }
       });
     }
