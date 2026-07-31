@@ -21,7 +21,9 @@ const findUserByEmail = async (email) => {
   if (!email || typeof email !== 'string') {
     return null;
   }
-  return await User.findOne({ email: email.toLowerCase().trim() }).populate('roleId');
+  const cleanEmail = email.trim();
+  const escaped = cleanEmail.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return await User.findOne({ email: { $regex: new RegExp('^' + escaped + '$', 'i') } }).populate('roleId');
 };
 
 const updateLastLogin = async (userId) => {

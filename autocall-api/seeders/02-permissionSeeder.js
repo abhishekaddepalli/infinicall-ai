@@ -662,7 +662,8 @@ const seedPermissions = async (dbConnection, mongoose) => {
 
     console.log('Permission seeding and role assignment completed successfully!');
 
-    const adminEmail = process.env.ADMIN_EMAIL;
+    const rawAdminEmail = process.env.ADMIN_EMAIL;
+    const adminEmail = rawAdminEmail ? rawAdminEmail.trim().toLowerCase() : null;
 
     if (!adminEmail) {
       console.log('ADMIN_EMAIL not set, skipping default admin creation');
@@ -670,7 +671,8 @@ const seedPermissions = async (dbConnection, mongoose) => {
       const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
       const hashedPassword = await bcrypt.hash(adminPassword, 10);
       const superAdminRole = await Role.findOne({ name: 'super_admin' });
-      const existingAdmin = await User.findOne({ email: adminEmail });
+      const escapedAdmin = adminEmail.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const existingAdmin = await User.findOne({ email: { $regex: new RegExp('^' + escapedAdmin + '$', 'i') } });
 
       if (!existingAdmin) {
         await User.create({
@@ -683,6 +685,7 @@ const seedPermissions = async (dbConnection, mongoose) => {
         });
         console.log(`Default admin created: ${adminEmail}`);
       } else {
+        existingAdmin.email = adminEmail;
         existingAdmin.password = hashedPassword;
         if (superAdminRole) existingAdmin.roleId = superAdminRole._id;
         existingAdmin.isVerified = true;
@@ -692,7 +695,8 @@ const seedPermissions = async (dbConnection, mongoose) => {
       }
     }
 
-    const defaultUserEmail = process.env.DEFAULT_USER_EMAIL;
+    const rawUserEmail = process.env.DEFAULT_USER_EMAIL;
+    const defaultUserEmail = rawUserEmail ? rawUserEmail.trim().toLowerCase() : null;
 
     if (!defaultUserEmail) {
       console.log('DEFAULT_USER_EMAIL not set, skipping default user creation');
@@ -700,7 +704,8 @@ const seedPermissions = async (dbConnection, mongoose) => {
       const userPassword = process.env.DEFAULT_USER_PASSWORD || 'user123';
       const hashedUserPassword = await bcrypt.hash(userPassword, 10);
       const userRole = await Role.findOne({ name: 'user' });
-      const existingUser = await User.findOne({ email: defaultUserEmail });
+      const escapedUser = defaultUserEmail.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const existingUser = await User.findOne({ email: { $regex: new RegExp('^' + escapedUser + '$', 'i') } });
 
       if (!existingUser) {
         await User.create({
@@ -713,6 +718,7 @@ const seedPermissions = async (dbConnection, mongoose) => {
         });
         console.log(`Default user created: ${defaultUserEmail}`);
       } else {
+        existingUser.email = defaultUserEmail;
         existingUser.password = hashedUserPassword;
         if (userRole) existingUser.roleId = userRole._id;
         existingUser.isVerified = true;
