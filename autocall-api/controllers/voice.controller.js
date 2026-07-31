@@ -79,7 +79,7 @@ exports.syncVoices = async (req, res) => {
     for (const sv of sarvamVoices) {
       await Voice.findOneAndUpdate(
         { voice_id: sv.voice_id },
-        sv,
+        { ...sv, status: 'active' },
         { upsert: true, new: true }
       );
       syncedCount++;

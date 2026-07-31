@@ -16,7 +16,8 @@ class SarvamService {
         category: 'Indian Regional',
         labels: { gender: 'Female', age: 'Young', accent: 'Telugu', description: 'Clear and natural Telugu voice' },
         target_language_code: 'te-IN',
-        speaker: 'meera'
+        speaker: 'meera',
+        status: 'active'
       },
       {
         voice_id: 'sarvam-pavithra-te',
@@ -25,7 +26,8 @@ class SarvamService {
         category: 'Indian Regional',
         labels: { gender: 'Female', age: 'Middle-aged', accent: 'Telugu', description: 'Warm and expressive Telugu voice' },
         target_language_code: 'te-IN',
-        speaker: 'pavithra'
+        speaker: 'pavithra',
+        status: 'active'
       },
       {
         voice_id: 'sarvam-arvind-te',
@@ -34,7 +36,8 @@ class SarvamService {
         category: 'Indian Regional',
         labels: { gender: 'Male', age: 'Middle-aged', accent: 'Telugu', description: 'Professional Telugu voice' },
         target_language_code: 'te-IN',
-        speaker: 'arvind'
+        speaker: 'arvind',
+        status: 'active'
       },
       {
         voice_id: 'sarvam-amrutha-te',
@@ -43,7 +46,8 @@ class SarvamService {
         category: 'Indian Regional',
         labels: { gender: 'Female', age: 'Young', accent: 'Telugu', description: 'Soft melodic Telugu voice' },
         target_language_code: 'te-IN',
-        speaker: 'amrutha'
+        speaker: 'amrutha',
+        status: 'active'
       },
       {
         voice_id: 'sarvam-ananya-hi',
@@ -52,7 +56,8 @@ class SarvamService {
         category: 'Indian Regional',
         labels: { gender: 'Female', age: 'Young', accent: 'Hindi', description: 'Fluent Hindi voice' },
         target_language_code: 'hi-IN',
-        speaker: 'ananya'
+        speaker: 'ananya',
+        status: 'active'
       },
       {
         voice_id: 'sarvam-kavya-hi',
@@ -61,7 +66,8 @@ class SarvamService {
         category: 'Indian Regional',
         labels: { gender: 'Female', age: 'Middle-aged', accent: 'Hindi', description: 'Professional Hindi voice' },
         target_language_code: 'hi-IN',
-        speaker: 'kavya'
+        speaker: 'kavya',
+        status: 'active'
       }
     ];
   }
