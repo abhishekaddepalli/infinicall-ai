@@ -700,14 +700,28 @@ class VoiceAutomationService extends EventEmitter {
     }
   }
 
-  async processSTT(buffer, userId) {
-    try {
-      const userSettings = await UserSettings.findOne({ user: userId });
-      const apiKey = userSettings?.elevenlabs_api_key;
+  convertWavToUlaw(wavBuffer) {
+    if (!wavBuffer || wavBuffer.length === 0) return Buffer.alloc(0);
+    const pcmData = (wavBuffer.length > 44 && wavBuffer.toString('ascii', 0, 4) === 'RIFF')
+      ? wavBuffer.slice(44)
+      : wavBuffer;
+    return this.encodePcmToUlaw(pcmData);
+  }
 
+  async processSTT(buffer, userId, voiceId = null) {
+    try {
       const wavBuffer = this.createUlawWav(buffer);
-      await elevenLabsService.saveAudio(wavBuffer, `inbound_${Date.now()}.mp3`);
-      const text = await elevenLabsService.transcribeAudio(wavBuffer, apiKey);
+      let text = '';
+
+      if (voiceId && voiceId.startsWith('sarvam-')) {
+        const sarvamService = require('./sarvamService');
+        const sttResult = await sarvamService.transcribeAudio(wavBuffer, { userId, language_code: 'te-IN' });
+        text = sttResult?.transcript || '';
+      } else {
+        const userSettings = await UserSettings.findOne({ user: userId });
+        const apiKey = userSettings?.elevenlabs_api_key;
+        text = await elevenLabsService.transcribeAudio(wavBuffer, apiKey);
+      }
 
       const noiseTokens = ['[background noise]', '[pause]', '[laughs]', '[clicking]', '[phone ringing]', '[phone beeping]', '[outro jingle]', '[silence]', '[phone hangs up]', '[phone hanging up]', '[phone clicks]'];
       const cleanedText = text ? text.trim() : '';
@@ -724,22 +738,34 @@ class VoiceAutomationService extends EventEmitter {
     }
   }
 
-  async speak(ws, streamSid, text, voiceId, apiKey) {
+  async speak(ws, streamSid, text, voiceId, apiKey, userId = null) {
     try {
-      console.log(`Speaking: "${text}"`);
-
-      if (!apiKey) {
-        console.warn('[TTS] No ElevenLabs API key found. Falling back to Twilio <Say>.');
-        return await this.speakViaTwiml(streamSid, text);
-      }
+      console.log(`Speaking: "${text}" with voiceId: ${voiceId}`);
 
       const stream = this.activeStreams.get(streamSid);
       if (stream) {
         stream.audioBuffer = [];
       }
 
-      const pcmBuffer = await elevenLabsService.generateSpeech(text, voiceId || 'JBFqnCBsd6RMkjVDRZzb', {}, apiKey);
-      const ulawBuffer = this.encodePcmToUlaw(pcmBuffer);
+      let ulawBuffer;
+
+      if (voiceId && voiceId.startsWith('sarvam-')) {
+        const sarvamService = require('./sarvamService');
+        const audioWavBuffer = await sarvamService.generateSpeech(text, voiceId, {
+          sample_rate: 8000,
+          userId: userId || stream?.userId
+        });
+        ulawBuffer = this.convertWavToUlaw(audioWavBuffer);
+      } else {
+        const activeKey = apiKey || await elevenLabsService.getApiKey(userId || stream?.userId);
+        if (!activeKey) {
+          console.warn('[TTS] No ElevenLabs API key found. Falling back to Twilio <Say>.');
+          return await this.speakViaTwiml(streamSid, text);
+        }
+        const pcmBuffer = await elevenLabsService.generateSpeech(text, voiceId || 'JBFqnCBsd6RMkjVDRZzb', { userId: userId || stream?.userId }, activeKey);
+        ulawBuffer = this.encodePcmToUlaw(pcmBuffer);
+      }
+
       const base64Audio = ulawBuffer.toString('base64');
       ws.send(JSON.stringify({ event: 'media', streamSid, media: { payload: base64Audio } }));
       
@@ -750,7 +776,7 @@ class VoiceAutomationService extends EventEmitter {
       };
       ws.send(JSON.stringify(markMessage));
     } catch (err) {
-      console.error('[ElevenLabs] TTS failed, falling back to Twilio <Say>:', err.message);
+      console.error('[TTS] Voice synthesis failed, falling back to Twilio <Say>:', err.message);
       await this.speakViaTwiml(streamSid, text);
     }
   }
