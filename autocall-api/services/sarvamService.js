@@ -148,19 +148,39 @@ class SarvamService {
 
   async generateSpeech(text, voiceId, options = {}) {
     const apiKey = await this.getApiKey(options.userId || options.user_id);
-    const voice = this.defaultVoices.find(v => v.voice_id === voiceId || v.speaker === voiceId) || this.defaultVoices[0];
-    
+
+    let cleanSpeaker = (voiceId || 'vidya')
+      .replace(/^sarvam-/, '')
+      .replace(/-(te|hi|en|ta|kn|ml|mr|gu|pa|bn|or)$/, '')
+      .toLowerCase();
+
+    const voice = this.defaultVoices.find(v => v.voice_id === voiceId || v.speaker === cleanSpeaker);
+    if (voice && voice.speaker) {
+      cleanSpeaker = voice.speaker.toLowerCase();
+    }
+
     const speakerMap = {
-      meera: 'roopa',
-      pavithra: 'kavitha',
+      roopa: 'vidya',
+      meera: 'vidya',
+      pavithra: 'arya',
+      kavitha: 'arya',
       amrutha: 'vidya',
-      arvind: 'vijay',
-      ananya: 'pooja'
+      shruti: 'arya',
+      arvind: 'karun',
+      vijay: 'karun',
+      gokul: 'abhilash',
+      kavya: 'manisha',
+      pooja: 'anushka',
+      priya: 'manisha',
+      rahul: 'hitesh',
+      rohan: 'hitesh',
+      amit: 'hitesh',
+      ananya: 'anushka'
     };
 
-    const rawSpeaker = voice?.speaker || voiceId || 'roopa';
-    const speaker = speakerMap[rawSpeaker] || (['roopa', 'kavitha', 'vidya', 'shruti', 'vijay', 'gokul', 'kavya', 'pooja', 'priya', 'rahul', 'rohan', 'amit'].includes(rawSpeaker) ? rawSpeaker : 'roopa');
-    const targetLanguageCode = voice?.target_language_code || options.target_language_code || (['kavya', 'pooja', 'priya', 'rahul', 'rohan', 'amit'].includes(speaker) ? 'hi-IN' : 'te-IN');
+    const validBulbulV2Speakers = ['vidya', 'arya', 'karun', 'abhilash', 'manisha', 'anushka', 'hitesh'];
+    const speaker = speakerMap[cleanSpeaker] || (validBulbulV2Speakers.includes(cleanSpeaker) ? cleanSpeaker : 'vidya');
+    const targetLanguageCode = ['manisha', 'anushka', 'hitesh'].includes(speaker) ? 'hi-IN' : 'te-IN';
 
     if (!apiKey) {
       throw new Error('Sarvam AI API Key is not configured. Please enter your Sarvam Subscription Key in System Settings (AI & Voice Providers).');
