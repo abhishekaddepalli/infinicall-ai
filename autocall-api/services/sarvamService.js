@@ -192,8 +192,8 @@ class SarvamService {
         target_language_code: targetLanguageCode,
         speaker: speaker,
         pitch: typeof options.pitch === 'number' ? options.pitch : 0,
-        pace: typeof options.pace === 'number' ? options.pace : 1.0,
-        loudness: typeof options.loudness === 'number' ? options.loudness : 1.5,
+        pace: typeof options.pace === 'number' ? options.pace : 0.98,
+        loudness: typeof options.loudness === 'number' ? options.loudness : 1.0,
         speech_sample_rate: options.sample_rate || 16000,
         enable_preprocessing: true,
         model: 'bulbul:v2'
