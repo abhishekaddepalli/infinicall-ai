@@ -17,10 +17,18 @@ export const voiceApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Voice'],
     }),
+    synthesizeSpeech: builder.mutation<{ success: boolean; data: { url: string } }, { text: string; voice_id: string }>({
+      query: (body) => ({
+        url: '/voices/synthesize',
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 })
 
 export const {
   useGetVoicesQuery,
   useSyncVoicesMutation,
+  useSynthesizeSpeechMutation,
 } = voiceApi

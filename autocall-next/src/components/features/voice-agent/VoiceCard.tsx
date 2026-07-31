@@ -4,12 +4,17 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { VoiceCardProps } from "@/types/voice"
-import { AudioWaveform, Globe, Pause, Play, Sparkles, User } from "lucide-react"
+import { useSynthesizeSpeechMutation } from "@/redux/api/voiceApi"
+import { getMediaUrl } from "@/utils/auth"
+import { AudioWaveform, Globe, Loader2, Pause, Play, Sparkles, User } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
+import { toast } from "sonner"
 
 export const VoiceCard = ({ voice }: VoiceCardProps) => {
   const [isPlaying, setIsPlaying] = useState(false)
+  const [synthesizeSpeech, { isLoading: isSynthesizing }] = useSynthesizeSpeechMutation()
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const currentAudioUrl = useRef<string | null>(voice.preview_url || null)
 
   useEffect(() => {
     return () => {
@@ -20,20 +25,65 @@ export const VoiceCard = ({ voice }: VoiceCardProps) => {
     }
   }, [])
 
-  const togglePlay = () => {
-    if (!voice.preview_url) return
+  const playAudio = (url: string) => {
+    const fullUrl = getMediaUrl(url) || url
+    if (audioRef.current) {
+      audioRef.current.pause()
+    }
+    audioRef.current = new Audio(fullUrl)
+    audioRef.current.onended = () => setIsPlaying(false)
+    audioRef.current.onerror = (e) => {
+      console.error('Audio playback error:', e)
+      setIsPlaying(false)
+      toast.error('Failed to play audio sample')
+    }
+    audioRef.current.play().then(() => {
+      setIsPlaying(true)
+    }).catch((err) => {
+      console.error('Audio play error:', err)
+      setIsPlaying(false)
+      toast.error('Audio playback failed')
+    })
+  }
 
-    if (!audioRef.current) {
-      audioRef.current = new Audio(voice.preview_url)
-      audioRef.current.onended = () => setIsPlaying(false)
+  const togglePlay = async () => {
+    if (isPlaying) {
+      if (audioRef.current) {
+        audioRef.current.pause()
+      }
+      setIsPlaying(false)
+      return
     }
 
-    if (isPlaying) {
-      audioRef.current.pause()
-      setIsPlaying(false)
-    } else {
-      audioRef.current.play()
-      setIsPlaying(true)
+    if (currentAudioUrl.current) {
+      playAudio(currentAudioUrl.current)
+      return
+    }
+
+    try {
+      let sampleText = "Namaskaram! InfiniCall AI Voice assistant."
+      if (voice.labels?.accent === 'Telugu' || voice.voice_id?.includes('-te')) {
+        sampleText = `Namaskaram! Nenu ${voice.name}. InfiniCall AI Voice assistant.`
+      } else if (voice.labels?.accent === 'Hindi' || voice.voice_id?.includes('-hi')) {
+        sampleText = `Namaste! Main ${voice.name} hoon. InfiniCall AI Voice assistant.`
+      } else {
+        sampleText = `Hello! I am ${voice.name}, your AI Voice assistant.`
+      }
+
+      const res = await synthesizeSpeech({
+        text: sampleText,
+        voice_id: voice.voice_id
+      }).unwrap()
+
+      if (res.success && res.data?.url) {
+        currentAudioUrl.current = res.data.url
+        playAudio(res.data.url)
+      } else {
+        toast.error('Could not generate voice preview')
+      }
+    } catch (err: any) {
+      console.error('Voice synthesis error:', err)
+      toast.error(err?.data?.message || 'Voice preview synthesis failed. Check API keys in settings.')
     }
   }
 
@@ -83,16 +133,15 @@ export const VoiceCard = ({ voice }: VoiceCardProps) => {
           <Button
             size="icon"
             onClick={togglePlay}
-            disabled={!voice.preview_url}
+            disabled={isSynthesizing}
             className={`shrink-0 w-14 h-14 rounded-full transition-all duration-500 relative overflow-hidden ${isPlaying
               ? "bg-primary text-white scale-105 shadow-lg shadow-primary/30"
               : "bg-subcard text-zinc-600 dark:text-zinc-300 hover:bg-primary/10 hover:text-primary border border-input-border-color hover:border-primary/30"
               }`}
           >
-            {isPlaying && (
-              <span className="absolute inset-0 rounded-full animate-ping bg-primary/20" />
-            )}
-            {isPlaying ? (
+            {isSynthesizing ? (
+              <Loader2 className="w-5 h-5 animate-spin relative z-10" />
+            ) : isPlaying ? (
               <Pause className="w-5 h-5 fill-current relative z-10" />
             ) : (
               <Play className="w-5 h-5 fill-current relative z-10" />
