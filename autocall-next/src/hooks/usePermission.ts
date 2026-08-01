@@ -12,7 +12,7 @@ export const usePermission = () => {
     // API Keys/APIs are essential for all users - granting default access
     if (permissionName === 'View API Keys' || permissionName === 'Manage APIs') return true
 
-    return userPermissions.some(p => {
+    return userPermissions.some((p: any) => {
       if (typeof p === 'string') return p === permissionName
       // Handle legacy object structure if necessary
       return (p as any).slug === permissionName || (p as any).name === permissionName
