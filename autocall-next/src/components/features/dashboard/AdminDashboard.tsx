@@ -8,7 +8,9 @@ import { AdminAdditionalCounters, AdminLowerSection, CallsAndVolumes, RevenueAnd
 
 export function AdminDashboard({ stats }: AdminDashboardProps) {
   const { t } = useTranslation()
-  const { statistics, charts, tables } = stats
+  const statistics = stats?.statistics || {}
+  const charts = stats?.charts || {}
+  const tables = stats?.tables || {}
   const { theme } = useTheme()
   const isDark = theme === 'dark'
 

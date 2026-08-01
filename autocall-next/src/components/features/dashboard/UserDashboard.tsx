@@ -78,7 +78,7 @@ export function UserDashboard({ stats }: UserDashboardProps) {
 
   // 10 stats counter definitions
   const counterCards = useMemo(() => {
-    const statistics = stats.statistics
+    const statistics = stats?.statistics || {}
     return [
       {
         title: t('total_calls'),
@@ -144,7 +144,7 @@ export function UserDashboard({ stats }: UserDashboardProps) {
       }
     },
     xaxis: {
-      categories: (stats.charts.currentWeekCallChart || []).map(item => item.day),
+      categories: (stats?.charts?.currentWeekCallChart || []).map(item => item.day),
       labels: {
         style: {
           colors: '#64748b',
@@ -179,11 +179,11 @@ export function UserDashboard({ stats }: UserDashboardProps) {
   const weeklyChartSeries = [
     {
       name: t('inbound'),
-      data: (stats.charts.currentWeekCallChart || []).map(item => item.incoming)
+      data: (stats?.charts?.currentWeekCallChart || []).map(item => item.incoming)
     },
     {
       name: t('outbound'),
-      data: (stats.charts.currentWeekCallChart || []).map(item => item.outgoing)
+      data: (stats?.charts?.currentWeekCallChart || []).map(item => item.outgoing)
     }
   ]
 
@@ -209,7 +209,7 @@ export function UserDashboard({ stats }: UserDashboardProps) {
     },
     stroke: { show: true, width: 2, colors: ['transparent'] },
     xaxis: {
-      categories: (stats.charts.currentWeekCampaignChart || []).map((_, idx) => `Week ${idx + 1}`),
+      categories: (stats?.charts?.currentWeekCampaignChart || []).map((_, idx) => `Week ${idx + 1}`),
       labels: {
         style: {
           colors: '#94a3b8',
@@ -253,11 +253,11 @@ export function UserDashboard({ stats }: UserDashboardProps) {
   const campaignChartSeries = [
     {
       name: t('ai_campaigns'),
-      data: (stats.charts.currentWeekCampaignChart || []).map(item => item.ai_campaigns || 0)
+      data: (stats?.charts?.currentWeekCampaignChart || []).map(item => item.ai_campaigns || 0)
     },
     {
       name: t('sms_campaigns'),
-      data: (stats.charts.currentWeekCampaignChart || []).map(item => item.sms_campaigns || 0)
+      data: (stats?.charts?.currentWeekCampaignChart || []).map(item => item.sms_campaigns || 0)
     }
   ]
 
