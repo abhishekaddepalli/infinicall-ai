@@ -18,7 +18,7 @@ exports.checkPermission = (permissionSlug) => {
       const role = user.roleId && user.roleId.name ? user.roleId : null;
       const roleName = role ? role.name : null;
 
-      if (roleName === 'super_admin' && req.authType !== 'api_key') {
+      if ((roleName === 'super_admin' || roleName === 'admin') && req.authType !== 'api_key') {
         return next();
       }
 
