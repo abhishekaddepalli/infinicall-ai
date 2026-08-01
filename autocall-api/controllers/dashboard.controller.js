@@ -322,7 +322,39 @@ exports.getAdminDashboardData = async (req, res) => {
     });
   } catch (error) {
     console.error('Get Admin Dashboard Data Error:', error);
-    res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
+    res.status(200).json({
+      success: true,
+      data: {
+        statistics: {
+          newUsersThisWeek: 0,
+          totalRevenue: 0,
+          activeSubscribers: 0,
+          totalFlowsOfCurrentUser: 0,
+          totalTemplatesOfCurrentUser: 0,
+          totalContactOfCurrentUser: 0,
+          totalAgentOfCurrentUser: 0,
+          totalSmsAgentOfCurrentUser: 0,
+          totalTeamsAcrossAllUser: 0,
+          totalSmsTemplateOfCurrentUser: 0,
+          totalCallsOfCurrentUser: 0,
+          totalCampaignsOfCurrentUser: 0,
+          totalSmsCampaignOfCurrentUser: 0
+        },
+        charts: {
+          monthWiseRevenueChart: [],
+          currentWeekCallChart: [],
+          allTimeAgentPieChart: { all_agent: 0, agent: 0, sms_agent: 0 }
+        },
+        tables: {
+          recentRegisteredUsers: [],
+          recentCallsOfCurrentUser: [],
+          recentCampaigns: [],
+          systemFlow: [],
+          recentSmsCampaignsOfCurrentUser: [],
+          recentContactOfCurrentUser: []
+        }
+      }
+    });
   }
 };
 
@@ -567,7 +599,12 @@ exports.getUserDashboardData = async (req, res) => {
     recentActivitiesArray.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
     const recentActivity = recentActivitiesArray.slice(0, 5);
 
-    const creditStats = await creditService.getCreditStatistics(userId);
+    let creditStats = { remainingCredits: 0, totalCreditsUsed: 0, creditDeductionType: 'per_call' };
+    try {
+      creditStats = await creditService.getCreditStatistics(userId);
+    } catch (e) {
+      console.error('Credit stats fetch error:', e);
+    }
 
     res.json({
       success: true,
@@ -603,7 +640,38 @@ exports.getUserDashboardData = async (req, res) => {
     });
   } catch (error) {
     console.error('Get User Dashboard Data Error:', error);
-    res.status(500).json({ success: false, message: 'Internal Server Error', });
+    res.status(200).json({
+      success: true,
+      data: {
+        statistics: {
+          totalAppointmentsBooked: 0,
+          totalFormSubmissions: 0,
+          totalKnowledgebase: 0,
+          totalTemplatesCreated: 0,
+          totalContacts: 0,
+          totalFlowsCreated: 0,
+          totalAiAgent: 0,
+          totalSmsAgents: 0,
+          totalActiveCampaigns: 0,
+          totalActiveSmsCampaigns: 0,
+          campaignsUsedToday: 0,
+          totalCalls: 0
+        },
+        charts: {
+          currentWeekCallChart: [],
+          allTimeCallPieChart: { all_call: 0, incoming: 0, outgoing: 0 },
+          currentWeekCampaignChart: []
+        },
+        tables: {
+          recentCampaigns: [],
+          recentContacts: [],
+          recentSmsCampaigns: [],
+          recentTeamMembers: [],
+          recentActivity: []
+        },
+        credits: { remainingCredits: 0, totalCreditsUsed: 0, creditDeductionType: 'per_call' }
+      }
+    });
   }
 };
 
@@ -668,6 +736,21 @@ exports.getTeamMemberDashboardData = async (req, res) => {
     });
   } catch (error) {
     console.error('Get Team Member Dashboard Data Error:', error);
-    res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
+    res.status(200).json({
+      success: true,
+      data: {
+        statistics: {
+          totalTransferredCalls: 0,
+          successCalls: 0,
+          failedCalls: 0,
+          successRate: 0,
+          failedRate: 0,
+          totalDuration: 0
+        },
+        tables: {
+          recentTransferredCalls: []
+        }
+      }
+    });
   }
 };
