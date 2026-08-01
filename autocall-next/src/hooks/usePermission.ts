@@ -4,8 +4,9 @@ import { useAppSelector } from '@/redux/hooks'
 
 export const usePermission = () => {
   const { user, isAuthenticated, isLoading } = useAppSelector((state) => state.auth)
-  const userPermissions = user?.permissions || user?.permissionSlugs || []
-  const userRole = user?.role || 'user'
+  const userPermissions = (user as any)?.permissions || (user as any)?.permissionSlugs || [];
+  const rawRole = user?.role || (typeof (user as any)?.roleId === 'object' ? (user as any)?.roleId?.name : (user as any)?.roleId) || 'user';
+  const userRole = typeof rawRole === 'string' ? rawRole.toLowerCase() : 'user';
 
   const hasPermission = (permissionName: string): boolean => {
     // API Keys/APIs are essential for all users - granting default access
@@ -26,10 +27,10 @@ export const usePermission = () => {
     return permissionNames.every(p => hasPermission(p))
   }
 
-  const isAdmin = () => userRole === 'admin' || userRole === 'super_admin'
+  const isAdmin = () => userRole === 'admin' || userRole === 'super_admin' || userRole === 'superadmin'
   const isAgent = () => userRole === 'agent'
   const isAssigner = () => userRole === 'assigner'
-  const isTeamMember = () => userRole === 'team_member'
+  const isTeamMember = () => userRole === 'team_member' || userRole === 'team'
 
   return {
     user,

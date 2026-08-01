@@ -59,13 +59,32 @@ const DashboardPage = () => {
     return <UserDashboardSkeleton />
   }
 
-  if (isError) {
-    return (
-      <div className="p-8 text-center text-rose-500 font-bold bg-rose-500/10 rounded-3xl border border-rose-500/20 animate-in fade-in duration-500">
-        {t('failed_to_load_stats')}
-      </div>
-    )
+  const defaultAdminStats = {
+    statistics: {
+      newUsersThisWeek: 0, totalRevenue: 0, activeSubscribers: 0, totalFlowsOfCurrentUser: 0,
+      totalTemplatesOfCurrentUser: 0, totalContactOfCurrentUser: 0, totalAgentOfCurrentUser: 0,
+      totalSmsAgentOfCurrentUser: 0, totalTeamsAcrossAllUser: 0, totalSmsTemplateOfCurrentUser: 0,
+      totalCallsOfCurrentUser: 0, totalCampaignsOfCurrentUser: 0, totalSmsCampaignOfCurrentUser: 0
+    },
+    charts: { monthWiseRevenueChart: [], currentWeekCallChart: [], allTimeAgentPieChart: { all_agent: 0, agent: 0, sms_agent: 0 } },
+    tables: { recentRegisteredUsers: [], recentCallsOfCurrentUser: [], recentCampaigns: [], systemFlow: [], recentSmsCampaignsOfCurrentUser: [], recentContactOfCurrentUser: [] }
   }
+
+  const defaultUserStats = {
+    statistics: { totalAppointmentsBooked: 0, totalFormSubmissions: 0, totalKnowledgebase: 0, totalTemplatesCreated: 0, totalContacts: 0, totalFlowsCreated: 0, totalAiAgent: 0, totalSmsAgents: 0, totalActiveCampaigns: 0, totalActiveSmsCampaigns: 0, campaignsUsedToday: 0, totalCalls: 0 },
+    charts: { currentWeekCallChart: [], allTimeCallPieChart: { all_call: 0, incoming: 0, outgoing: 0 }, currentWeekCampaignChart: [] },
+    tables: { recentCampaigns: [], recentContacts: [], recentSmsCampaigns: [], recentTeamMembers: [], recentActivity: [] },
+    credits: { remainingCredits: 0, totalCreditsUsed: 0, creditDeductionType: 'per_call' }
+  }
+
+  const defaultTeamStats = {
+    statistics: { totalTransferredCalls: 0, successCalls: 0, failedCalls: 0, successRate: 0, failedRate: 0, totalDuration: 0 },
+    tables: { recentTransferredCalls: [] }
+  }
+
+  const activeAdminStats = adminStats || defaultAdminStats
+  const activeUserStats = userStats || defaultUserStats
+  const activeTeamStats = teamStats || defaultTeamStats
 
   return (
     <div className="space-y-6">
@@ -80,9 +99,9 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {isPrivileged && adminStats && <AdminDashboard stats={adminStats} />}
-      {isTeam && teamStats && <TeamMemberDashboard stats={teamStats} onSearchChange={handleSearchChange} />}
-      {isRegularUser && userStats && <UserDashboard stats={userStats} />}
+      {isPrivileged && <AdminDashboard stats={activeAdminStats} />}
+      {isTeam && <TeamMemberDashboard stats={activeTeamStats} onSearchChange={handleSearchChange} />}
+      {isRegularUser && <UserDashboard stats={activeUserStats} />}
     </div>
   )
 }
