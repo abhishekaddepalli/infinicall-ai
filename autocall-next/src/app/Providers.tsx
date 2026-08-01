@@ -1,6 +1,7 @@
 "use client";
 
 import DynamicFavicon from "@/components/reusable/DynamicFavicon";
+import { FloatingVirtualPhoneWidget } from "@/components/features/virtual-phone/FloatingVirtualPhoneWidget";
 import MaintenanceGuard from "@/components/reusable/MaintenanceGuard";
 import "@/lib/i18n";
 import i18n from "@/lib/i18n";
@@ -44,6 +45,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
               <MaintenanceGuard>
                 <DynamicFavicon />
                 {children}
+                <FloatingVirtualPhoneWidget />
               </MaintenanceGuard>
             </DirectionWrapper>
           </FacebookSDKProvider>

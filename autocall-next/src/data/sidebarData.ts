@@ -65,6 +65,7 @@ export const iconMap = {
   users: Users,
   settings2: Settings2,
   phone: Phone,
+  phoneCall: Phone,
   mic: Mic,
   cpu: Cpu,
   globe: Globe,
@@ -165,6 +166,13 @@ export const sidebarMenuData: MenuSection[] = [
         label: "call_activity",
         icon: "history",
         path: ROUTES.CALL_ACTIVITY,
+        requiredPermission: PERMISSIONS.VIEW_CALLS_HISTORY,
+      },
+      {
+        id: "virtual-phone",
+        label: "virtual_phone",
+        icon: "phoneCall",
+        path: ROUTES.VIRTUAL_PHONE,
         requiredPermission: PERMISSIONS.VIEW_CALLS_HISTORY,
       },
       {

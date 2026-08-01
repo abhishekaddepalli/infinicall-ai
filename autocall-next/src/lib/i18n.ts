@@ -1583,6 +1583,7 @@ i18n
           configure_template_des: "Configure categories and calling strategies.",
           integrate: "Integrate",
           failed_to_load_stats: "Failed to load dashboard statistics",
+          virtual_phone: "Virtual Phone",
           api_integration: "API Integration",
           tenant_guide_setup: "Tenant Guide Setup",
           google_account_configuration: "Google Account Configuration",
