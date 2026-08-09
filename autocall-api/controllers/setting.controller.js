@@ -345,6 +345,7 @@ exports.getPublicSettings = async (req, res) => {
       req.ip?.replace(/^::ffff:/, '') ||
       req.headers['x-forwarded-for']?.split(',')[0].trim();
 
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.status(200).json({
       message: 'Public settings fetched successfully',
       settings: {
