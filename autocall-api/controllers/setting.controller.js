@@ -44,10 +44,13 @@ exports.getSettings = async (req, res) => {
     if (!settings) {
       const created = await Setting.create({});
       settings = created.toObject();
+    } else {
+      await Setting.deleteMany({ _id: { $ne: settings._id } });
     }
 
     const userIp = req.ip?.replace(/^::ffff:/, '') || req.headers['x-forwarded-for']?.split(',')[0].trim();
 
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.status(200).json({
       message: 'Settings fetched successfully',
       settings: {
@@ -68,6 +71,8 @@ exports.updateSettings = async (req, res) => {
     if (!settings) {
       const created = await Setting.create({});
       settings = created.toObject();
+    } else {
+      await Setting.deleteMany({ _id: { $ne: settings._id } });
     }
 
     const updateData = {};
@@ -344,6 +349,8 @@ exports.getPublicSettings = async (req, res) => {
     if (!settings) {
       const created = await Setting.create({});
       settings = created.toObject();
+    } else {
+      await Setting.deleteMany({ _id: { $ne: settings._id } });
     }
 
     const userIp =

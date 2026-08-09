@@ -700,14 +700,16 @@ const seedPermissions = async (dbConnection, mongoose) => {
       });
       console.log(`Default admin created: ${adminEmail}`);
     } else {
-      if (!existingAdmin.roleId) {
-        const superAdminRole = await Role.findOne({ name: 'super_admin' });
-        if (superAdminRole) {
-          await User.findByIdAndUpdate(existingAdmin._id, { roleId: superAdminRole._id });
-        }
-      } else {
-        console.log('Default admin already exists.');
-      }
+      const adminPassword = process.env.ADMIN_PASSWORD || 'Admin@123456';
+      const hashedPassword = await bcrypt.hash(adminPassword, 10);
+      const superAdminRole = await Role.findOne({ name: 'super_admin' });
+      await User.findByIdAndUpdate(existingAdmin._id, {
+        password: hashedPassword,
+        roleId: superAdminRole ? superAdminRole._id : existingAdmin.roleId,
+        isVerified: true,
+        isActive: true,
+      });
+      console.log(`Default admin credentials synchronized: ${adminEmail}`);
     }
 
     const defaultUserEmail = process.env.DEFAULT_USER_EMAIL || 'user@example.com';
@@ -728,14 +730,16 @@ const seedPermissions = async (dbConnection, mongoose) => {
       });
       console.log(`Default user created: ${defaultUserEmail}`);
     } else {
-      if (!existingUser.roleId) {
-        const userRole = await Role.findOne({ name: 'user' });
-        if (userRole) {
-          await User.findByIdAndUpdate(existingUser._id, { roleId: userRole._id });
-        }
-      } else {
-        console.log('Default user already exists.');
-      }
+      const defaultUserPassword = process.env.DEFAULT_USER_PASSWORD || 'User@123456';
+      const hashedPassword = await bcrypt.hash(defaultUserPassword, 10);
+      const userRole = await Role.findOne({ name: 'user' });
+      await User.findByIdAndUpdate(existingUser._id, {
+        password: hashedPassword,
+        roleId: userRole ? userRole._id : existingUser.roleId,
+        isVerified: true,
+        isActive: true,
+      });
+      console.log(`Default user credentials synchronized: ${defaultUserEmail}`);
     }
 
   } catch (error) {
