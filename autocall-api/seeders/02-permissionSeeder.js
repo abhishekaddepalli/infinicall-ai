@@ -682,67 +682,59 @@ const seedPermissions = async (dbConnection, mongoose) => {
 
     console.log('Permission seeding and role assignment completed successfully!');
 
-    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
 
-    if (!adminEmail) {
-      console.log('ADMIN_EMAIL not set, skipping default admin creation');
+    const existingAdmin = await User.findOne({ email: adminEmail });
+    if (!existingAdmin) {
+      const adminPassword = process.env.ADMIN_PASSWORD || 'Admin@123456';
+      const hashedPassword = await bcrypt.hash(adminPassword, 10);
+      const superAdminRole = await Role.findOne({ name: 'super_admin' });
+
+      await User.create({
+        name: process.env.ADMIN_NAME || 'Super Admin',
+        email: adminEmail,
+        password: hashedPassword,
+        roleId: superAdminRole ? superAdminRole._id : null,
+        isVerified: true,
+        isActive: true,
+      });
+      console.log(`Default admin created: ${adminEmail}`);
     } else {
-      const existingAdmin = await User.findOne({ email: adminEmail });
-      if (!existingAdmin) {
-        const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
-        const hashedPassword = await bcrypt.hash(adminPassword, 10);
+      if (!existingAdmin.roleId) {
         const superAdminRole = await Role.findOne({ name: 'super_admin' });
-
-        await User.create({
-          name: process.env.ADMIN_NAME || 'Admin',
-          email: adminEmail,
-          password: hashedPassword,
-          roleId: superAdminRole ? superAdminRole._id : null,
-          isVerified: true,
-          isActive: true,
-        });
-        console.log(`Default admin created: ${adminEmail}`);
-      } else {
-        if (!existingAdmin.roleId) {
-          const superAdminRole = await Role.findOne({ name: 'super_admin' });
-          if (superAdminRole) {
-            await User.findByIdAndUpdate(existingAdmin._id, { roleId: superAdminRole._id });
-          }
-        } else {
-          console.log('Default admin already exists.');
+        if (superAdminRole) {
+          await User.findByIdAndUpdate(existingAdmin._id, { roleId: superAdminRole._id });
         }
+      } else {
+        console.log('Default admin already exists.');
       }
     }
 
-    const defaultUserEmail = process.env.DEFAULT_USER_EMAIL;
+    const defaultUserEmail = process.env.DEFAULT_USER_EMAIL || 'user@example.com';
 
-    if (!defaultUserEmail) {
-      console.log('DEFAULT_USER_EMAIL not set, skipping default user creation');
+    const existingUser = await User.findOne({ email: defaultUserEmail });
+    if (!existingUser) {
+      const defaultUserPassword = process.env.DEFAULT_USER_PASSWORD || 'User@123456';
+      const hashedPassword = await bcrypt.hash(defaultUserPassword, 10);
+      const userRole = await Role.findOne({ name: 'user' });
+
+      await User.create({
+        name: process.env.DEFAULT_USER_NAME || 'Default User',
+        email: defaultUserEmail,
+        password: hashedPassword,
+        roleId: userRole ? userRole._id : null,
+        isVerified: true,
+        isActive: true,
+      });
+      console.log(`Default user created: ${defaultUserEmail}`);
     } else {
-      const existingUser = await User.findOne({ email: defaultUserEmail });
-      if (!existingUser) {
-        const defaultUserPassword = process.env.DEFAULT_USER_PASSWORD || 'user123';
-        const hashedPassword = await bcrypt.hash(defaultUserPassword, 10);
+      if (!existingUser.roleId) {
         const userRole = await Role.findOne({ name: 'user' });
-
-        await User.create({
-          name: process.env.DEFAULT_USER_NAME || 'Default User',
-          email: defaultUserEmail,
-          password: hashedPassword,
-          roleId: userRole ? userRole._id : null,
-          isVerified: true,
-          isActive: true,
-        });
-        console.log(`Default user created: ${defaultUserEmail}`);
-      } else {
-        if (!existingUser.roleId) {
-          const userRole = await Role.findOne({ name: 'user' });
-          if (userRole) {
-            await User.findByIdAndUpdate(existingUser._id, { roleId: userRole._id });
-          }
-        } else {
-          console.log('Default user already exists.');
+        if (userRole) {
+          await User.findByIdAndUpdate(existingUser._id, { roleId: userRole._id });
         }
+      } else {
+        console.log('Default user already exists.');
       }
     }
 
