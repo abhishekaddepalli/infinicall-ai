@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const BACKEND_API_URL = (
+  process.env.INTERNAL_API_URL ||
+  process.env.BACKEND_API_URL ||
+  "http://127.0.0.1:3000/api"
+).replace(/\/$/, "");
 
 /**
  * Common handler to proxy requests from Next.js API routes to the backend API.
@@ -20,7 +24,8 @@ export async function apiHandler(
     const token = request.headers.get("authorization");
     const contentType = request.headers.get("content-type");
 
-    let url = `${BACKEND_API_URL}${endpoint}`;
+    const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+    let url = `${BACKEND_API_URL}${cleanEndpoint}`;
 
     const searchParams = request.nextUrl.searchParams;
     const queryString = searchParams.toString();

@@ -10,7 +10,7 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { clearAuth } from "../slices/authSlice";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "/api";
+const API_BASE_URL = "/api";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: API_BASE_URL,
