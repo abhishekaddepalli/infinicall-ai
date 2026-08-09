@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AutoCall - AWS Integration" />
+    <meta name="author" content="pixelstrap" />
+    <link rel="icon" href="assets/images/logo/side-logo.png" type="image/png" />
+    <link rel="shortcut icon" href="assets/images/logo/side-logo.png" type="image/png" />
+    <title>AWS Integration - AutoCall Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="assets/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/vendors/feather-icon.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/vendors/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/global-search.css" />
+</head>
+
+<body>
+    <script>
+        let initTheme = localStorage.getItem("theme");
+        if (!initTheme) {
+            initTheme = "light";
+            localStorage.setItem("theme", "light");
+        }
+        if (initTheme === "dark") {
+            document.body.classList.add("dark-only");
+        }
+    </script>
+    <a href="javascript:void(0)" class="sidebar-overlay"></a>
+    <div class="tap-top"><i data-feather="chevrons-up"></i>
+        <p>Top</p>
+    </div>
+
+    <div class="home-section">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container custom-container">
+                <div class="main-menu">
+                    <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fa fa-bars"> </i>
+                    </button>
+                    <a class="navbar-brand" href="index.html">
+                        <img src="assets/images/logo/logo.png">
+                        <!-- <h2 style="color: white;">AutoCall</h2> -->
+                    </a>
+                    <div>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav menu">
+                                <li class="nav-item active"><a class="nav-link" href="index.html">Home</a></li>
+                                <li class="nav-item"><a class="nav-link"
+                                        href="https://support.pixelstrap.com/support/pixelstrap/ShowHomePage.do"
+                                        target="_blank">Support</a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link" href="https://auto-call-pied.vercel.app/"
+                                        target="_blank">Frontend</a></li>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <ul class="nav-right">
+                        <li>
+                            <div class="btn-group">
+                                <a class="decrease btn btn-doc" href="#" title="Decrease font size">A-</a><a
+                                    class="reset btn btn-doc" href="#" title="Default font size">A</a><a
+                                    class="increase btn btn-doc" href="#" title="Increase font size">A+</a>
+                            </div>
+                        </li>
+                        <li>
+                            <a class="btn btn-light mode" href="#" title="Dark"><i class="fa fa-moon-o"></i></a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container custom-container">
+            <div class="document"
+                style="background: linear-gradient(135deg, #8cc7e4 30%, #0d5e8b 90%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent !important;">
+                AutoCall Documentation</div>
+            <div class="top-heading">
+                <h2>Ai-Driven Call Automation with AutoCall</h2>
+                <div class="home-search">
+                    <input type="search" name="text" placeholder="Search..." />
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container custom-container" id="mainRightNavbar">
+        <div class="document-main">
+
+            <div class="left-sidebar">
+                <div class="card">
+                    <div class="card-body">
+                        <aside>
+              <button class="btn button-close">
+                <span>Close</span>
+                <i data-feather="x"></i>
+              </button>
+              <ul class="list-unstyled nav-sidebar doc-nav">
+                <li class="nav-item">
+                  <div class="title"><a class="nav-link" href="index.html">Introduction</a></div>
+                </li>
+                <li class="nav-item">
+                  <div class="title"><a class="nav-link" href="prerequisite.html">Prerequisite</a></div>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">AutoCall Installation <i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="overview.html" class="nav-link">Overview</a></li>
+                    <li class="nav-item"><a href="quick-installation.html" class="nav-link">Quick
+                        Installation</a></li>
+
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">Backend Installation <i class="fa fa-angle-down"
+                            aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="backend-local-server.html" class="nav-link">Local
+                            Server</a></li>
+                        <li class="nav-item"><a href="backend-live-server.html" class="nav-link">Virtual
+                            Private
+                            Server</a></li>
+                      </ul>
+                    </li>
+
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">Frontend Installation
+                          <i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="frontend-installation.html" class="nav-link">Local
+                            Server</a></li>
+
+                        <li class="nav-item">
+                          <a href="deployment-vps.html" class="nav-link">Virtual Private Server</a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="deployment-vercel.html" class="nav-link">Vercel</a>
+                        </li>
+                      </ul>
+                    </li>
+
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Core Features<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">AI Voice Call <i class="fa fa-angle-down"
+                            aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="workflow-builder.html" class="nav-link">WorkFlow Builder</a></li>
+                        <li class="nav-item"><a href="agents.html" class="nav-link">AI Assistants</a></li>
+                        <li class="nav-item"><a href="campaign.html" class="nav-link">AI Campaign Hub</a></li>
+                      </ul>
+                    </li>
+
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">SMS Management <i class="fa fa-angle-down"
+                            aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="sms-agents.html" class="nav-link">SMS Assistance</a></li>
+                        <li class="nav-item"><a href="sms-templates.html" class="nav-link">SMS Templates</a></li>
+                        <li class="nav-item"><a href="sms-campaigns.html" class="nav-link">SMS Campaigns</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Integration<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="meta-connection.html" class="nav-link">Meta Whatsapp
+                        Connection</a></li>
+                    <li class="nav-item"><a href="aws-connection.html" class="nav-link">AWS Integration</a></li>
+                    <li class="nav-item"><a href="trunk-integration.html" class="nav-link">Trunk Integration</a></li>
+                    <li class="nav-item"><a href="twilio-integration.html" class="nav-link">Twilio Setup</a></li>
+                    <li class="nav-item"><a href="plivo-integration.html" class="nav-link">Plivo Setup</a></li>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Telephony Provider<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="contact-hub.html" class="nav-link">Contact Hub</a></li>
+                    <li class="nav-item"><a href="contact-group.html" class="nav-link">Contact Group</a></li>
+                    <li class="nav-item"><a href="voice-numbers.html" class="nav-link">Phone Numbers</a></li>
+                    <li class="nav-item"><a href="call-activity.html" class="nav-link">Call Activity</a></li>
+                    <li class="nav-item"><a href="restricted-word.html" class="nav-link">Restricted Word</a></li>
+                    <li class="nav-item"><a href="virtual-phone.html" class="nav-link">Virtual Phone</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Team Management<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="teams.html" class="nav-link">Teams</a></li>
+                    <li class="nav-item"><a href="team-members.html" class="nav-link">Team Members</a></li>
+                    <li class="nav-item"><a href="team-dashboard.html" class="nav-link">Team Dashboard</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Knowledge Base<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="intelligence-hub.html" class="nav-link">Intelligence Hub</a></li>
+                    <li class="nav-item"><a href="conversation-templates.html" class="nav-link">Conversation
+                        Templates</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Toolbox Hub<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="lead-capture.html" class="nav-link">Lead Capture Forms</a></li>
+                    <li class="nav-item"><a href="appointment-booking.html" class="nav-link">Appointment Booking</a>
+                    </li>
+                    <li class="nav-item"><a href="google-workspace.html" class="nav-link">Google Workspace</a></li>
+                    <li class="nav-item"><a href="embeddable-widget.html" class="nav-link">Embeddable Widget</a></li>
+                    <li class="nav-item"><a href="whatsapp-business.html" class="nav-link">WhatsApp Business</a></li>
+                    <li class="nav-item"><a href="event-webhooks.html" class="nav-link">Event Webhooks</a></li>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Admin Module <i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="admin-member-management.html" class="nav-link">Member
+                        Management</a>
+                    </li>
+                    <li class="nav-item"><a href="admin-role-management.html" class="nav-link">Role
+                        Management</a></li>
+                    <li class="nav-item"><a href="admin-plans.html" class="nav-link">Subscription Plans</a></li>
+                    <li class="nav-item"><a href="admin-faq.html" class="nav-link">FAQ Management</a></li>
+                    <li class="nav-item"><a href="admin-pages.html" class="nav-link">Pages Management</a></li>
+                    <li class="nav-item"><a href="admin-blog.html" class="nav-link">Blog Management</a></li>
+                    <li class="nav-item"><a href="admin-testimonials.html" class="nav-link">Testimonials
+                        Management</a>
+                    <li class="nav-item"><a href="admin-settings.html" class="nav-link">System Settings</a></li>
+                    <li class="nav-item"><a href="kyc-configuration.html" class="nav-link">KYC Configuration</a></li>
+                    <li class="nav-item"><a href="api-integration.html" class="nav-link">API Integration</a></li>
+                    <li class="nav-item"><a href="tenant-guide.html" class="nav-link">Tenant Guide Setup</a></li>
+
+
+
+                    <li class="nav-item"><a href="ai-model.html" class="nav-link">AI Models</a></li>
+                    <li class="nav-item"><a href="languages.html" class="nav-link">Languages</a></li>
+                    <li class="nav-item"><a href="settings.html" class="nav-link">Settings</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <div class="title"><a class="nav-link" href="technologies.html">Technologies Used</a></div>
+                </li>
+              </ul>
+            </aside>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content card-hover-effect">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button class="btn sidebar-button"><i class="fa fa-bars me-2"></i>Menu</button>
+                        <h4 class="main-title mb-4"><img src="assets/images/logo/side-logo.png" alt="" />AWS Integration
+                        </h4>
+                    </div>
+
+                    <div class="col-12 os-content">
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+
+                                <h5 class="main-sub-title mt-0">Overview</h5>
+
+                                <p class="text-muted mb-3">
+                                    Connect your AWS account to enable scalable cloud services and infrastructure
+                                    management directly from the platform. This integration allows workflows and AI
+                                    services to securely utilize AWS resources such as storage, server hosting,
+                                    notifications, and real-time processing. </p>
+                                <p class="text-muted mb-3">
+                                    For example, when users interact with an AI call or appointment booking flow, the
+                                    system can automatically store recordings in Amazon S3, trigger backend functions
+                                    using AWS Lambda, send notifications through Amazon SNS, and manage application
+                                    services with reliable cloud infrastructure. </p>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="main-sub-title">AWS Configuration</h5>
+
+                                <p class="mb-3">Configure your AWS S3 credentials for scalable media storage.</p>
+
+                                <p class="mb-3"><b>Purpose:</b> After enable AWS, your data will be stored in
+                                    AWS S3 bucket.</p>
+
+                                <table class="table" border="1">
+                                    <thead>
+                                        <tr>
+                                            <th>Credential Field</th>
+                                            <th>Functional Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>AWS Access Key ID</strong></td>
+                                            <td>Your unique identification key for AWS S3 access. Found in IAM Security
+                                                Credentials.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>AWS Secret Access Key</strong></td>
+                                            <td>The primary authentication key. (Visible only once during creation).
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>AWS Region</strong></td>
+                                            <td>The physical location of your bucket server (e.g., `us-east-1` or
+                                                `ap-south-1`).</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>AWS S3 Bucket</strong></td>
+                                            <td>The unique name of the bucket you created for storing application files.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/autocall-aws-option.png" alt="autocall-aws-option"
+                                        class="img-fluid mb-2" />
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="main-sub-title">AWS S3 Setup Guide</h5>
+
+                                <p class="mb-3"><b>1. Create an S3 Bucket</b> Go to AWS Dashboard → Search Amazon S3 →
+                                    Create bucket.</p>
+
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/aws-integration/dashboard.png" alt="open-whatsapp-api-setup"
+                                        class="img-fluid mb-2" />
+                                </div>
+                                <p class="mb-3 mt-3"><b>Bucket Type:</b> Select <b>General purpose</b>.
+                                </p>
+                                <p class="mb-3"><b>Bucket name:</b> Enter a unique name (e.g.,
+                                    <code>autocall-storage-bucket</code>).
+                                </p>
+                                <p class="mb-3"><b>AWS Region:</b> Select your preferred server location (e.g.,
+                                    <code>ap-south-1</code>).
+                                </p>
+                                <p class="mb-3"><b>Object Ownership:</b> Select <b>ACLs enabled</b> and <b>Bucket owner
+                                        preferred</b>.
+                                </p>
+                                <p class="mb-3"><b>Block Public Access:</b> Uncheck <b>Block all public access</b> to
+                                    allow
+                                    external file retrieval.
+                                </p>
+                                <p class="mb-3"><b>Encryption:</b> Keep default <b>SSE-S3</b> and <b>Enable Bucket
+                                        Key</b> for optimized cost.
+                                </p>
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/aws-integration/create_bucket_1.png" alt="create_bucket"
+                                        class="img-fluid mb-2" />
+                                </div>
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/aws-integration/create_bucket_2.png" alt="create_bucket"
+                                        class="img-fluid mb-2" />
+                                </div>
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/aws-integration/create_bucket_3.png" alt="create_bucket"
+                                        class="img-fluid mb-2" />
+                                </div>
+                                <p class="mb-3 mt-3">As per the given image, fill the details and click on
+                                    <strong>Create bucket</strong>.
+                                </p>
+                                <p class="mb-3">You will get the bucket name and bucket region. Copy them and save them
+                                    somewhere safe. </p>
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/aws-integration/bucket_dashboard.png" alt="bucket_dashboard"
+                                        class="img-fluid mb-2" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="main-sub-title">2. Create IAM User & Access Keys</h5>
+
+                                <p class="mb-3">Search <strong>IAM</strong> in the AWS Management Console search bar
+                                    and navigate to <strong>Users → Create user</strong>.</p>
+
+                                <p class="mb-3"><strong>Step A: Specify User Details</strong></p>
+                                <p class="mb-3" style="font-size: 17px;">Enter a descriptive name (e.g.,
+                                    <code>autocall-s3-user</code>).
+                                </p>
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/aws-integration/aws_user_create_1.png"
+                                        alt="aws_user_create_1" class="img-fluid mb-2" />
+                                </div>
+
+                                <p class="mb-3 mt-3"><strong>Step B: Set Permissions</strong></p>
+                                <p class="mb-3" style="font-size: 17px;">Select <b>Attach policies directly</b>.
+                                </p>
+                                <p class="mb-3" style="font-size: 17px;">Search for <b>AmazonS3FullAccess</b>and ensure
+                                    it is checked.
+                                </p>
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/aws-integration/aws_user_create_2.png"
+                                        alt="aws_user_create_2" class="img-fluid mb-2" />
+                                </div>
+
+                                <p class="mb-3 mt-3"><strong>Step C: Review & Create</strong></p>
+                                <p class="mb-3" style="font-size: 17px;">Verify the details and click <b>Create
+                                        user</b>.
+                                </p>
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/aws-integration/aws_user_create_3.png"
+                                        alt="aws_user_create_3" class="img-fluid mb-2" />
+                                </div>
+
+                                <p class="mb-3 mt-3"><strong>Step D: Generate Access Keys</strong></p>
+                                <p class="mb-3" style="font-size: 17px;">Navigate to the newly created user and click on
+                                    the <b>Security credentials</b> tab.
+                                </p>
+                                <p class="mb-3" style="font-size: 17px;">Scroll down to the <b>Access keys</b> section
+                                    and click <b>Create access key</b>. </p>
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/aws-integration/create_user_3.png" alt="create_user_3"
+                                        class="img-fluid mb-2" />
+                                </div>
+
+                                <p class="mb-3 mt-3" style="font-size: 17px;">Select <b>Application running outside
+                                        AWS</b> from the best practices list and click <b>Next</b>.
+                                </p>
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/aws-integration/access_key_1.png" alt="access_key_1"
+                                        class="img-fluid mb-2" />
+                                </div>
+
+                                <p class="mb-3 mt-3" style="font-size: 17px;">(Optional) Set a description tag and click
+                                    <b>Create access key</b>.
+                                </p>
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/aws-integration/access_key_3.png" alt="access_key_3"
+                                        class="img-fluid mb-2" />
+                                </div>
+
+                                <p class="mb-3 mt-3" style="font-size: 17px;"><b>Critical:</b> Copy your <b>Access Key
+                                        ID</b> and
+                                    <b>Secret Access Key</b> immediately and save them securely.
+                                </p>
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/aws-integration/access_key_2.png" alt="access_key_2"
+                                        class="img-fluid mb-2" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="main-sub-title">3. Storage Monitoring</h5>
+
+                                <p class="mb-3">You can track your storage usage and manage your uploaded files by
+                                    navigating to the <strong>Buckets</strong> section in the Amazon S3 console.</p>
+
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/aws-integration/bucket_name.png" alt="bucket_name"
+                                        class="img-fluid mb-2" />
+                                </div>
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/aws-integration/bucket_object.png" alt="bucket_object"
+                                        class="img-fluid mb-2" />
+                                </div>
+                                <p class="mb-3">click on bucket name to monitor your storage</p>
+
+                                <div class="warning-box small mb-0"> Note : after collecting all the details, go to the
+                                    <strong>Admin Settings</strong> page and click on the <strong>AWS</strong> tab and
+                                    enter the details in the respective fields.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="steps-box">
+                                        <div class="steps-title">
+                                            <div><i class="fa fa-rocket"></i>
+                                                <h5 class="mb-0">What's Next?</h5>
+                                            </div>
+                                            <p>Let's get started — your journey with AutoCall begins here!</p>
+                                        </div>
+                                        <div class="row gy-4">
+                                            <div class="col-md-4 col-sm-6">
+                                                <a href="backend-local-server.html" class="steps-content">
+                                                    <div class="icon"><img src="assets/images/icon/3.png" alt="" />
+                                                    </div>
+                                                    <div class="steps-items">
+                                                        <h5>AI Model</h5>
+                                                        <p>Manage AI Model</p>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-4 col-sm-6">
+                                                <a href="deployment-vps.html" class="steps-content">
+                                                    <div class="icon"><img src="assets/images/icon/2.png" alt="" />
+                                                    </div>
+                                                    <div class="steps-items">
+                                                        <h5>Voice Number</h5>
+                                                        <p>Telephonic Provider</p>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-4 col-sm-6">
+                                                <a href="meta-connection.html" class="steps-content">
+                                                    <div class="icon"><img src="assets/images/icon/2.png" alt="" />
+                                                    </div>
+                                                    <div class="steps-items">
+                                                        <h5>Meta Integration</h5>
+                                                        <p>Configure Meta Services</p>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row footer-theme partition-f">
+                <div class="col-12">Copyright 2026 © AutoCall by pixelstrap</div>
+            </div>
+        </div>
+    </footer>
+    <div class="bg-overlay"></div>
+    <script src="assets/js/jquery-3.5.1.js"></script>
+    <script src="assets/js/bootstrap/bootstrap.bundle.js"></script>
+    <script src="assets/js/icons/feather-icon/feather.js"></script>
+    <script src="assets/js/icons/feather-icon/feather-icon.js"></script>
+    <script src="assets/js/document/main.js"></script>
+    <script src="assets/js/script.js"></script>
+
+    <script src="assets/js/global-search.js"></script>
+</body>
+
+</html>

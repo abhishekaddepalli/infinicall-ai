@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AutoCall - System Settings" />
+  <meta name="author" content="pixelstrap" />
+  <link rel="icon" href="assets/images/logo/side-logo.png" type="image/png" />
+  <title>Tenant Guide Setup - AutoCall Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="assets/css/fontawesome.css" />
+  <link rel="stylesheet" type="text/css" href="assets/css/vendors/feather-icon.css" />
+  <link rel="stylesheet" type="text/css" href="assets/css/vendors/bootstrap.css" />
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+  <link rel="stylesheet" type="text/css" href="assets/css/global-search.css" />
+</head>
+
+<body>
+    <script>
+        let initTheme = localStorage.getItem("theme");
+        if (!initTheme) {
+            initTheme = "light";
+            localStorage.setItem("theme", "light");
+        }
+        if (initTheme === "dark") {
+            document.body.classList.add("dark-only");
+        }
+    </script>
+  <a href="javascript:void(0)" class="sidebar-overlay"></a>
+  <div class="tap-top"><i data-feather="chevrons-up"></i>
+    <p>Top</p>
+  </div>
+
+  <div class="home-section">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container custom-container">
+        <div class="main-menu">
+          <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <i class="fa fa-bars"> </i>
+          </button>
+          <a class="navbar-brand" href="index.html">
+            <img src="assets/images/logo/logo.png">
+            <!-- <h2 style="color: white;">AutoCall</h2> -->
+          </a>
+          <div>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav menu">
+                <li class="nav-item active"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link"
+                    href="https://support.pixelstrap.com/support/pixelstrap/ShowHomePage.do" target="_blank">Support</a>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="https://auto-call-pied.vercel.app/"
+                    target="_blank">Frontend</a></li>
+
+              </ul>
+            </div>
+          </div>
+          <ul class="nav-right">
+            <li>
+              <div class="btn-group">
+                <a class="decrease btn btn-doc" href="#" title="Decrease font size">A-</a><a class="reset btn btn-doc"
+                  href="#" title="Default font size">A</a><a class="increase btn btn-doc" href="#"
+                  title="Increase font size">A+</a>
+              </div>
+            </li>
+            <li>
+              <a class="btn btn-light mode" href="#" title="Dark"><i class="fa fa-moon-o"></i></a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container custom-container">
+      <div class="document"
+        style="background: linear-gradient(135deg, #8cc7e4 30%, #0d5e8b 90%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent !important;">
+        AutoCall Documentation</div>
+      <div class="top-heading">
+        <h2>Ai-Driven Call Automation with AutoCall</h2>
+        <div class="home-search">
+          <input type="search" name="text" placeholder="Search..." />
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container custom-container" id="mainRightNavbar">
+    <div class="document-main">
+
+      <div class="left-sidebar">
+        <div class="card">
+          <div class="card-body">
+            <aside>
+              <button class="btn button-close">
+                <span>Close</span>
+                <i data-feather="x"></i>
+              </button>
+              <ul class="list-unstyled nav-sidebar doc-nav">
+                <li class="nav-item">
+                  <div class="title"><a class="nav-link" href="index.html">Introduction</a></div>
+                </li>
+                <li class="nav-item">
+                  <div class="title"><a class="nav-link" href="prerequisite.html">Prerequisite</a></div>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">AutoCall Installation <i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="overview.html" class="nav-link">Overview</a></li>
+                    <li class="nav-item"><a href="quick-installation.html" class="nav-link">Quick
+                        Installation</a></li>
+
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">Backend Installation <i class="fa fa-angle-down"
+                            aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="backend-local-server.html" class="nav-link">Local
+                            Server</a></li>
+                        <li class="nav-item"><a href="backend-live-server.html" class="nav-link">Virtual
+                            Private
+                            Server</a></li>
+                      </ul>
+                    </li>
+
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">Frontend Installation
+                          <i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="frontend-installation.html" class="nav-link">Local
+                            Server</a></li>
+
+                        <li class="nav-item">
+                          <a href="deployment-vps.html" class="nav-link">Virtual Private Server</a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="deployment-vercel.html" class="nav-link">Vercel</a>
+                        </li>
+                      </ul>
+                    </li>
+
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Core Features<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">AI Voice Call <i class="fa fa-angle-down"
+                            aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="workflow-builder.html" class="nav-link">WorkFlow Builder</a></li>
+                        <li class="nav-item"><a href="agents.html" class="nav-link">AI Assistants</a></li>
+                        <li class="nav-item"><a href="campaign.html" class="nav-link">AI Campaign Hub</a></li>
+                      </ul>
+                    </li>
+
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">SMS Management <i class="fa fa-angle-down"
+                            aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="sms-agents.html" class="nav-link">SMS Assistance</a></li>
+                        <li class="nav-item"><a href="sms-templates.html" class="nav-link">SMS Templates</a></li>
+                        <li class="nav-item"><a href="sms-campaigns.html" class="nav-link">SMS Campaigns</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Integration<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="meta-connection.html" class="nav-link">Meta Whatsapp
+                        Connection</a></li>
+                    <li class="nav-item"><a href="aws-connection.html" class="nav-link">AWS Integration</a></li>
+                    <li class="nav-item"><a href="trunk-integration.html" class="nav-link">Trunk Integration</a></li>
+                    <li class="nav-item"><a href="twilio-integration.html" class="nav-link">Twilio Setup</a></li>
+                    <li class="nav-item"><a href="plivo-integration.html" class="nav-link">Plivo Setup</a></li>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Telephony Provider<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="contact-hub.html" class="nav-link">Contact Hub</a></li>
+                    <li class="nav-item"><a href="contact-group.html" class="nav-link">Contact Group</a></li>
+                    <li class="nav-item"><a href="voice-numbers.html" class="nav-link">Phone Numbers</a></li>
+                    <li class="nav-item"><a href="call-activity.html" class="nav-link">Call Activity</a></li>
+                    <li class="nav-item"><a href="restricted-word.html" class="nav-link">Restricted Word</a></li>
+                    <li class="nav-item"><a href="virtual-phone.html" class="nav-link">Virtual Phone</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Team Management<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="teams.html" class="nav-link">Teams</a></li>
+                    <li class="nav-item"><a href="team-members.html" class="nav-link">Team Members</a></li>
+                    <li class="nav-item"><a href="team-dashboard.html" class="nav-link">Team Dashboard</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Knowledge Base<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="intelligence-hub.html" class="nav-link">Intelligence Hub</a></li>
+                    <li class="nav-item"><a href="conversation-templates.html" class="nav-link">Conversation
+                        Templates</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Toolbox Hub<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="lead-capture.html" class="nav-link">Lead Capture Forms</a></li>
+                    <li class="nav-item"><a href="appointment-booking.html" class="nav-link">Appointment Booking</a>
+                    </li>
+                    <li class="nav-item"><a href="google-workspace.html" class="nav-link">Google Workspace</a></li>
+                    <li class="nav-item"><a href="embeddable-widget.html" class="nav-link">Embeddable Widget</a></li>
+                    <li class="nav-item"><a href="whatsapp-business.html" class="nav-link">WhatsApp Business</a></li>
+                    <li class="nav-item"><a href="event-webhooks.html" class="nav-link">Event Webhooks</a></li>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Admin Module <i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="admin-member-management.html" class="nav-link">Member
+                        Management</a>
+                    </li>
+                    <li class="nav-item"><a href="admin-role-management.html" class="nav-link">Role
+                        Management</a></li>
+                    <li class="nav-item"><a href="admin-plans.html" class="nav-link">Subscription Plans</a></li>
+                    <li class="nav-item"><a href="admin-faq.html" class="nav-link">FAQ Management</a></li>
+                    <li class="nav-item"><a href="admin-pages.html" class="nav-link">Pages Management</a></li>
+                    <li class="nav-item"><a href="admin-blog.html" class="nav-link">Blog Management</a></li>
+                    <li class="nav-item"><a href="admin-testimonials.html" class="nav-link">Testimonials
+                        Management</a>
+                    <li class="nav-item"><a href="admin-settings.html" class="nav-link">System Settings</a></li>
+                    <li class="nav-item"><a href="kyc-configuration.html" class="nav-link">KYC Configuration</a></li>
+                    <li class="nav-item"><a href="api-integration.html" class="nav-link">API Integration</a></li>
+                    <li class="nav-item"><a href="tenant-guide.html" class="nav-link">Tenant Guide Setup</a></li>
+
+
+
+                    <li class="nav-item"><a href="ai-model.html" class="nav-link">AI Models</a></li>
+                    <li class="nav-item"><a href="languages.html" class="nav-link">Languages</a></li>
+                    <li class="nav-item"><a href="settings.html" class="nav-link">Settings</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <div class="title"><a class="nav-link" href="technologies.html">Technologies Used</a></div>
+                </li>
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </div>
+
+      <div class="content card-hover-effect">
+        <div class="row">
+          <div class="col-sm-12">
+            <button class="btn sidebar-button"><i class="fa fa-bars me-2"></i>Menu</button>
+            <h4 class="main-title mb-4"><img src="assets/images/logo/side-logo.png" alt="" /> Tenant Guide Setup</h4>
+          </div>
+          <div class="col-12">
+            <div class="card mb-4">
+              <div class="card-body">
+                <p class="mb-0">The <b>Tenant Guide Setup</b> module allows platform administrators to document and
+                  define custom API endpoints dynamically. These guides serve as the reference documentation presented
+                  to users for platform integration. <br><br> <i
+                    class="fa fa-info-circle text-primary me-2"></i><strong>Note:</strong> Any guide set up in this
+                  module will be automatically rendered and visible to end-users within the <b>API Integration</b>
+                  section of the API Docs.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card mb-4">
+              <div class="card-body">
+                <h5 class="main-sub-title mt-0">1. Creating a New Guide</h5>
+                <p>Begin by creating a new category or collection of APIs. You must specify a descriptive Title and
+                  Description to clarify the guide's purpose.</p>
+                <ul>
+                  <li><strong>Title:</strong> The name of the API grouping (e.g., "SMS Campaigns API").</li>
+                  <li><strong>Description:</strong> A brief summary of what functionalities these endpoints provide.
+                  </li>
+                </ul>
+                <div class="images-box mt-4">
+                  <img src="assets/images/admin-module/tenant-guide-create.png" alt="create-guide"
+                    class="img-fluid mb-2" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card mb-4">
+              <div class="card-body">
+                <h5 class="main-sub-title mt-0">2. Managing API Endpoints</h5>
+                <p>Once a guide is created, you can document its specific endpoints by adding them sequentially.</p>
+                <ul>
+                  <li><strong>Method & URL:</strong> Define the HTTP Method (GET, POST, PUT, DELETE) and the
+                    corresponding URL Path.</li>
+                  <li><strong>Description:</strong> Explain the purpose of the endpoint and any expected parameters.
+                  </li>
+                  <li><strong>Request & Response JSON:</strong> Provide structured examples of the expected Request Body
+                    and Response payload to assist developers.</li>
+                </ul>
+                <div class="images-box mt-4">
+                  <img src="assets/images/admin-module/tenant-guide-setup.png" alt="setup-endpoints"
+                    class="img-fluid mb-2" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card mb-4">
+              <div class="card-body">
+                <h5 class="main-sub-title mt-0">3. Deleting Endpoints and Guides</h5>
+                <p>You can manage outdated documentation by individually removing endpoints or deleting entire guides.
+                </p>
+                <ul>
+                  <li><strong>Individual Endpoint Deletion:</strong> Click the red trash icon next to a specific
+                    endpoint to remove it without affecting the rest of the guide.</li>
+                  <li><strong>Guide Deletion:</strong> Use the delete button at the top of the guide editor to
+                    permanently remove the entire guide and all its associated endpoints.</li>
+                </ul>
+                <div class="images-box mt-4">
+                  <img src="assets/images/admin-module/tenant-guide-endpoint-remove.png" alt="remove-endpoint"
+                    class="img-fluid mb-2" />
+                </div>
+                <div class="images-box mt-4">
+                  <img src="assets/images/admin-module/tenant-guide-delete.png" alt="delete-guide"
+                    class="img-fluid mb-2" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card mb-4 ">
+              <div class="card-body">
+                <h6 class="step-title mt-0 text-primary"><i class="fa fa-lightbulb-o me-2"></i>Key Points for
+                  Administration</h6>
+                <ul class="mb-0">
+                  <li><strong>API Integration Visibility:</strong> All guides created and configured here will be
+                    seamlessly displayed in the <b>API Integration</b> section.</li>
+                  <li><strong>JSON Validation:</strong> Ensure your Request and Response examples are valid JSON
+                    structures to provide clear guidance to developers.</li>
+                  <li><strong>Permanent Deletion:</strong> Removing a guide or endpoint is irreversible. Always verify
+                    before clicking the delete button.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="steps-box">
+                  <div class="steps-title">
+                    <div><i class="fa fa-rocket"></i>
+                      <h5 class="mb-0">What's Next?</h5>
+                    </div>
+                    <p>Continue exploring the Admin Module tools.</p>
+                  </div>
+                  <div class="row gy-4">
+                    <div class="col-md-4 col-sm-6">
+                      <a href="admin-user-management.html" class="steps-content">
+                        <div class="icon"><img src="assets/images/icon/2.png" alt="" /></div>
+                        <div class="steps-items">
+                          <h5>User Management</h5>
+                          <p>Manage Members</p>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="col-md-4 col-sm-6">
+                      <a href="admin-role-management.html" class="steps-content">
+                        <div class="icon"><img src="assets/images/icon/3.png" alt="" /></div>
+                        <div class="steps-items">
+                          <h5>Role Management</h5>
+                          <p>Assign Permissions</p>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="col-md-4 col-sm-6">
+                      <a href="admin-blog.html" class="steps-content">
+                        <div class="icon"><img src="assets/images/icon/2.png" alt="" /></div>
+                        <div class="steps-items">
+                          <h5>Blog Management</h5>
+                          <p>Blog Publish</p>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="container">
+      <div class="row footer-theme partition-f">
+        <div class="col-12">Copyright 2026 © AutoCall by pixelstrap</div>
+      </div>
+    </div>
+  </footer>
+  <div class="bg-overlay"></div>
+  <script src="assets/js/jquery-3.5.1.js"></script>
+  <script src="assets/js/bootstrap/bootstrap.bundle.js"></script>
+  <script src="assets/js/icons/feather-icon/feather.js"></script>
+  <script src="assets/js/icons/feather-icon/feather-icon.js"></script>
+  <script src="assets/js/document/main.js"></script>
+  <script src="assets/js/script.js"></script>
+  <script src="assets/js/global-search.js"></script>
+</body>
+
+</html>

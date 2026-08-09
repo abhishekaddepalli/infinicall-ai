@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AutoCall - Google Workspace" />
+    <meta name="author" content="pixelstrap" />
+    <link rel="icon" href="assets/images/logo/side-logo.png" type="image/png" />
+    <link rel="shortcut icon" href="assets/images/logo/side-logo.png" type="image/png" />
+    <title>Google Workspace - AutoCall Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="assets/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/vendors/feather-icon.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/vendors/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/global-search.css" />
+</head>
+
+<body>
+    <script>
+        let initTheme = localStorage.getItem("theme");
+        if (!initTheme) {
+            initTheme = "light";
+            localStorage.setItem("theme", "light");
+        }
+        if (initTheme === "dark") {
+            document.body.classList.add("dark-only");
+        }
+    </script>
+    <a href="javascript:void(0)" class="sidebar-overlay"></a>
+    <div class="tap-top"><i data-feather="chevrons-up"></i>
+        <p>Top</p>
+    </div>
+
+    <div class="home-section">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container custom-container">
+                <div class="main-menu">
+                    <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fa fa-bars"> </i>
+                    </button>
+                    <a class="navbar-brand" href="index.html">
+                        <img src="assets/images/logo/logo.png">
+                        <!-- <h2 style="color: white;">AutoCall</h2> -->
+                    </a>
+                    <div>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav menu">
+                                <li class="nav-item active"><a class="nav-link" href="index.html">Home</a></li>
+                                <li class="nav-item"><a class="nav-link"
+                                        href="https://support.pixelstrap.com/support/pixelstrap/ShowHomePage.do"
+                                        target="_blank">Support</a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link" href="https://auto-call-pied.vercel.app/"
+                                        target="_blank">Frontend</a></li>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <ul class="nav-right">
+                        <li>
+                            <div class="btn-group">
+                                <a class="decrease btn btn-doc" href="#" title="Decrease font size">A-</a><a
+                                    class="reset btn btn-doc" href="#" title="Default font size">A</a><a
+                                    class="increase btn btn-doc" href="#" title="Increase font size">A+</a>
+                            </div>
+                        </li>
+                        <li>
+                            <a class="btn btn-light mode" href="#" title="Dark"><i class="fa fa-moon-o"></i></a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container custom-container">
+            <div class="document"
+                style="background: linear-gradient(135deg, #8cc7e4 30%, #0d5e8b 90%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent !important;">
+                AutoCall Documentation</div>
+            <div class="top-heading">
+                <h2>Ai-Driven Call Automation with AutoCall</h2>
+                <div class="home-search">
+                    <input type="search" name="text" placeholder="Search..." />
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container custom-container" id="mainRightNavbar">
+        <div class="document-main">
+
+            <div class="left-sidebar">
+                <div class="card">
+                    <div class="card-body">
+                        <aside>
+              <button class="btn button-close">
+                <span>Close</span>
+                <i data-feather="x"></i>
+              </button>
+              <ul class="list-unstyled nav-sidebar doc-nav">
+                <li class="nav-item">
+                  <div class="title"><a class="nav-link" href="index.html">Introduction</a></div>
+                </li>
+                <li class="nav-item">
+                  <div class="title"><a class="nav-link" href="prerequisite.html">Prerequisite</a></div>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">AutoCall Installation <i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="overview.html" class="nav-link">Overview</a></li>
+                    <li class="nav-item"><a href="quick-installation.html" class="nav-link">Quick
+                        Installation</a></li>
+
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">Backend Installation <i class="fa fa-angle-down"
+                            aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="backend-local-server.html" class="nav-link">Local
+                            Server</a></li>
+                        <li class="nav-item"><a href="backend-live-server.html" class="nav-link">Virtual
+                            Private
+                            Server</a></li>
+                      </ul>
+                    </li>
+
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">Frontend Installation
+                          <i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="frontend-installation.html" class="nav-link">Local
+                            Server</a></li>
+
+                        <li class="nav-item">
+                          <a href="deployment-vps.html" class="nav-link">Virtual Private Server</a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="deployment-vercel.html" class="nav-link">Vercel</a>
+                        </li>
+                      </ul>
+                    </li>
+
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Core Features<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">AI Voice Call <i class="fa fa-angle-down"
+                            aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="workflow-builder.html" class="nav-link">WorkFlow Builder</a></li>
+                        <li class="nav-item"><a href="agents.html" class="nav-link">AI Assistants</a></li>
+                        <li class="nav-item"><a href="campaign.html" class="nav-link">AI Campaign Hub</a></li>
+                      </ul>
+                    </li>
+
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">SMS Management <i class="fa fa-angle-down"
+                            aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="sms-agents.html" class="nav-link">SMS Assistance</a></li>
+                        <li class="nav-item"><a href="sms-templates.html" class="nav-link">SMS Templates</a></li>
+                        <li class="nav-item"><a href="sms-campaigns.html" class="nav-link">SMS Campaigns</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Integration<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="meta-connection.html" class="nav-link">Meta Whatsapp
+                        Connection</a></li>
+                    <li class="nav-item"><a href="aws-connection.html" class="nav-link">AWS Integration</a></li>
+                    <li class="nav-item"><a href="trunk-integration.html" class="nav-link">Trunk Integration</a></li>
+                    <li class="nav-item"><a href="twilio-integration.html" class="nav-link">Twilio Setup</a></li>
+                    <li class="nav-item"><a href="plivo-integration.html" class="nav-link">Plivo Setup</a></li>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Telephony Provider<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="contact-hub.html" class="nav-link">Contact Hub</a></li>
+                    <li class="nav-item"><a href="contact-group.html" class="nav-link">Contact Group</a></li>
+                    <li class="nav-item"><a href="voice-numbers.html" class="nav-link">Phone Numbers</a></li>
+                    <li class="nav-item"><a href="call-activity.html" class="nav-link">Call Activity</a></li>
+                    <li class="nav-item"><a href="restricted-word.html" class="nav-link">Restricted Word</a></li>
+                    <li class="nav-item"><a href="virtual-phone.html" class="nav-link">Virtual Phone</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Team Management<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="teams.html" class="nav-link">Teams</a></li>
+                    <li class="nav-item"><a href="team-members.html" class="nav-link">Team Members</a></li>
+                    <li class="nav-item"><a href="team-dashboard.html" class="nav-link">Team Dashboard</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Knowledge Base<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="intelligence-hub.html" class="nav-link">Intelligence Hub</a></li>
+                    <li class="nav-item"><a href="conversation-templates.html" class="nav-link">Conversation
+                        Templates</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Toolbox Hub<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="lead-capture.html" class="nav-link">Lead Capture Forms</a></li>
+                    <li class="nav-item"><a href="appointment-booking.html" class="nav-link">Appointment Booking</a>
+                    </li>
+                    <li class="nav-item"><a href="google-workspace.html" class="nav-link">Google Workspace</a></li>
+                    <li class="nav-item"><a href="embeddable-widget.html" class="nav-link">Embeddable Widget</a></li>
+                    <li class="nav-item"><a href="whatsapp-business.html" class="nav-link">WhatsApp Business</a></li>
+                    <li class="nav-item"><a href="event-webhooks.html" class="nav-link">Event Webhooks</a></li>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Admin Module <i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="admin-member-management.html" class="nav-link">Member
+                        Management</a>
+                    </li>
+                    <li class="nav-item"><a href="admin-role-management.html" class="nav-link">Role
+                        Management</a></li>
+                    <li class="nav-item"><a href="admin-plans.html" class="nav-link">Subscription Plans</a></li>
+                    <li class="nav-item"><a href="admin-faq.html" class="nav-link">FAQ Management</a></li>
+                    <li class="nav-item"><a href="admin-pages.html" class="nav-link">Pages Management</a></li>
+                    <li class="nav-item"><a href="admin-blog.html" class="nav-link">Blog Management</a></li>
+                    <li class="nav-item"><a href="admin-testimonials.html" class="nav-link">Testimonials
+                        Management</a>
+                    <li class="nav-item"><a href="admin-settings.html" class="nav-link">System Settings</a></li>
+                    <li class="nav-item"><a href="kyc-configuration.html" class="nav-link">KYC Configuration</a></li>
+                    <li class="nav-item"><a href="api-integration.html" class="nav-link">API Integration</a></li>
+                    <li class="nav-item"><a href="tenant-guide.html" class="nav-link">Tenant Guide Setup</a></li>
+
+
+
+                    <li class="nav-item"><a href="ai-model.html" class="nav-link">AI Models</a></li>
+                    <li class="nav-item"><a href="languages.html" class="nav-link">Languages</a></li>
+                    <li class="nav-item"><a href="settings.html" class="nav-link">Settings</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <div class="title"><a class="nav-link" href="technologies.html">Technologies Used</a></div>
+                </li>
+              </ul>
+            </aside>
+                    </div>
+                </div>
+            </div>
+            <div class="content card-hover-effect">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button class="btn sidebar-button"><i class="fa fa-bars me-2"></i>Menu</button>
+                        <h4 class="main-title mb-4"><img src="assets/images/logo/side-logo.png" alt="" />Google
+                            Workspace
+                        </h4>
+                    </div>
+
+                    <div class="col-12 os-content">
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="main-sub-title mt-0">Overview</h5>
+                                <p class="text-muted mb-3">
+                                    Authenticate your Google environment to enable frictionless sync across Sheets,
+                                    Drive, and Calendar. By integrating Google Workspace, you can effortlessly push
+                                    leads to Google Sheets, pull dynamic data, and manage documents seamlessly within
+                                    AutoCall.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="main-sub-title">Google Cloud API Setup</h5>
+                                <p class="text-muted mb-3">Before connecting your Google Account, you need to create a
+                                    Google Cloud Project and obtain OAuth credentials.</p>
+
+                                <h6 class="mb-2">Step 1: Create a Google Cloud Project</h6>
+                                <ol class="mb-3">
+                                    <li>Go to <a href="https://console.cloud.google.com"
+                                            target="_blank">console.cloud.google.com</a>.</li>
+                                    <li>Click <b>Select a project</b> &rarr; <b>New Project</b>.</li>
+                                    <li>Name your project (e.g., <code>Autocall</code>) and click <b>Create</b>.</li>
+                                </ol>
+
+                                <h6 class="mb-2">Step 2: Enable Required APIs</h6>
+                                <ol class="mb-3">
+                                    <li>In the sidebar, go to <b>APIs & Services</b> &rarr; <b>Library</b>.</li>
+                                    <li>Search for and <b>Enable</b> these two APIs:
+                                        <ul>
+                                            <li><b>Google Calendar API</b></li>
+                                            <li><b>Google Sheets API</b></li>
+                                        </ul>
+                                    </li>
+                                </ol>
+
+                                <h6 class="mb-2">Step 3: Create OAuth 2.0 Credentials</h6>
+                                <ol class="mb-3">
+                                    <li>Go to <b>APIs & Services</b> &rarr; <b>Credentials</b>.</li>
+                                    <li>Click <b>Create Credentials</b> &rarr; <b>OAuth client ID</b>.</li>
+                                    <li>If prompted, configure the <b>OAuth consent screen</b> first:
+                                        <ul>
+                                            <li>Set User Type to <b>External</b>.</li>
+                                            <li>Fill in App name, User support email, and Developer contact.</li>
+                                            <li>Under <b>Scopes</b>, add:
+                                                <code>https://www.googleapis.com/auth/calendar</code> and
+                                                <code>https://www.googleapis.com/auth/spreadsheets</code>
+                                            </li>
+                                            <li>Under <b>Test users</b>, add the Google account you want to use.</li>
+                                        </ul>
+                                    </li>
+                                    <li>Back in <b>Create OAuth client ID</b>:
+                                        <ul>
+                                            <li>Application type: <b>Web application</b>.</li>
+                                            <li>Add an <b>Authorized redirect URI</b> (e.g.,
+                                                <code>https://yourdomain.com/api/appointments/google/callback</code>).
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>Click <b>Create</b>. Copy your <b>Client ID</b> and <b>Client Secret</b>.</li>
+                                </ol>
+
+                                <h6 class="mb-2">Adding Credentials to AutoCall</h6>
+                                <p class="mb-3">Once you have your credentials, navigate to the <b>Settings &rarr;
+                                        Google Accounts</b> section in your AutoCall Dashboard. Paste your <b>Client
+                                        ID</b>, <b>Client Secret</b>, and configure the <b>Redirect URI</b> to complete
+                                    the integration.</p>
+
+                                <div class="images-box mt-4 mb-4">
+                                    <!-- Placeholder image for Google Workspace Configuration -->
+                                    <img src="assets/images/google-workspace.png"
+                                        alt="Google Account Configuration Settings"
+                                        class="img-fluid mb-2 border rounded" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="main-sub-title">Google Workspace Dashboard</h5>
+                                <p>Access the Google Workspace module from:</p>
+                                <ul>
+                                    <li>Toolbox Hub > Google Workspace > Configure </li>
+                                </ul>
+                                <div class="images-box mt-4 mb-4">
+                                    <img src="assets/images/tool-box/overview.png" alt="Toolbox Hub Overview"
+                                        class="img-fluid mb-2" />
+                                </div>
+                                <p class="mb-3">The main dashboard lists all connected Google Accounts. From here, you
+                                    can manage the sync status and access individual apps like Google Sheets.</p>
+
+                                <h6 class="mb-3">The dashboard actions include:</h6>
+                                <ol>
+                                    <li><strong>Manage Google Sheets (First Icon) :</strong> Click the green spreadsheet
+                                        icon to view and manage all sheets linked to this specific Google Account.</li>
+                                    <li><strong>Manage Google Calendar (Second Icon) :</strong> Click the blue calendar
+                                        icon to view and manage all calendars linked to this specific Google Account.
+                                    </li>
+                                    <li><strong>Remove Account :</strong> Disconnect the Google account entirely from
+                                        your AutoCall workspace.</li>
+                                </ol>
+                                <p class="mb-3">Click on <b>+ Connect Google Account</b> at the top right to
+                                    authenticate a new workspace.</p>
+
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/tool-box/google-workSpace.png"
+                                        alt="Google Workspace Dashboard" class="img-fluid mb-2" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="main-sub-title">1. Manage Google Sheets</h5>
+                                <p class="mb-3">Clicking the <b>Manage Google Sheets</b> icon opens the Sheets Dashboard
+                                    for that account. This view displays all your configured spreadsheets, showing their
+                                    connection status and Google Spreadsheet ID.</p>
+
+                                <ul>
+                                    <li><strong>Connection Name :</strong> Your internal label for the spreadsheet.</li>
+                                    <li><strong>Spreadsheet ID :</strong> The unique identifier linking the sheet.</li>
+                                    <li><strong>Linked Status :</strong> Indicates whether the sheet is actively linked
+                                        to AutoCall.</li>
+                                </ul>
+
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/tool-box/google-sheet.png" alt="Manage Google Sheets"
+                                        class="img-fluid mb-2" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="main-sub-title">2. Create Google Sheet</h5>
+                                <p class="mb-3">Click <b>+ Create Sheet</b> to link an existing sheet or automatically
+                                    create a new one in your Google Drive.</p>
+                                <ul>
+                                    <li><strong>Google Account :</strong> Ensure the correct account is selected.</li>
+                                    <li><strong>Create in Google Drive :</strong> Toggle this on to have AutoCall
+                                        instantly generate a new spreadsheet in your Drive, instead of linking an old
+                                        one.</li>
+                                    <li><strong>Data Range & Tab Name :</strong> Specify exactly where AutoCall should
+                                        read/write data (e.g., "Sheet1", range "A:E").</li>
+                                    <li><strong>Column Headers :</strong> Define a comma-separated list of columns
+                                        (e.g., Name, Phone, Date, Time, Status). AutoCall uses these headers to
+                                        structure the data.</li>
+                                </ul>
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/tool-box/create-sheet.png" alt="Create Google Sheet"
+                                        class="img-fluid mb-2" />
+                                </div>
+                                <div class="warning-box small mb-0"> Note : If you do not want to create a new sheet,
+                                    you can sync an existing sheet with your account by fetching the sheet from your
+                                    google Sheet</div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="main-sub-title">3. Edit Sheet Data</h5>
+                                <p class="mb-3">You can view and modify the sheet data directly within AutoCall by
+                                    clicking the <b>Edit (Pencil)</b> icon. Add rows, adjust columns, and click <b>Save
+                                        to Google</b> to push changes instantly back to your live Google Sheet.</p>
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/tool-box/edit-sheet.png" alt="Edit Sheet Data"
+                                        class="img-fluid mb-2" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="main-sub-title">4. Delete Google Sheet</h5>
+                                <p class="mb-3">If you need to remove a connection, click the <b>Delete (Trash)</b>
+                                    icon. You will be prompted with two safe choices:</p>
+                                <ul>
+                                    <li><strong>Remove from System Only :</strong> Deletes the connection in AutoCall
+                                        but keeps the actual file untouched in your Google Drive.</li>
+                                    <li><strong>Delete from System and Google :</strong> Permanently deletes the file
+                                        from both AutoCall and your Google Drive account.</li>
+                                </ul>
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/tool-box/delete-sheet.png" alt="Delete Google Sheet"
+                                        class="img-fluid mb-2" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="main-sub-title mt-0">Key Points</h5>
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2"><i class="fa fa-check text-success me-2"></i>
+                                            <strong>Frictionless Sync:</strong> Keep your leads and call data in perfect
+                                            harmony with your Google Workspace.
+                                        </li>
+                                        <li class="mb-2"><i class="fa fa-check text-success me-2"></i> <strong>Direct
+                                                Creation:</strong> Generate properly formatted Google Sheets directly
+                                            from the AutoCall interface.</li>
+                                        <li class="mb-2"><i class="fa fa-check text-success me-2"></i> <strong>In-App
+                                                Editing:</strong> Make quick data adjustments without ever needing to
+                                            open a new tab for Google Sheets.</li>
+                                        <li class="mb-2"><i class="fa fa-check text-success me-2"></i> <strong>Safe
+                                                Deletion:</strong> Protect your data by choosing whether to delete files
+                                            entirely or just unlink them.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="steps-box">
+                                        <div class="steps-title">
+                                            <div><i class="fa fa-rocket"></i>
+                                                <h5 class="mb-0">What's Next?</h5>
+                                            </div>
+                                            <p>Let's get started — your journey with AutoCall begins here!</p>
+                                        </div>
+                                        <div class="row gy-4">
+                                            <div class="col-md-4 col-sm-6">
+                                                <a href="appointment-booking.html" class="steps-content">
+                                                    <div class="icon"><img src="assets/images/icon/1.png" alt="" />
+                                                    </div>
+                                                    <div class="steps-items">
+                                                        <h5>Appointment Booking</h5>
+                                                        <p>Manage Appointments</p>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-4 col-sm-6">
+                                                <a href="lead-capture.html" class="steps-content">
+                                                    <div class="icon"><img src="assets/images/icon/2.png" alt="" />
+                                                    </div>
+                                                    <div class="steps-items">
+                                                        <h5>Lead Capture</h5>
+                                                        <p>Manage Forms</p>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-4 col-sm-6">
+                                                <a href="embeddable-widget.html" class="steps-content">
+                                                    <div class="icon"><img src="assets/images/icon/4.png" alt="" />
+                                                    </div>
+                                                    <div class="steps-items">
+                                                        <h5>Widgets</h5>
+                                                        <p>Manage Widgets</p>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row footer-theme partition-f">
+                <div class="col-12">Copyright 2026 © AutoCall by pixelstrap</div>
+            </div>
+        </div>
+    </footer>
+    <div class="bg-overlay"></div>
+    <script src="assets/js/jquery-3.5.1.js"></script>
+    <script src="assets/js/bootstrap/bootstrap.bundle.js"></script>
+    <script src="assets/js/icons/feather-icon/feather.js"></script>
+    <script src="assets/js/icons/feather-icon/feather-icon.js"></script>
+    <script src="assets/js/document/main.js"></script>
+    <script src="assets/js/script.js"></script>
+
+    <script src="assets/js/global-search.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AutoCall - Backend Local Setup" />
+  <meta name="author" content="pixelstrap" />
+  <link rel="icon" href="assets/images/logo/side-logo.png" type="image/png" />
+  <link rel="shortcut icon" href="assets/images/logo/side-logo.png" type="image/png" />
+  <title>Backend Local Server - AutoCall Documentation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet" />
+
+  <link rel="stylesheet" type="text/css" href="assets/css/fontawesome.css" />
+
+  <link rel="stylesheet" type="text/css" href="assets/css/vendors/feather-icon.css" />
+
+  <link rel="stylesheet" type="text/css" href="assets/css/vendors/bootstrap.css" />
+
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+
+  <link rel="stylesheet" type="text/css" href="assets/css/global-search.css" />
+</head>
+
+<body>
+    <script>
+        let initTheme = localStorage.getItem("theme");
+        if (!initTheme) {
+            initTheme = "light";
+            localStorage.setItem("theme", "light");
+        }
+        if (initTheme === "dark") {
+            document.body.classList.add("dark-only");
+        }
+    </script>
+  <a href="javascript:void(0)" class="sidebar-overlay"></a>
+  <div class="tap-top"><i data-feather="chevrons-up"></i>
+    <p>Top</p>
+  </div>
+
+  <div class="home-section">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container custom-container">
+        <div class="main-menu">
+          <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <i class="fa fa-bars"> </i>
+          </button>
+          <a class="navbar-brand" href="index.html">
+            <img src="assets/images/logo/logo.png">
+            <!-- <h2 style="color: white;">AutoCall</h2> -->
+          </a>
+          <div>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav menu">
+                <li class="nav-item active"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link"
+                    href="https://support.pixelstrap.com/support/pixelstrap/ShowHomePage.do" target="_blank">Support</a>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="https://auto-call-pied.vercel.app/"
+                    target="_blank">Frontend</a></li>
+
+              </ul>
+            </div>
+          </div>
+          <ul class="nav-right">
+            <li>
+              <div class="btn-group">
+                <a class="decrease btn btn-doc" href="#" title="Decrease font size">A-</a><a class="reset btn btn-doc"
+                  href="#" title="Default font size">A</a><a class="increase btn btn-doc" href="#"
+                  title="Increase font size">A+</a>
+              </div>
+            </li>
+            <li>
+              <a class="btn btn-light mode" href="#" title="Dark"><i class="fa fa-moon-o"></i></a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container custom-container">
+      <div class="document"
+        style="background: linear-gradient(135deg, #8cc7e4 30%, #0d5e8b 90%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent !important;">
+        AutoCall Documentation</div>
+      <div class="top-heading">
+        <h2>Ai-Driven Call Automation with AutoCall</h2>
+        <div class="home-search">
+          <input type="search" name="text" placeholder="Search..." />
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container custom-container" id="mainRightNavbar">
+    <div class="document-main">
+
+      <div class="left-sidebar">
+        <div class="card">
+          <div class="card-body">
+            <aside>
+              <button class="btn button-close">
+                <span>Close</span>
+                <i data-feather="x"></i>
+              </button>
+              <ul class="list-unstyled nav-sidebar doc-nav">
+                <li class="nav-item">
+                  <div class="title"><a class="nav-link" href="index.html">Introduction</a></div>
+                </li>
+                <li class="nav-item">
+                  <div class="title"><a class="nav-link" href="prerequisite.html">Prerequisite</a></div>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">AutoCall Installation <i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="overview.html" class="nav-link">Overview</a></li>
+                    <li class="nav-item"><a href="quick-installation.html" class="nav-link">Quick
+                        Installation</a></li>
+
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">Backend Installation <i class="fa fa-angle-down"
+                            aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="backend-local-server.html" class="nav-link">Local
+                            Server</a></li>
+                        <li class="nav-item"><a href="backend-live-server.html" class="nav-link">Virtual
+                            Private
+                            Server</a></li>
+                      </ul>
+                    </li>
+
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">Frontend Installation
+                          <i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="frontend-installation.html" class="nav-link">Local
+                            Server</a></li>
+
+                        <li class="nav-item">
+                          <a href="deployment-vps.html" class="nav-link">Virtual Private Server</a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="deployment-vercel.html" class="nav-link">Vercel</a>
+                        </li>
+                      </ul>
+                    </li>
+
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Core Features<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">AI Voice Call <i class="fa fa-angle-down"
+                            aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="workflow-builder.html" class="nav-link">WorkFlow Builder</a></li>
+                        <li class="nav-item"><a href="agents.html" class="nav-link">AI Assistants</a></li>
+                        <li class="nav-item"><a href="campaign.html" class="nav-link">AI Campaign Hub</a></li>
+                      </ul>
+                    </li>
+
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">SMS Management <i class="fa fa-angle-down"
+                            aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="sms-agents.html" class="nav-link">SMS Assistance</a></li>
+                        <li class="nav-item"><a href="sms-templates.html" class="nav-link">SMS Templates</a></li>
+                        <li class="nav-item"><a href="sms-campaigns.html" class="nav-link">SMS Campaigns</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Integration<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="meta-connection.html" class="nav-link">Meta Whatsapp
+                        Connection</a></li>
+                    <li class="nav-item"><a href="aws-connection.html" class="nav-link">AWS Integration</a></li>
+                    <li class="nav-item"><a href="trunk-integration.html" class="nav-link">Trunk Integration</a></li>
+                    <li class="nav-item"><a href="twilio-integration.html" class="nav-link">Twilio Setup</a></li>
+                    <li class="nav-item"><a href="plivo-integration.html" class="nav-link">Plivo Setup</a></li>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Telephony Provider<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="contact-hub.html" class="nav-link">Contact Hub</a></li>
+                    <li class="nav-item"><a href="contact-group.html" class="nav-link">Contact Group</a></li>
+                    <li class="nav-item"><a href="voice-numbers.html" class="nav-link">Phone Numbers</a></li>
+                    <li class="nav-item"><a href="call-activity.html" class="nav-link">Call Activity</a></li>
+                    <li class="nav-item"><a href="restricted-word.html" class="nav-link">Restricted Word</a></li>
+                    <li class="nav-item"><a href="virtual-phone.html" class="nav-link">Virtual Phone</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Team Management<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="teams.html" class="nav-link">Teams</a></li>
+                    <li class="nav-item"><a href="team-members.html" class="nav-link">Team Members</a></li>
+                    <li class="nav-item"><a href="team-dashboard.html" class="nav-link">Team Dashboard</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Knowledge Base<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="intelligence-hub.html" class="nav-link">Intelligence Hub</a></li>
+                    <li class="nav-item"><a href="conversation-templates.html" class="nav-link">Conversation
+                        Templates</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Toolbox Hub<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="lead-capture.html" class="nav-link">Lead Capture Forms</a></li>
+                    <li class="nav-item"><a href="appointment-booking.html" class="nav-link">Appointment Booking</a>
+                    </li>
+                    <li class="nav-item"><a href="google-workspace.html" class="nav-link">Google Workspace</a></li>
+                    <li class="nav-item"><a href="embeddable-widget.html" class="nav-link">Embeddable Widget</a></li>
+                    <li class="nav-item"><a href="whatsapp-business.html" class="nav-link">WhatsApp Business</a></li>
+                    <li class="nav-item"><a href="event-webhooks.html" class="nav-link">Event Webhooks</a></li>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Admin Module <i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="admin-member-management.html" class="nav-link">Member
+                        Management</a>
+                    </li>
+                    <li class="nav-item"><a href="admin-role-management.html" class="nav-link">Role
+                        Management</a></li>
+                    <li class="nav-item"><a href="admin-plans.html" class="nav-link">Subscription Plans</a></li>
+                    <li class="nav-item"><a href="admin-faq.html" class="nav-link">FAQ Management</a></li>
+                    <li class="nav-item"><a href="admin-pages.html" class="nav-link">Pages Management</a></li>
+                    <li class="nav-item"><a href="admin-blog.html" class="nav-link">Blog Management</a></li>
+                    <li class="nav-item"><a href="admin-testimonials.html" class="nav-link">Testimonials
+                        Management</a>
+                    <li class="nav-item"><a href="admin-settings.html" class="nav-link">System Settings</a></li>
+                    <li class="nav-item"><a href="kyc-configuration.html" class="nav-link">KYC Configuration</a></li>
+                    <li class="nav-item"><a href="api-integration.html" class="nav-link">API Integration</a></li>
+                    <li class="nav-item"><a href="tenant-guide.html" class="nav-link">Tenant Guide Setup</a></li>
+
+
+
+                    <li class="nav-item"><a href="ai-model.html" class="nav-link">AI Models</a></li>
+                    <li class="nav-item"><a href="languages.html" class="nav-link">Languages</a></li>
+                    <li class="nav-item"><a href="settings.html" class="nav-link">Settings</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <div class="title"><a class="nav-link" href="technologies.html">Technologies Used</a></div>
+                </li>
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </div>
+
+      <div class="content card-hover-effect">
+        <div class="row">
+          <div class="col-sm-12">
+            <button class="btn sidebar-button"><i class="fa fa-bars me-2"></i>Menu</button>
+            <h4 class="main-title mb-4"><img src="assets/images/logo/side-logo.png" alt="" /> Local Server Deployment
+            </h4>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <p>These are the steps required to set up <b>AutoCall</b> application manually on any environment
+                  (Local
+                  System or Live Server).</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="d-flex justify-content-center mb-4">
+              <div class="d-flex gap-3" aria-label="OS Toggle">
+                <button type="button" class="btn btn-custom-os active os-toggle px-4 shadow-sm"
+                  style="border-radius: 10px;" data-os="windows"><i class="fa fa-windows me-1"></i> Windows</button>
+                <button type="button" class="btn btn-outline-custom-os os-toggle px-4 shadow-sm"
+                  style="border-radius: 10px;" data-os="macos"><i class="fa fa-apple me-1"></i> macOS</button>
+                <button type="button" class="btn btn-outline-custom-os os-toggle px-4 shadow-sm"
+                  style="border-radius: 10px;" data-os="linux"><i class="fa fa-linux me-1"></i> Linux</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 os-content" id="windows-content">
+
+            <div class="card mb-4">
+              <div class="card-body">
+                <h5 class="main-sub-title mt-0">Getting Started</h5>
+                <p class="text-muted mb-3">Follow these steps to set up the environment on Windows.</p>
+                <ul class="mb-0">
+                  <li>MongoDB Installation</li>
+                  <li>Node.js Installation</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="card mb-4">
+              <div class="card-body">
+
+                <h5 class="main-sub-title">MongoDB Setup</h5>
+
+                <p class="mb-3"><b>1. Download & Install MongoDB Community Server</b></p>
+                <p class="text-muted small">
+                  Go to:
+                  <a href="https://www.mongodb.com/try/download/community" target="_blank">
+                    MongoDB Community Download
+                  </a>
+                </p>
+
+                <ul class="text-muted small">
+                  <li>Version: Latest stable (e.g. 7.x or 8.x)</li>
+                  <li>Platform: Windows</li>
+                  <li>Package: MSI</li>
+                </ul>
+
+                <p class="text-muted small">During installation choose:</p>
+
+                <ul class="text-muted small">
+                  <li>Complete setup (recommended)</li>
+                  <li>Check <b>Install MongoDB as a Service</b></li>
+                  <li>Check <b>Install MongoDB Compass</b> (GUI)</li>
+                </ul>
+
+                <p class="mt-4 mb-2"><b>2. Add MongoDB to PATH</b></p>
+
+                <div class="code-block p-3 bg-light rounded border mb-3">
+                  <pre class="mb-0"><code>C:\Program Files\MongoDB\Server\&lt;version&gt;\bin</code></pre>
+                </div>
+
+                <p class="mt-4 mb-2"><b>3. Verify Installation</b></p>
+
+                <div class="code-block p-3 bg-light rounded border">
+                  <pre class="mb-0"><code>mongod --version
+mongosh --version</code></pre>
+                </div>
+
+                <p class="mt-4 mb-2"><b>4. Create Database & User</b></p>
+
+                <div class="code-block p-3 bg-light rounded border">
+                  <pre class="mb-0"><code><span class="text-info"># Open mongosh</span>
+mongosh
+
+<span class="text-info">// Switch to admin</span>
+use admin
+
+<span class="text-info">// Create admin user</span>
+db.createUser({
+  user: "admin",
+  pwd: "StrongAdminPass123!",
+  roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+})
+
+<span class="text-info">// Create application database and user</span>
+use autocall
+
+db.createUser({
+  user: "autocall_user",
+  pwd: "Your_strong_password",
+  roles: [ { role: "readWrite", db: "autocall" } ]
+})</code></pre>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+
+                <h5 class="main-sub-title">Node.js Setup</h5>
+
+                <p class="mb-3"><b>1. Download & Install Node.js (LTS)</b></p>
+
+                <p class="text-muted small">
+                  Download from
+                  <a href="https://nodejs.org/" target="_blank">nodejs.org</a>
+                  and choose the <b>LTS</b> version.
+                </p>
+
+                <p class="mt-4 mb-2"><b>2. Verify Installation</b></p>
+
+                <div class="code-block p-3 bg-light rounded border mb-3">
+                  <pre class="mb-0"><code>node -v
+npm -v</code></pre>
+                </div>
+                <p class="text-muted small"> Successful installation will output version numbers (e.g., v22.x.x).</p>
+
+                <p class="mt-4 mb-2"><b>3. Install PM2</b></p>
+                <p class="text-muted small"> Essential for production to keep your app running in the background.</p>
+                <div class="code-block p-3 bg-light rounded border">
+                  <pre class="mb-0"><code>npm install pm2 -g
+pm2 -v</code></pre>
+                </div>
+
+                <div class="p-3 bg-primary-light rounded border-start border-4 border-primary mt-4 mb-0">
+                  <p class="small mb-0">
+                    <b>Connection String:</b>
+                    <code class="text-black">
+            mongodb://autocall_user:YOUR_PASSWORD@localhost:27017/autocall
+          </code>
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+
+                <h5 class="main-sub-title">How to Run Seeding</h5>
+
+                <p class="text-muted small"> To seed all data to the database, navigate to your backend directory and
+                  run the following command: </p>
+
+                <div class="code-block p-3 bg-light rounded border mb-3">
+                  <pre class="mb-0"><code>npm run seed</code></pre>
+                </div>
+
+                <div class="warning-box small mb-0"> Note : Ensure your .env file is correctly configured with
+                  your
+                  MongoDB connection string before running the seed command.
+                </div>
+
+                <div class="p-3 bg-primary-light rounded border-start border-4 border-primary small mt-3 mb-0"><i
+                    class="fa fa-info-circle me-2"></i> Tip: After updating the
+                  .env file, make sure to rebuild and restart your application:
+                  <p>For Backend: pm2 restart all</p>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-12 os-content" id="macos-content" style="display: none;">
+
+            <div class="card mb-4">
+              <div class="card-body">
+
+                <h5 class="main-sub-title mt-0">Getting Started</h5>
+
+                <p class="text-muted mb-3">
+                  Follow these steps to set up the environment on macOS.
+                </p>
+
+                <ul class="mb-0">
+                  <li>MongoDB Installation (via Homebrew)</li>
+                  <li>Node.js Installation</li>
+                </ul>
+
+              </div>
+            </div>
+
+            <div class="card mb-4">
+              <div class="card-body">
+
+                <h5 class="main-sub-title">MongoDB Setup</h5>
+
+                <p class="mb-3"><b>1. Install MongoDB using Homebrew</b></p>
+
+                <div class="code-block p-3 bg-light rounded border mb-3">
+                  <pre class="mb-0"><code>brew update
+brew tap mongodb/brew
+brew install mongodb-community@8.0
+brew services start mongodb-community</code></pre>
+                </div>
+
+                <p class="mt-4 mb-2"><b>2. Verify Installation</b></p>
+
+                <div class="code-block p-3 bg-light rounded border">
+                  <pre class="mb-0"><code>mongod --version
+mongosh --version</code></pre>
+                </div>
+
+                <p class="mt-4 mb-2"><b>3. Create Database & User</b></p>
+
+                <div class="code-block p-3 bg-light rounded border">
+                  <pre class="mb-0"><code>mongosh
+
+use admin
+
+db.createUser({
+  user: "admin",
+  pwd: "StrongAdminPass123!",
+  roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+})
+
+use autocall
+
+db.createUser({
+  user: "autocall_user",
+  pwd: "Your_strong_password",
+  roles: [ { role: "readWrite", db: "autocall" } ]
+})</code></pre>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+
+                <h5 class="main-sub-title">Node.js Setup</h5>
+
+                <p class="mb-3"><b>1. Download & Install Node.js (LTS)</b></p>
+
+                <p class="text-muted small">
+                  Download the <b>.pkg</b> installer from
+                  <a href="https://nodejs.org/" target="_blank">nodejs.org</a>.
+                </p>
+
+                <p class="mt-4 mb-2"><b>2. Verify Installation</b></p>
+
+                <div class="code-block p-3 bg-light rounded border">
+                  <pre class="mb-0"><code>node -v
+npm -v</code></pre>
+                </div>
+                <p class="text-muted small"> Successful installation will output version numbers (e.g., v22.x.x).</p>
+
+                <p class="mt-4 mb-2"><b>3. Install PM2</b></p>
+                <p class="text-muted small"> Essential for production to keep your app running in the background.</p>
+                <div class="code-block p-3 bg-light rounded border">
+                  <pre class="mb-0"><code>npm install pm2 -g
+pm2 -v</code></pre>
+                </div>
+
+                <div class="p-3 bg-primary-light rounded border-start border-4 border-primary mt-4 mb-0">
+                  <p class="small mb-0">
+                    <b>Connection String:</b>
+                    <code>mongodb://autocall:Your_password@localhost:27017/autocall</code>
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+
+                <h5 class="main-sub-title">How to Run Seeding</h5>
+
+                <p class="text-muted small"> To seed all data to the database, navigate to your backend directory and
+                  run the following command: </p>
+
+                <div class="code-block p-3 bg-light rounded border mb-3">
+                  <pre class="mb-0"><code>npm run seed</code></pre>
+                </div>
+
+                <div class="warning-box small mb-0"> Note : Ensure your .env file is correctly configured with
+                  your
+                  MongoDB connection string before running the seed command.
+                </div>
+
+                <div class="p-3 bg-primary-light rounded border-start border-4 border-primary small mt-3 mb-0"><i
+                    class="fa fa-info-circle me-2"></i> Tip: After updating the
+                  .env file, make sure to rebuild and restart your application:
+                  <p>For Backend: pm2 restart all</p>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-12 os-content" id="linux-content" style="display: none;">
+
+            <div class="card mb-4">
+              <div class="card-body">
+
+                <h5 class="main-sub-title mt-0">Getting Started</h5>
+
+                <p class="text-muted mb-3">
+                  Follow these steps to set up the environment on Linux.
+                </p>
+                <p class="text-muted mb-3">
+                  Recommended for Ubuntu 22.04 / 24.04 and other Debian-based distributions.
+                </p>
+
+                <p>
+
+                <ul class="mb-0">
+                  <li>MongoDB Installation (via APT)</li>
+                  <li>Configure Service</li>
+                </ul>
+
+              </div>
+            </div>
+
+            <div class="card mb-4">
+              <div class="card-body">
+
+                <h5 class="main-sub-title">MongoDB Setup</h5>
+
+                <p class="mb-3"><b>1. Install MongoDB Community Edition</b></p>
+
+                <div class="code-block p-3 bg-light rounded border mb-3">
+                  <pre class="mb-0 custom-scrollbar" style="white-space: pre-wrap; word-wrap: break-word;"><code>sudo apt-get install gnupg curl
+curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg --dearmor
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] 
+https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+sudo apt-get update
+sudo apt-get install -y mongodb-org
+                  </code></pre>
+                </div>
+
+                <p class="mt-4 mb-2"><b>2. Start & Enable MongoDB
+
+                  </b></p>
+
+                <div class="code-block p-3 bg-light rounded border">
+                  <pre class="mb-0"><code>sudo systemctl start mongod
+sudo systemctl enable mongod
+</code></pre>
+                </div>
+
+                <p class="mt-4 mb-2"><b>3. Create Database & User</b></p>
+
+                <div class="code-block p-3 bg-light rounded border">
+                  <pre class="mb-0"><code>mongosh
+
+use admin
+
+db.createUser({
+  user: "admin",
+  pwd: "StrongAdminPass123!",
+  roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+})
+
+use autocall
+
+db.createUser({
+  user: "autocall_user",
+  pwd: "Your_strong_password",
+  roles: [ { role: "readWrite", db: "autocall" } ]
+})</code></pre>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+
+                <h5 class="main-sub-title">Node.js Setup</h5>
+
+                <p class="mb-3"><b>1. Download & Install Node.js (LTS)</b></p>
+
+                <p class="text-muted small">
+                  Download the <b>.pkg</b> installer from
+                  <a href="https://nodejs.org/" target="_blank">nodejs.org</a>.
+                </p>
+
+                <p class="mt-4 mb-2"><b>2. Verify Installation</b></p>
+
+                <div class="code-block p-3 bg-light rounded border">
+                  <pre class="mb-0"><code>node -v
+npm -v</code></pre>
+                </div>
+
+                <p class="text-muted small"> Successful installation will output version numbers (e.g., v22.x.x).</p>
+
+                <p class="mt-4 mb-2"><b>3. Install PM2</b></p>
+                <p class="text-muted small"> Essential for production to keep your app running in the background.</p>
+                <div class="code-block p-3 bg-light rounded border">
+                  <pre class="mb-0"><code>npm install pm2 -g
+pm2 -v</code></pre>
+                </div>
+
+                <div class="p-3 bg-primary-light rounded border-start border-4 border-primary mt-4 mb-0">
+                  <p class="small mb-0">
+                    <b>Connection String:</b>
+                    <code>mongodb://autocall_user:Your_password@localhost:27017/autocall</code>
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+
+                <h5 class="main-sub-title">How to Run Seeding</h5>
+
+                <p class="text-muted small"> To seed all data to the database, navigate to your backend directory and
+                  run the following command: </p>
+
+                <div class="code-block p-3 bg-light rounded border mb-3">
+                  <pre class="mb-0"><code>npm run seed</code></pre>
+                </div>
+
+                <div class="warning-box small mb-0"> Note: Ensure your .env file is correctly configured with
+                  your
+                  MongoDB connection string before running the seed command.
+                </div>
+
+                <div class="p-3 bg-primary-light rounded border-start border-4 border-primary small mt-3 mb-0"><i
+                    class="fa fa-info-circle me-2"></i> Tip: After updating the
+                  .env file, make sure to rebuild and restart your application:
+                  <p>For Backend: pm2 restart all</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-12 mt-4">
+            <div class="card">
+              <div class="card-body">
+                <div class="steps-box">
+                  <div class="steps-title">
+                    <div><i class="fa fa-rocket"></i>
+                      <h5 class="mb-0">What's Next?</h5>
+                    </div>
+                    <p>Let's get started — your journey with AutoCall begins here!</p>
+                  </div>
+                  <div class="row gy-4">
+                    <div class="col-md-4 col-sm-6">
+                      <a href="backend-live-server.html" class="steps-content">
+                        <div class="icon"><img src="assets/images/icon/4.png" alt="" /></div>
+                        <div class="steps-items">
+                          <h5>Live Server</h5>
+                          <p>Live Backend</p>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="col-md-4 col-sm-6">
+                      <a href="deployment-vercel.html" class="steps-content">
+                        <div class="icon"><img src="assets/images/icon/3.png" alt="" /></div>
+                        <div class="steps-items">
+                          <h5>Vercel Deployment</h5>
+                          <p>Cloud Hosting</p>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="col-md-4 col-sm-6">
+                      <a href="workflow-builder.html" class="steps-content">
+                        <div class="icon"><img src="assets/images/icon/2.png" alt="" /></div>
+                        <div class="steps-items">
+                          <h5>WorkFlow Builder</h5>
+                          <p>Manage Call Flows</p>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="container">
+      <div class="row footer-theme partition-f">
+        <div class="col-12">Copyright 2026 © AutoCall by pixelstrap</div>
+      </div>
+    </div>
+  </footer>
+  <div class="bg-overlay"></div>
+  <script src="assets/js/jquery-3.5.1.js"></script>
+  <script src="assets/js/bootstrap/bootstrap.bundle.js"></script>
+  <script src="assets/js/icons/feather-icon/feather.js"></script>
+  <script src="assets/js/icons/feather-icon/feather-icon.js"></script>
+  <script src="assets/js/document/main.js"></script>
+  <script src="assets/js/script.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('.os-toggle').click(function () {
+        const os = $(this).data('os');
+        $('.os-toggle').removeClass('active btn-custom-os').addClass('btn-outline-custom-os');
+        $(this).addClass('active btn-custom-os').removeClass('btn-outline-custom-os');
+        $('.os-content').hide();
+        $(`#${os}-content`).fadeIn();
+      });
+    });
+  </script>
+  <script src="assets/js/global-search.js"></script>
+</body>
+
+</html>

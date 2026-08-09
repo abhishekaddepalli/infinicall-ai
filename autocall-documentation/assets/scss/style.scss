@@ -1,0 +1,39 @@
+@import "theme/variables";
+:root {
+  --theme-deafult: #7c3aed;
+  --theme-secondary: #95a4fc;
+  --primary-rgb: 124, 58, 237;
+  --mix-primary: linear-gradient(135deg, #ff9f43 0%, #ff5e57 30%, #9b5cff 65%, #7c3aed 100%);
+  --primary-gradient: linear-gradient(135deg, #7198c0 0%, #95a4fc 100%);
+  --secondary-gradient: linear-gradient(135deg, #95a4fc 0%, #7198c0 100%);
+  --background: #ffffff;
+  --foreground: #3a4060;
+  --border: rgba(180, 200, 240, 0.4);
+  --light-border-color: #e5e7eb;
+  --title-color: #111827;
+  --subtitle-color: #6b7280;
+}
+@import "components/buttons.scss";
+@import "components/alert";
+
+@import "components/card.scss";
+@import "components/color.scss";
+@import "components/dropdown.scss";
+@import "components/popover.scss";
+@import "components/tab.scss";
+@import "components/radio";
+@import "components/badge";
+@import "components/switch";
+@import "components/datatable";
+@import "components/form-wizard";
+@import "components/table.scss";
+@import "components/tree";
+@import "components/according";
+
+@import "layout/select2";
+
+@import "pages/chart";
+
+@import "theme/document.scss";
+@import "theme/responsive"; 
+@import "theme/dark.scss";

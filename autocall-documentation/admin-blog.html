@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AutoCall - Blog Management" />
+    <meta name="author" content="pixelstrap" />
+    <link rel="icon" href="assets/images/logo/side-logo.png" type="image/png" />
+    <link rel="shortcut icon" href="assets/images/logo/side-logo.png" type="image/png" />
+    <title>Blog Management - AutoCall Documentation</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="assets/css/fontawesome.css" />
+
+    <link rel="stylesheet" type="text/css" href="assets/css/vendors/feather-icon.css" />
+
+    <link rel="stylesheet" type="text/css" href="assets/css/vendors/bootstrap.css" />
+
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+
+    <link rel="stylesheet" type="text/css" href="assets/css/global-search.css" />
+</head>
+
+<body>
+    <script>
+        let initTheme = localStorage.getItem("theme");
+        if (!initTheme) {
+            initTheme = "light";
+            localStorage.setItem("theme", "light");
+        }
+        if (initTheme === "dark") {
+            document.body.classList.add("dark-only");
+        }
+    </script>
+    <a href="javascript:void(0)" class="sidebar-overlay"></a>
+    <div class="tap-top"><i data-feather="chevrons-up"></i>
+        <p>Top</p>
+    </div>
+
+    <div class="home-section">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container custom-container">
+                <div class="main-menu">
+                    <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fa fa-bars"> </i>
+                    </button>
+                    <a class="navbar-brand" href="index.html">
+                        <img src="assets/images/logo/logo.png">
+                        <!-- <h2 style="color: white;">AutoCall</h2> -->
+                    </a>
+                    <div>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav menu">
+                                <li class="nav-item active"><a class="nav-link" href="index.html">Home</a></li>
+                                <li class="nav-item"><a class="nav-link"
+                                        href="https://support.pixelstrap.com/support/pixelstrap/ShowHomePage.do"
+                                        target="_blank">Support</a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link" href="https://auto-call-pied.vercel.app/"
+                                        target="_blank">Frontend</a></li>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <ul class="nav-right">
+                        <li>
+                            <div class="btn-group">
+                                <a class="decrease btn btn-doc" href="#" title="Decrease font size">A-</a><a
+                                    class="reset btn btn-doc" href="#" title="Default font size">A</a><a
+                                    class="increase btn btn-doc" href="#" title="Increase font size">A+</a>
+                            </div>
+                        </li>
+                        <li>
+                            <a class="btn btn-light mode" href="#" title="Dark"><i class="fa fa-moon-o"></i></a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container custom-container">
+            <div class="document"
+                style="background: linear-gradient(135deg, #8cc7e4 30%, #0d5e8b 90%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent !important;">
+                AutoCall Documentation</div>
+            <div class="top-heading">
+                <h2>Ai-Driven Call Automation with AutoCall</h2>
+                <div class="home-search">
+                    <input type="search" name="text" placeholder="Search..." />
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container custom-container" id="mainRightNavbar">
+        <div class="document-main">
+
+            <div class="left-sidebar">
+                <div class="card">
+                    <div class="card-body">
+                        <aside>
+              <button class="btn button-close">
+                <span>Close</span>
+                <i data-feather="x"></i>
+              </button>
+              <ul class="list-unstyled nav-sidebar doc-nav">
+                <li class="nav-item">
+                  <div class="title"><a class="nav-link" href="index.html">Introduction</a></div>
+                </li>
+                <li class="nav-item">
+                  <div class="title"><a class="nav-link" href="prerequisite.html">Prerequisite</a></div>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">AutoCall Installation <i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="overview.html" class="nav-link">Overview</a></li>
+                    <li class="nav-item"><a href="quick-installation.html" class="nav-link">Quick
+                        Installation</a></li>
+
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">Backend Installation <i class="fa fa-angle-down"
+                            aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="backend-local-server.html" class="nav-link">Local
+                            Server</a></li>
+                        <li class="nav-item"><a href="backend-live-server.html" class="nav-link">Virtual
+                            Private
+                            Server</a></li>
+                      </ul>
+                    </li>
+
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">Frontend Installation
+                          <i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="frontend-installation.html" class="nav-link">Local
+                            Server</a></li>
+
+                        <li class="nav-item">
+                          <a href="deployment-vps.html" class="nav-link">Virtual Private Server</a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="deployment-vercel.html" class="nav-link">Vercel</a>
+                        </li>
+                      </ul>
+                    </li>
+
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Core Features<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">AI Voice Call <i class="fa fa-angle-down"
+                            aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="workflow-builder.html" class="nav-link">WorkFlow Builder</a></li>
+                        <li class="nav-item"><a href="agents.html" class="nav-link">AI Assistants</a></li>
+                        <li class="nav-item"><a href="campaign.html" class="nav-link">AI Campaign Hub</a></li>
+                      </ul>
+                    </li>
+
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">SMS Management <i class="fa fa-angle-down"
+                            aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="sms-agents.html" class="nav-link">SMS Assistance</a></li>
+                        <li class="nav-item"><a href="sms-templates.html" class="nav-link">SMS Templates</a></li>
+                        <li class="nav-item"><a href="sms-campaigns.html" class="nav-link">SMS Campaigns</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Integration<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="meta-connection.html" class="nav-link">Meta Whatsapp
+                        Connection</a></li>
+                    <li class="nav-item"><a href="aws-connection.html" class="nav-link">AWS Integration</a></li>
+                    <li class="nav-item"><a href="trunk-integration.html" class="nav-link">Trunk Integration</a></li>
+                    <li class="nav-item"><a href="twilio-integration.html" class="nav-link">Twilio Setup</a></li>
+                    <li class="nav-item"><a href="plivo-integration.html" class="nav-link">Plivo Setup</a></li>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Telephony Provider<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="contact-hub.html" class="nav-link">Contact Hub</a></li>
+                    <li class="nav-item"><a href="contact-group.html" class="nav-link">Contact Group</a></li>
+                    <li class="nav-item"><a href="voice-numbers.html" class="nav-link">Phone Numbers</a></li>
+                    <li class="nav-item"><a href="call-activity.html" class="nav-link">Call Activity</a></li>
+                    <li class="nav-item"><a href="restricted-word.html" class="nav-link">Restricted Word</a></li>
+                    <li class="nav-item"><a href="virtual-phone.html" class="nav-link">Virtual Phone</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Team Management<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="teams.html" class="nav-link">Teams</a></li>
+                    <li class="nav-item"><a href="team-members.html" class="nav-link">Team Members</a></li>
+                    <li class="nav-item"><a href="team-dashboard.html" class="nav-link">Team Dashboard</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Knowledge Base<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="intelligence-hub.html" class="nav-link">Intelligence Hub</a></li>
+                    <li class="nav-item"><a href="conversation-templates.html" class="nav-link">Conversation
+                        Templates</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Toolbox Hub<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="lead-capture.html" class="nav-link">Lead Capture Forms</a></li>
+                    <li class="nav-item"><a href="appointment-booking.html" class="nav-link">Appointment Booking</a>
+                    </li>
+                    <li class="nav-item"><a href="google-workspace.html" class="nav-link">Google Workspace</a></li>
+                    <li class="nav-item"><a href="embeddable-widget.html" class="nav-link">Embeddable Widget</a></li>
+                    <li class="nav-item"><a href="whatsapp-business.html" class="nav-link">WhatsApp Business</a></li>
+                    <li class="nav-item"><a href="event-webhooks.html" class="nav-link">Event Webhooks</a></li>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Admin Module <i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="admin-member-management.html" class="nav-link">Member
+                        Management</a>
+                    </li>
+                    <li class="nav-item"><a href="admin-role-management.html" class="nav-link">Role
+                        Management</a></li>
+                    <li class="nav-item"><a href="admin-plans.html" class="nav-link">Subscription Plans</a></li>
+                    <li class="nav-item"><a href="admin-faq.html" class="nav-link">FAQ Management</a></li>
+                    <li class="nav-item"><a href="admin-pages.html" class="nav-link">Pages Management</a></li>
+                    <li class="nav-item"><a href="admin-blog.html" class="nav-link">Blog Management</a></li>
+                    <li class="nav-item"><a href="admin-testimonials.html" class="nav-link">Testimonials
+                        Management</a>
+                    <li class="nav-item"><a href="admin-settings.html" class="nav-link">System Settings</a></li>
+                    <li class="nav-item"><a href="kyc-configuration.html" class="nav-link">KYC Configuration</a></li>
+                    <li class="nav-item"><a href="api-integration.html" class="nav-link">API Integration</a></li>
+                    <li class="nav-item"><a href="tenant-guide.html" class="nav-link">Tenant Guide Setup</a></li>
+
+
+
+                    <li class="nav-item"><a href="ai-model.html" class="nav-link">AI Models</a></li>
+                    <li class="nav-item"><a href="languages.html" class="nav-link">Languages</a></li>
+                    <li class="nav-item"><a href="settings.html" class="nav-link">Settings</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <div class="title"><a class="nav-link" href="technologies.html">Technologies Used</a></div>
+                </li>
+              </ul>
+            </aside>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content card-hover-effect">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button class="btn sidebar-button"><i class="fa fa-bars me-2"></i>Menu</button>
+                        <h4 class="main-title mb-4"><img src="assets/images/logo/side-logo.png" alt="" /> Blog
+                            Management</h4>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <p>Manage the blog using categories and tags to organize content effectively and improve
+                                    content discovery.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="d-flex justify-content-center mb-4">
+                            <div class="d-flex gap-3" aria-label="OS Toggle">
+                                <button type="button" class="btn btn-custom-os active os-toggle px-4 shadow-sm"
+                                    style="border-radius: 10px;" data-os="blog"><i
+                                        class="fa fa-linux me-1"></i>Blogs</button>
+                                <button type="button" class="btn btn-outline-custom-os os-toggle px-4 shadow-sm"
+                                    style="border-radius: 10px;" data-os="category"><i
+                                        class="fa fa-linux me-1"></i>Categories</button>
+                                <button type="button" class="btn btn-outline-custom-os os-toggle px-4 shadow-sm"
+                                    style="border-radius: 10px;" data-os="tag"><i class="fa fa-linux me-1"></i>
+                                    Tags</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 os-content" id="blog-content">
+
+                        <div class=" card mb-4">
+                            <div class="card-body">
+
+                                <h5 class="main-sub-title mt-0">Blogs Overview</h5>
+
+                                <p class="mb-3">
+                                    The Blog Management module allows users to create, manage, and organize blog content
+                                    efficiently using posts, categories, and tags. It provides a complete system to
+                                    publish, edit, and control blog visibility while maintaining structured content
+                                    organization.</p>
+
+                                <p class="mb-3">
+                                    Manage blog posts, assign categories and tags, upload thumbnails, and configure
+                                    SEO settings to improve content reach and discoverability.</p>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+
+                                <h5 class="main-sub-title">Dashboard</h5>
+
+                                <p class="mb-3">The Blogs dashboard displays all blog posts in a clean card-based
+                                    layout. Each card shows key details such as title, publish date, author, tags, short
+                                    description, and status (e.g., Pending or Published).</p>
+
+                                <p class="mt-4 mb-2">Quickly browse, search, and access blog posts, as well as
+                                    click “Read More” to view full content. The Create New Post button allows quick
+                                    access to add new blog content.</p>
+
+                                <!-- 
+                                <div class="images-box mt-4">
+                                    <img src="assets/images/admin-module/blog-dashboard.png" alt="blog-dashboard"
+                                        class="img-fluid mb-2" />
+                                </div> -->
+
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+
+                                <h5 class="main-sub-title">1. Create Blog</h5>
+                                <div
+                                    class="p-3 bg-primary-light rounded border-start border-4 border-primary small mt-3 mb-0 mb-3">
+                                    <i class="fa fa-info-circle me-2"></i> Before
+                                    creating a blog post, add relevant tags and categories to ensure
+                                    better organization and content management.
+                                </div>
+
+                                <p class="mb-3">Create a new blog by clicking the <b>Create New Post</b> button. The
+                                    blog form includes:</p>
+
+                                <ul>
+                                    <li><b>Title & Slug </b> : Define the blog title and unique slug</li>
+                                    <li><b>Short Description</b> : Add a brief summary of the blog</li>
+                                    <li><b>Knowledge Content</b> : Use a rich text editor to write detailed content</li>
+                                    <li><b>Thumbnail Image</b> : Upload a featured image for the blog post</li>
+                                    <li><b>Categories & Tags</b> : Assign relevant categories and tags</li>
+                                    <li><b>Featured Option</b> : Highlight important blog posts</li>
+                                    <li><b>Status Toggle</b> : Enable or disable blog visibility</li>
+                                </ul>
+
+                                <h6 class="mt-4 mb-2">SEO & Meta Settings</h6>
+                                <p class="mb-3">SEO settings help optimize blog visibility:</p>
+                                <ul>
+                                    <li><b>Meta Title</b>: Define search engine title</li>
+                                    <li><b>Meta Description</b>: Add a description for search indexing</li>
+                                </ul>
+
+                                <p class="text-muted small mt-4">
+                                    These settings improve search engine ranking and content discoverability.</p>
+
+                                <!-- <div class="images-box mt-4">
+                                    <img src="assets/images/admin-module/blog-create.png" alt="blog-create"
+                                        class="img-fluid mb-2" />
+                                </div> -->
+
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+
+                                <h5 class="main-sub-title">2. Edit Blog</h5>
+
+                                <p class="mb-3">Click the edit option on a blog card to open the blog form. Update the
+                                    title, content, categories, tags, thumbnail, or SEO settings, then click on the
+                                    <b>Update Blog</b> button to apply the changes.
+                                </p>
+
+                                <!-- <div class="images-box mt-4">
+                                    <img src="assets/images/admin-module/blog-edit.png" alt="blog-edit"
+                                        class="img-fluid mb-2" />
+                                </div> -->
+
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+
+                                <h5 class="main-sub-title">3. Delete Blog</h5>
+
+                                <p class="mb-3">Click the <b>Delete</b> option on a blog card to remove the post. A
+                                    confirmation prompt appears before deletion to prevent accidental removal. Once
+                                    deleted, the blog is permanently removed from the system.</p>
+
+                                <!-- <div class="images-box mt-4">
+                                    <img src="assets/images/admin-module/blog-delete.png" alt="blog-delete"
+                                        class="img-fluid mb-2" />
+                                </div> -->
+
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2"><i class="fa fa-check text-success me-2"></i>Create and manage
+                                            blog posts with title, content, thumbnail, and SEO settings.</li>
+                                        <li class="mb-2"><i class="fa fa-check text-success me-2"></i>Control blog
+                                            status (publish/draft) for user visibility.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 os-content" id="category-content" style="display: none;">
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+
+                                <h5 class="main-sub-title mt-0">Categories Overview</h5>
+
+                                <p class="mb-3">
+                                    The Categories section helps organize blog content into structured groups based on
+                                    topics or themes. Categories make it easier to manage blog posts and improve
+                                    navigation for users by grouping related content together. </p>
+
+                                <p class="mb-3">
+                                    Create, edit & delete categories and assign them while creating or updating blog
+                                    posts. Using categories ensures better content organization and a cleaner blog
+                                    structure. </p>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+
+                                <h5 class="main-sub-title">Dashboard</h5>
+
+                                <p class="mb-3">The Categories Dashboard displays all created categories in a searchable
+                                    and paginated table. Quickly view category name and perform actions like edit or
+                                    delete.</p>
+
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+
+                                <h5 class="main-sub-title">1. Create Category</h5>
+
+                                <p class="mb-3">create a new category by clicking the <b>Add Category</b> button. Enter
+                                    the category name, define a unique slug, and set the category status
+                                    (active/inactive).
+                                </p>
+
+                                <!-- <div class="images-box mt-4">
+                                    <img src="assets/images/category-add.png" alt="category-add"
+                                        class="img-fluid mb-2" />
+                                </div> -->
+
+                                <p class="text-muted small mt-4">
+                                    For example, categories like “Technology”, “AI Tools”, “Design”, or “Marketing” help
+                                    group blog posts effectively. </p>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+
+                                <h5 class="main-sub-title">2. Edit Category</h5>
+
+                                <p class="mb-3">Edit existing categories by clicking the edit icon. Update the category
+                                    name, slug, or status as needed, then click the <b>Update</b> button to save changes
+                                    instantly.</p>
+
+                                <!-- <div class="images-box mt-4">
+                                    <img src="assets/images/category-edit.png" alt="category-edit"
+                                        class="img-fluid mb-2" />
+                                </div> -->
+
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+
+                                <h5 class="main-sub-title">3. Delete Category</h5>
+
+                                <p class="mb-3">Delete a category by clicking the <b>Delete</b> icon. A confirmation
+                                    prompt appears before removal to prevent accidental deletion. Once deleted, the
+                                    category is removed and cannot be used for blog posts.</p>
+
+                                <!-- <div class="images-box mt-4">
+                                    <img src="assets/images/category-delete.png" alt="category-delete"
+                                        class="img-fluid mb-2" />
+                                </div> -->
+
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2"><i class="fa fa-check text-success me-2"></i>Organize blogs
+                                            into structured topics or groups.</li>
+                                        <li class="mb-2"><i class="fa fa-check text-success me-2"></i>Each category
+                                            includes name, slug, and status configuration.</li>
+                                        <li class="mb-2"><i class="fa fa-check text-success me-2"></i>Active categories
+                                            are available for blog assignment.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 os-content" id="tag-content" style="display: none;">
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+
+                                <h5 class="main-sub-title mt-0">Tags Overview</h5>
+
+                                <p class="mb-3">
+                                    The Tags section is used to manage and organize blog content by assigning relevant
+                                    keywords to each post. Tags help improve content discoverability, filtering, and
+                                    search functionality within the blog system.
+                                </p>
+                                <p class="mb-3">
+                                    Create, edit & delete tags and assign them while creating or updating blog
+                                    posts. Using tags effectively allows better categorization of topics and
+                                    enhances user navigation across blog content.
+                                </p>
+
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+
+                                <h5 class="main-sub-title">Dashboard</h5>
+
+                                <p class="mb-3">The Tags Dashboard provides a centralized interface to manage all blog
+                                    tags efficiently. It displays a list of created tags in a structured table with
+                                    options to search, paginate, and perform quick actions like edit or delete.</p>
+
+                                <p class="mt-4 mb-2">Quickly view tag names, manage existing tags, and add
+                                    new ones using the “Add Tag” button. This dashboard helps maintain organized
+                                    tagging for blog content, improving content filtering and overall user
+                                    experience.</p>
+
+                                <!-- <div class="images-box mt-4">
+                                    <img src="assets/images/tag-dashboard.png" alt="tag-dashboard"
+                                        class="img-fluid mb-2" />
+                                </div> -->
+
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+
+                                <h5 class="main-sub-title">1. Add Tags</h5>
+
+                                <p class="mb-3">Create new tags by clicking the <b>Add Tag</b> button. Enter a unique
+                                    tag
+                                    name to define a keyword or topic that can be assigned to blog posts. Once created,
+                                    the tag becomes available for use in organizing and categorizing blog content.</p>
+
+                                <!-- <div class="images-box mt-4">
+                                    <img src="assets/images/tag-add.png" alt="tag-add" class="img-fluid mb-2" />
+                                </div> -->
+
+                                <p class="text-muted small mt-4">
+                                    For example, you can add tags like "aiart”, imagegeneration,” videogeneration,” to
+                                    categorize and organize your blog posts effectively. </p>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+
+                                <h5 class="main-sub-title">2. Edit Tag</h5>
+
+                                <p class="mb-3">Edit existing tags by clicking the edit icon next to any tag. Update
+                                    the tag name as needed, then click the <b>Update</b> button to save changes and
+                                    apply
+                                    them instantly across all associated blog posts.</p>
+
+                                <!-- <div class="images-box mt-4">
+                                    <img src="assets/images/tag-edit.png" alt="tag-edit" class="img-fluid mb-2" />
+                                </div> -->
+
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+
+                                <h5 class="main-sub-title">3. Delete Tag</h5>
+
+                                <p class="mb-3">Delete tags by clicking the <b>Delete</b> icon next to any tag. A
+                                    confirmation
+                                    prompt appears before removal to prevent accidental deletion. Once deleted, the tag
+                                    is removed from the system and will no longer be available for blog posts.</p>
+
+                                <!-- <div class="images-box mt-4">
+                                    <img src="assets/images/tag-delete.png" alt="tag-delete" class="img-fluid mb-2" />
+                                </div> -->
+
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2"><i class="fa fa-check text-success me-2"></i>Add keywords to
+                                            blogs for flexible content labeling.</li>
+                                        <li class="mb-2"><i class="fa fa-check text-success me-2"></i>Improve search,
+                                            filtering, and discoverability of blog posts.</li>
+                                        <li class="mb-2"><i class="fa fa-check text-success me-2"></i>Tags can be reused
+                                            across multiple blogs.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 mt-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="steps-box">
+                                    <div class="steps-title">
+                                        <div><i class="fa fa-rocket"></i>
+                                            <h5 class="mb-0">What's Next?</h5>
+                                        </div>
+                                        <p>Let's get started — your journey with AutoCall begins here!</p>
+                                    </div>
+                                    <div class="row gy-4">
+                                        <div class="col-md-4 col-sm-6">
+                                            <a href="backend-live-server.html" class="steps-content">
+                                                <div class="icon"><img src="assets/images/icon/4.png" alt="" /></div>
+                                                <div class="steps-items">
+                                                    <h5>Live Server</h5>
+                                                    <p>Live Backend</p>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-4 col-sm-6">
+                                            <a href="deployment-vercel.html" class="steps-content">
+                                                <div class="icon"><img src="assets/images/icon/3.png" alt="" /></div>
+                                                <div class="steps-items">
+                                                    <h5>Vercel Deployment</h5>
+                                                    <p>Cloud Hosting</p>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-4 col-sm-6">
+                                            <a href="admin-faq.html" class="steps-content">
+                                                <div class="icon"><img src="assets/images/icon/2.png" alt="" /></div>
+                                                <div class="steps-items">
+                                                    <h5>FAQ Management</h5>
+                                                    <p>Knowledge Base</p>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row footer-theme partition-f">
+                <div class="col-12">Copyright 2026 © AutoCall by pixelstrap</div>
+            </div>
+        </div>
+    </footer>
+    <div class="bg-overlay"></div>
+    <script src="assets/js/jquery-3.5.1.js"></script>
+    <script src="assets/js/bootstrap/bootstrap.bundle.js"></script>
+    <script src="assets/js/icons/feather-icon/feather.js"></script>
+    <script src="assets/js/icons/feather-icon/feather-icon.js"></script>
+    <script src="assets/js/document/main.js"></script>
+    <script src="assets/js/script.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.os-toggle').click(function () {
+                const os = $(this).data('os');
+                $('.os-toggle').removeClass('active btn-custom-os').addClass('btn-outline-custom-os');
+                $(this).addClass('active btn-custom-os').removeClass('btn-outline-custom-os');
+                $('.os-content').hide();
+                $(`#${os}-content`).fadeIn();
+            });
+        });
+    </script>
+    <script src="assets/js/global-search.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AutoCall - Deployment (VPS)" />
+  <meta name="author" content="pixelstrap" />
+  <link rel="icon" href="assets/images/logo/side-logo.png" type="image/png" />
+  <link rel="shortcut icon" href="assets/images/logo/side-logo.png" type="image/png" />
+  <title>Deployment (VPS) - AutoCall Documentation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet" />
+
+  <link rel="stylesheet" type="text/css" href="assets/css/fontawesome.css" />
+
+  <link rel="stylesheet" type="text/css" href="assets/css/vendors/feather-icon.css" />
+
+  <link rel="stylesheet" type="text/css" href="assets/css/vendors/bootstrap.css" />
+
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+
+  <link rel="stylesheet" type="text/css" href="assets/css/global-search.css" />
+</head>
+
+<body>
+    <script>
+        let initTheme = localStorage.getItem("theme");
+        if (!initTheme) {
+            initTheme = "light";
+            localStorage.setItem("theme", "light");
+        }
+        if (initTheme === "dark") {
+            document.body.classList.add("dark-only");
+        }
+    </script>
+  <a href="javascript:void(0)" class="sidebar-overlay"></a>
+  <div class="tap-top"><i data-feather="chevrons-up"></i>
+    <p>Top</p>
+  </div>
+
+  <div class="home-section">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container custom-container">
+        <div class="main-menu">
+          <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <i class="fa fa-bars"> </i>
+          </button>
+          <a class="navbar-brand" href="index.html">
+            <img src="assets/images/logo/logo.png">
+            <!-- <h2 style="color: white;">AutoCall</h2> -->
+          </a>
+          <div>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav menu">
+                <li class="nav-item active"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link"
+                    href="https://support.pixelstrap.com/support/pixelstrap/ShowHomePage.do" target="_blank">Support</a>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="https://auto-call-pied.vercel.app/"
+                    target="_blank">Frontend</a></li>
+
+              </ul>
+            </div>
+          </div>
+          <ul class="nav-right">
+            <li>
+              <div class="btn-group">
+                <a class="decrease btn btn-doc" href="#" title="Decrease font size">A-</a><a class="reset btn btn-doc"
+                  href="#" title="Default font size">A</a><a class="increase btn btn-doc" href="#"
+                  title="Increase font size">A+</a>
+              </div>
+            </li>
+            <li>
+              <a class="btn btn-light mode" href="#" title="Dark"><i class="fa fa-moon-o"></i></a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container custom-container">
+      <div class="document"
+        style="background: linear-gradient(135deg, #8cc7e4 30%, #0d5e8b 90%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent !important;">
+        AutoCall Documentation</div>
+      <div class="top-heading">
+        <h2>Ai-Driven Call Automation with AutoCall</h2>
+        <div class="home-search">
+          <input type="search" name="text" placeholder="Search..." />
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container custom-container" id="mainRightNavbar">
+    <div class="document-main">
+
+      <div class="left-sidebar">
+        <div class="card">
+          <div class="card-body">
+            <aside>
+              <button class="btn button-close">
+                <span>Close</span>
+                <i data-feather="x"></i>
+              </button>
+              <ul class="list-unstyled nav-sidebar doc-nav">
+                <li class="nav-item">
+                  <div class="title"><a class="nav-link" href="index.html">Introduction</a></div>
+                </li>
+                <li class="nav-item">
+                  <div class="title"><a class="nav-link" href="prerequisite.html">Prerequisite</a></div>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">AutoCall Installation <i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="overview.html" class="nav-link">Overview</a></li>
+                    <li class="nav-item"><a href="quick-installation.html" class="nav-link">Quick
+                        Installation</a></li>
+
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">Backend Installation <i class="fa fa-angle-down"
+                            aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="backend-local-server.html" class="nav-link">Local
+                            Server</a></li>
+                        <li class="nav-item"><a href="backend-live-server.html" class="nav-link">Virtual
+                            Private
+                            Server</a></li>
+                      </ul>
+                    </li>
+
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">Frontend Installation
+                          <i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="frontend-installation.html" class="nav-link">Local
+                            Server</a></li>
+
+                        <li class="nav-item">
+                          <a href="deployment-vps.html" class="nav-link">Virtual Private Server</a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="deployment-vercel.html" class="nav-link">Vercel</a>
+                        </li>
+                      </ul>
+                    </li>
+
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Core Features<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">AI Voice Call <i class="fa fa-angle-down"
+                            aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="workflow-builder.html" class="nav-link">WorkFlow Builder</a></li>
+                        <li class="nav-item"><a href="agents.html" class="nav-link">AI Assistants</a></li>
+                        <li class="nav-item"><a href="campaign.html" class="nav-link">AI Campaign Hub</a></li>
+                      </ul>
+                    </li>
+
+                    <li class="nav-item menu">
+                      <div class="title">
+                        <a class="nav-link" href="javascript:void(0)">SMS Management <i class="fa fa-angle-down"
+                            aria-hidden="true"></i></a>
+                      </div>
+                      <ul class="sub-menu nested-sub-menu">
+                        <li class="nav-item"><a href="sms-agents.html" class="nav-link">SMS Assistance</a></li>
+                        <li class="nav-item"><a href="sms-templates.html" class="nav-link">SMS Templates</a></li>
+                        <li class="nav-item"><a href="sms-campaigns.html" class="nav-link">SMS Campaigns</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Integration<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="meta-connection.html" class="nav-link">Meta Whatsapp
+                        Connection</a></li>
+                    <li class="nav-item"><a href="aws-connection.html" class="nav-link">AWS Integration</a></li>
+                    <li class="nav-item"><a href="trunk-integration.html" class="nav-link">Trunk Integration</a></li>
+                    <li class="nav-item"><a href="twilio-integration.html" class="nav-link">Twilio Setup</a></li>
+                    <li class="nav-item"><a href="plivo-integration.html" class="nav-link">Plivo Setup</a></li>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Telephony Provider<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="contact-hub.html" class="nav-link">Contact Hub</a></li>
+                    <li class="nav-item"><a href="contact-group.html" class="nav-link">Contact Group</a></li>
+                    <li class="nav-item"><a href="voice-numbers.html" class="nav-link">Phone Numbers</a></li>
+                    <li class="nav-item"><a href="call-activity.html" class="nav-link">Call Activity</a></li>
+                    <li class="nav-item"><a href="restricted-word.html" class="nav-link">Restricted Word</a></li>
+                    <li class="nav-item"><a href="virtual-phone.html" class="nav-link">Virtual Phone</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Team Management<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="teams.html" class="nav-link">Teams</a></li>
+                    <li class="nav-item"><a href="team-members.html" class="nav-link">Team Members</a></li>
+                    <li class="nav-item"><a href="team-dashboard.html" class="nav-link">Team Dashboard</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Knowledge Base<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="intelligence-hub.html" class="nav-link">Intelligence Hub</a></li>
+                    <li class="nav-item"><a href="conversation-templates.html" class="nav-link">Conversation
+                        Templates</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Toolbox Hub<i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="lead-capture.html" class="nav-link">Lead Capture Forms</a></li>
+                    <li class="nav-item"><a href="appointment-booking.html" class="nav-link">Appointment Booking</a>
+                    </li>
+                    <li class="nav-item"><a href="google-workspace.html" class="nav-link">Google Workspace</a></li>
+                    <li class="nav-item"><a href="embeddable-widget.html" class="nav-link">Embeddable Widget</a></li>
+                    <li class="nav-item"><a href="whatsapp-business.html" class="nav-link">WhatsApp Business</a></li>
+                    <li class="nav-item"><a href="event-webhooks.html" class="nav-link">Event Webhooks</a></li>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu">
+                  <div class="title">
+                    <a class="nav-link" href="javascript:void(0)">Admin Module <i class="fa fa-angle-down"
+                        aria-hidden="true"></i></a>
+                  </div>
+                  <ul class="sub-menu">
+                    <li class="nav-item"><a href="admin-member-management.html" class="nav-link">Member
+                        Management</a>
+                    </li>
+                    <li class="nav-item"><a href="admin-role-management.html" class="nav-link">Role
+                        Management</a></li>
+                    <li class="nav-item"><a href="admin-plans.html" class="nav-link">Subscription Plans</a></li>
+                    <li class="nav-item"><a href="admin-faq.html" class="nav-link">FAQ Management</a></li>
+                    <li class="nav-item"><a href="admin-pages.html" class="nav-link">Pages Management</a></li>
+                    <li class="nav-item"><a href="admin-blog.html" class="nav-link">Blog Management</a></li>
+                    <li class="nav-item"><a href="admin-testimonials.html" class="nav-link">Testimonials
+                        Management</a>
+                    <li class="nav-item"><a href="admin-settings.html" class="nav-link">System Settings</a></li>
+                    <li class="nav-item"><a href="kyc-configuration.html" class="nav-link">KYC Configuration</a></li>
+                    <li class="nav-item"><a href="api-integration.html" class="nav-link">API Integration</a></li>
+                    <li class="nav-item"><a href="tenant-guide.html" class="nav-link">Tenant Guide Setup</a></li>
+
+
+
+                    <li class="nav-item"><a href="ai-model.html" class="nav-link">AI Models</a></li>
+                    <li class="nav-item"><a href="languages.html" class="nav-link">Languages</a></li>
+                    <li class="nav-item"><a href="settings.html" class="nav-link">Settings</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <div class="title"><a class="nav-link" href="technologies.html">Technologies Used</a></div>
+                </li>
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </div>
+
+      <div class="content card-hover-effect">
+        <div class="row">
+          <div class="col-sm-12">
+            <button class="btn sidebar-button"><i class="fa fa-bars me-2"></i>Menu</button>
+            <h4 class="main-title mb-4"><img src="assets/images/logo/side-logo.png" alt="" /> Deployment (VPS)</h4>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <p class="mb-4">This guide explains how to deploy the <b>AutoCall</b> frontend on a VPS (Virtual
+                  Private Server). You will configure the server, install required software, build the Next.js
+                  application, and run AutoCall in a production-ready environment.</p>
+                <p>VPS deployment is recommended because it provides Full server control, Better performance tuning,
+                  Secure routing, SSL support, and Scalability for SaaS growth.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="main-sub-title mt-0">1. System Setup</h5>
+                <p class="text-muted small mb-3">After connecting to your VPS via SSH:</p>
+                <div class="code-block p-3 bg-light rounded border mb-3">
+                  <pre class="mb-0"><code>sudo apt update && sudo apt upgrade -y
+sudo apt install curl wget git unzip build-essential -y</code></pre>
+                </div>
+                <p class="text-muted small">These utilities are required for installing Node.js, MongoDB, and managing
+                  your backend.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="main-sub-title mt-0">2. Deploy AutoCall Frontend Code</h5>
+                <p class="text-muted small mb-3">To deploy your frontend code, you first need to host it on a version
+                  control
+                  system like GitHub and configure server access.</p>
+
+                <p class="mb-2"><b>Step 1 — Upload Code to GitHub & Get URL</b></p>
+                <ul class="text-muted small mb-3">
+                  <li>Unzip the provided source code file and upload the code to a new GitHub repository.</li>
+                  <li>Open your GitHub repository in the browser.</li>
+                  <li>Click on the green <b>Code</b> button.</li>
+                  <li>Select the <b>SSH</b> option.</li>
+                  <li>Copy the SSH URL.</li>
+                </ul>
+
+                <p class="mb-2"><b>Step 2 — Give Server Access to Your Private Repo (Optional)</b></p>
+                <p class="text-muted small mb-2">If your repository is private, you must generate an SSH key on your
+                  server to allow access.</p>
+
+                <p class="text-muted small mb-1">Generate SSH key on server:</p>
+                <div class="code-block p-3 bg-light rounded border mb-2">
+                  <pre class="mb-0"><code>ssh-keygen -t ed25519 -C "server"</code></pre>
+                </div>
+                <p class="text-muted small mb-3">Press <b>Enter</b> for defaults when prompted.</p>
+
+                <p class="text-muted small mb-1">Show the public key:</p>
+                <div class="code-block p-3 bg-light rounded border mb-2">
+                  <pre class="mb-0"><code>cat ~/.ssh/id_ed25519.pub</code></pre>
+                </div>
+                <p class="text-muted small mb-3">Copy the output text.</p>
+
+                <p class="mb-2"><b>Step 3 — Add Deploy Key to GitHub</b></p>
+                <ul class="text-muted small mb-3">
+                  <li>Go to your GitHub <b>Repository</b>.</li>
+                  <li>Click on <b>Settings</b>.</li>
+                  <li>Navigate to <b>Deploy Keys</b>.</li>
+                  <li>Click <b>Add Deploy Key</b>.</li>
+                  <li>Paste the key you copied from your server.</li>
+                  <li>Ensure <b>Allow write access</b> is UNCHECKED (Enable Read Access only).</li>
+                  <li>Click <b>Add key</b>.</li>
+                </ul>
+
+                <p class="mb-2"><b>Step 4 — Clone Repository</b></p>
+                <p class="text-muted small mb-2">Connect to your VPS terminal and use the copied URL to clone the
+                  repository:</p>
+                <div class="code-block p-3 bg-light rounded border mb-3">
+                  <pre class="mb-0"><code>mkdir -p /opt/apps
+cd /opt/apps
+
+git clone git@github.com:YOUR_USERNAME/autocall-frontend.git</code></pre>
+                </div>
+
+                <p class="mb-2"><b>Step 5 — Install Dependencies</b></p>
+                <div class="code-block p-3 bg-light rounded border">
+                  <pre class="mb-0"><code>cd autocall-frontend
+npm install</code></pre>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="main-sub-title mt-0">3. Configure Environment Variables</h5>
+                <p class="text-muted small mb-3">Create <code>.env.local</code> file:</p>
+                <div class="code-block p-3 bg-light rounded border mb-3">
+                  <pre class="mb-0"><code>nano .env.local</code></pre>
+                </div>
+                <p class="text-muted small mb-2">Example Production Configuration:</p>
+                <div class="code-block p-3 bg-light rounded border">
+                  <pre class="mb-0 custom-scrollbar"><code>NEXT_PUBLIC_API_BASE_URL=http://your-backend-domain/api
+NEXT_PUBLIC_STORAGE_URL=http://your-backend-domain
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+NEXT_PUBLIC_SOCKET_URL=http://your-backend-domain</code></pre>
+                </div>
+                <div class="p-3 bg-primary-light rounded border-start border-4 border-primary small mt-3 mb-0"><i
+                    class="fa fa-info-circle me-2"></i> AutoCall being a
+                  SaaS platform requires secure API key storage. Never commit .env.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="main-sub-title mt-0">4. Build & Process Management (PM2)</h5>
+                <p class="text-muted small mb-3">Build the Next.js application and start it using PM2:</p>
+                <div class="code-block p-3 bg-light rounded border mb-3">
+                  <pre class="mb-0"><code>npm run build
+sudo npm install -g pm2
+pm2 start npm --name "autocall-frontend" -- run start
+pm2 save
+pm2 startup</code></pre>
+                </div>
+                <p class="text-muted small mb-3">Check logs:</p>
+                <div class="code-block p-3 bg-light rounded border mb-3">
+                  <pre class="mb-0"><code>pm2 logs autocall-frontend</code></pre>
+                </div>
+                <p class="text-muted small mb-0">PM2 ensures: Auto restart on crash, Background execution, Memory
+                  monitoring, Log management.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="main-sub-title mt-0">5. Reverse Proxy Setup (Nginx)</h5>
+                <p class="text-muted small mb-3">The AutoCall frontend runs internally on port 3001. Install Nginx and
+                  create
+                  config:
+                </p>
+                <div class="code-block p-3 bg-light rounded border mb-3">
+                  <pre class="mb-0"><code>sudo apt install nginx -y
+sudo nano /etc/nginx/sites-available/autocall-frontend</code></pre>
+                </div>
+                <p class="text-muted small mb-2">Add configuration:</p>
+                <div class="code-block p-3 bg-light rounded border mb-3">
+                  <pre class="mb-0"><code>server {
+   listen 80;
+   server_name frontend.your-domain.com;
+
+   location / {
+       proxy_pass http://localhost:3001;
+       proxy_http_version 1.1;
+       proxy_set_header Upgrade $http_upgrade;
+       proxy_set_header Connection 'upgrade';
+       proxy_set_header Host $host;
+       proxy_cache_bypass $http_upgrade;
+   }
+}</code></pre>
+                </div>
+                <p class="text-muted small mb-2">Enable configuration:</p>
+                <div class="code-block p-3 bg-light rounded border">
+                  <pre class="mb-0"><code>sudo ln -s /etc/nginx/sites-available/autocall-frontend /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="main-sub-title mt-0">6. Enable SSL (HTTPS)</h5>
+                <p class="text-muted small mb-3">Install Certbot and generate SSL:</p>
+                <div class="code-block p-3 bg-light rounded border mb-3">
+                  <pre class="mb-0"><code>sudo apt install certbot python3-certbot-nginx -y
+sudo certbot --nginx -d frontend.your-domain.com</code></pre>
+                </div>
+                <p class="text-muted small mb-2">Set up auto renewal:</p>
+                <div class="code-block p-3 bg-light rounded border">
+                  <pre class="mb-0"><code>sudo crontab -e
+<span class="text-info"># Add the following line:</span>
+0 12 * * * /usr/bin/certbot renew --quiet</code></pre>
+                </div>
+                <p class="text-muted small mt-2">Now AutoCall runs securely via HTTPS.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="main-sub-title mt-0">7. Testing & Verification</h5>
+                <p class="text-muted small mb-3">Test the application in your browser:</p>
+                <div class="code-block p-3 bg-light rounded border mb-3">
+                  <pre class="mb-0"><code>https://frontend.your-domain.com</code></pre>
+                </div>
+                <p class="text-muted small">Check: Login pages, Dashboard loading, and API connections.</p>
+                <p class="text-muted small mb-0">Logs: <code>pm2 logs autocall-frontend</code></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="main-sub-title mt-0">8. Maintenance & Updates</h5>
+                <p class="text-muted small mb-3">To update frontend:</p>
+                <div class="code-block p-3 bg-light rounded border mb-3">
+                  <pre class="mb-0"><code>cd autocall-frontend
+git pull origin main
+npm install
+npm run build
+pm2 restart autocall-frontend</code></pre>
+                </div>
+                <p class="text-muted small mb-0">Regularly monitor: CPU & RAM, Disk space, and SSL renewal status.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mt-4">
+            <div class="card">
+              <div class="card-body">
+                <div class="steps-box">
+                  <div class="steps-title">
+                    <div><i class="fa fa-rocket"></i>
+                      <h5 class="mb-0">What's Next?</h5>
+                    </div>
+                    <p>Let's get started — your journey with AutoCall begins here!</p>
+                  </div>
+                  <div class="row gy-4">
+                    <div class="col-md-4 col-sm-6">
+                      <a href="deployment-vercel.html" class="steps-content">
+                        <div class="icon"><img src="assets/images/icon/3.png" alt="" /></div>
+                        <div class="steps-items">
+                          <h5>Vercel Deployment</h5>
+                          <p>Cloud Hosting</p>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="col-md-4 col-sm-6">
+                      <a href="aws-connection.html" class="steps-content">
+                        <div class="icon"><img src="assets/images/icon/4.png" alt="" /></div>
+                        <div class="steps-items">
+                          <h5>AWS Integration</h5>
+                          <p>Configure AWS Services</p>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="col-md-4 col-sm-6">
+                      <a href="meta-connection.html" class="steps-content">
+                        <div class="icon"><img src="assets/images/icon/2.png" alt="" /></div>
+                        <div class="steps-items">
+                          <h5>Meta Integration</h5>
+                          <p>Configure Meta Services</p>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="container">
+      <div class="row footer-theme partition-f">
+        <div class="col-12">Copyright 2026 © AutoCall by pixelstrap</div>
+      </div>
+    </div>
+  </footer>
+  <div class="bg-overlay"></div>
+  <script src="assets/js/jquery-3.5.1.js"></script>
+  <script src="assets/js/bootstrap/bootstrap.bundle.js"></script>
+  <script src="assets/js/icons/feather-icon/feather.js"></script>
+  <script src="assets/js/icons/feather-icon/feather-icon.js"></script>
+  <script src="assets/js/document/main.js"></script>
+  <script src="assets/js/script.js"></script>
+  <script src="assets/js/global-search.js"></script>
+</body>
+
+</html>
