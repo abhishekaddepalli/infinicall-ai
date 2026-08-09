@@ -1,8 +1,8 @@
 "use client";
 
+import { AuthLogo } from "@/components/auth/AuthLogo";
 import { ROUTES } from "@/constants/routes";
 import { FooterProps } from "@/types/landing";
-import Image from "next/image";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
@@ -40,9 +40,7 @@ export function Footer({ footerData }: FooterProps) {
           <div className="md:col-span-6 flex flex-col justify-between pr-0 md:pr-16">
             <div>
               <div className="flex items-center gap-2.5 mb-6">
-                <Link href={ROUTES.DASHBOARD} className="flex items-center gap-3 self-start no-underline">
-                  <Image src="/light-logo.png" alt="autocall logo" width={180} height={48} unoptimized className="max-h-12 w-auto object-contain transition-all duration-300" />
-                </Link>
+                <AuthLogo logoType="landing" />
               </div>
 
               {/* Very clear description text with excellent contrast */}

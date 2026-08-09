@@ -104,7 +104,7 @@ export function Header({ navigation }: HeaderProps) {
         <div className={`flex items-center justify-between border border-primary/10 rounded-full px-6 md:px-8 py-3.5 transition-all duration-300 ${isScrolled ? "bg-white/90 backdrop-blur-lg shadow-[0_8px_30px_rgba(1,84,130,0.08)]" : "bg-white/70 backdrop-blur-md shadow-[0_8px_30px_rgba(1,84,130,0.04)]"
           }`}>
           {/* Logo */}
-          <AuthLogo forceLogo="/logo.png" />
+          <AuthLogo logoType="landing" />
 
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-8">
