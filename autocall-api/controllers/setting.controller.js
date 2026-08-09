@@ -42,7 +42,8 @@ exports.getSettings = async (req, res) => {
     let settings = await Setting.findOne().populate('login_widget_key').lean();
 
     if (!settings) {
-      return res.status(404).json({ message: 'Settings not found.' });
+      const created = await Setting.create({});
+      settings = created.toObject();
     }
 
     const userIp = req.ip?.replace(/^::ffff:/, '') || req.headers['x-forwarded-for']?.split(',')[0].trim();
@@ -63,8 +64,11 @@ exports.getSettings = async (req, res) => {
 
 exports.updateSettings = async (req, res) => {
   try {
-    const settings = await Setting.findOne().lean({ virtuals: true });
-    if (!settings) return res.status(404).json({ message: 'Settings not found' });
+    let settings = await Setting.findOne().lean({ virtuals: true });
+    if (!settings) {
+      const created = await Setting.create({});
+      settings = created.toObject();
+    }
 
     const updateData = {};
 
@@ -338,7 +342,8 @@ exports.getPublicSettings = async (req, res) => {
       .lean();
 
     if (!settings) {
-      return res.status(404).json({ message: 'Settings not found.' });
+      const created = await Setting.create({});
+      settings = created.toObject();
     }
 
     const userIp =
