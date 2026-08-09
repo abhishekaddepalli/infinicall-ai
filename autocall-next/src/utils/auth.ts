@@ -135,17 +135,13 @@ export const authUtils = {
 export const getMediaUrl = (
   path: string | null | undefined,
 ): string | undefined => {
-  if (!path) return undefined;
-  if (path.startsWith("http") || path.startsWith("data:")) return path;
+  if (!path || path === "null" || path.trim() === "") return undefined;
+  if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("data:")) return path;
 
-  const baseUrl = process.env.NEXT_PUBLIC_STORAGE_URL || "";
+  const baseUrl = (process.env.NEXT_PUBLIC_STORAGE_URL || "").replace(/\/$/, "");
+  const cleanPath = path.replace(/^\//, "");
 
-  const normalizedPath =
-    path.startsWith("uploads") || path.startsWith("/uploads")
-      ? path
-      : `uploads/${path}`;
-
-  return `${baseUrl}/${normalizedPath.startsWith("/") ? normalizedPath : `${normalizedPath}`}`;
+  return `${baseUrl}/${cleanPath}`;
 };
 
 export const formatDate = (

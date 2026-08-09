@@ -69,6 +69,7 @@ const ImageUploadItem = ({
         {displayUrl ? (
           <div className="relative w-full h-full group/image">
             <Image
+              unoptimized
               src={displayUrl}
               alt={label}
               width={100}
