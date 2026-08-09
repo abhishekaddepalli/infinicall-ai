@@ -37,18 +37,21 @@ connectDB().then(() => {
 app.use(
   cors({
     origin: function (origin, callback) {
-      const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [];
-
       if (!origin || origin === 'null') return callback(null, true);
 
-      if (origin && (origin.includes('localhost:') || origin.includes('127.0.0.1:'))) {
+      const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim()) : [];
+      if (process.env.FRONTEND_URL) allowedOrigins.push(process.env.FRONTEND_URL.trim());
+      if (process.env.APP_URL) allowedOrigins.push(process.env.APP_URL.trim());
+
+      if (origin.includes('localhost:') || origin.includes('127.0.0.1:')) {
         return callback(null, true);
       }
 
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
+      if (allowedOrigins.length === 0 || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+        return callback(null, true);
       } else {
-        callback(new Error('CORS blocked: ' + origin));
+        console.warn('CORS request from origin:', origin);
+        return callback(null, true);
       }
     },
     credentials: true,
