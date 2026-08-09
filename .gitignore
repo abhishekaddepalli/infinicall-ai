@@ -27,8 +27,9 @@ logs/
 **/logs/
 
 # Uploads & Temp
-uploads/
-**/uploads/
+uploads/*
+**/uploads/*
+!**/uploads/logo/
 .cache/
 .DS_Store
 Thumbs.db
