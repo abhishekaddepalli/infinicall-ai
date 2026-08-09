@@ -35,11 +35,13 @@ export const AuthLogo = ({
 
     let settingUrl = "";
     if (logoType === "landing") {
-      settingUrl = settings?.landing_logo_url || settings?.logo_light_url || settings?.logo_dark_url;
+      settingUrl = settings?.landing_logo_url || settings?.logo_light_url || settings?.logo_dark_url || settings?.sidebar_logo_url || settings?.mobile_logo_url;
     } else if (logoType === "onboarding") {
-      settingUrl = settings?.onboarding_logo_url || settings?.logo_light_url;
+      settingUrl = settings?.onboarding_logo_url || settings?.landing_logo_url || settings?.logo_light_url || settings?.sidebar_logo_url;
     } else {
-      settingUrl = isDark ? (settings?.logo_dark_url || settings?.logo_light_url) : (settings?.logo_light_url || settings?.logo_dark_url);
+      settingUrl = isDark
+        ? (settings?.logo_dark_url || settings?.logo_light_url || settings?.landing_logo_url || settings?.sidebar_logo_url || settings?.mobile_logo_url)
+        : (settings?.logo_light_url || settings?.logo_dark_url || settings?.landing_logo_url || settings?.sidebar_logo_url || settings?.mobile_logo_url);
     }
 
     if (settingUrl) {

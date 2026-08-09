@@ -37,11 +37,13 @@ const SidebarLogo = ({ isCollapsed, onClick }: SidebarLogoProps) => {
     };
 
     if (isCollapsed) {
-      const url = settings?.favicon_url;
+      const url = settings?.favicon_url || settings?.mobile_logo_url || settings?.sidebar_logo_url;
       return resolveUrl(url) || "/favicon.png";
     }
 
-    const url = isDark ? settings?.logo_dark_url : settings?.logo_light_url;
+    const url = isDark 
+      ? (settings?.logo_dark_url || settings?.logo_light_url || settings?.sidebar_logo_url || settings?.landing_logo_url || settings?.mobile_logo_url)
+      : (settings?.logo_light_url || settings?.logo_dark_url || settings?.sidebar_logo_url || settings?.landing_logo_url || settings?.mobile_logo_url);
     return resolveUrl(url) || (isDark ? "/light-logo.png" : "/logo.png");
   }, [mounted, theme, resolvedTheme, isCollapsed, settings]);
 
