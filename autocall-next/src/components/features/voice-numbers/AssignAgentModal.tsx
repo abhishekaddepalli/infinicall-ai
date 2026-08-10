@@ -30,8 +30,7 @@ const AssignAgentModal = ({
     { skip: !isOpen },
   )
 
-  const incomingAgents =
-    agentsData?.data?.filter((a: { type: string }) => a.type === 'incoming') ?? []
+  const availableAgents = agentsData?.data ?? []
 
   const agentOptions = [
     {
@@ -40,7 +39,7 @@ const AssignAgentModal = ({
       }),
       value: 'none',
     },
-    ...incomingAgents
+    ...availableAgents
       .map((agent: { name: string; _id?: string; id?: string }) => ({
         label: agent.name,
         value: agent._id || agent.id || '',

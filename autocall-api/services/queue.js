@@ -49,9 +49,16 @@ if (process.env.REDIS_URL) {
 
       console.log(`Executing campaign: ${campaign.name}`);
 
-      const settings = await UserSettings.findOne({ user: campaign.userId });
-      if (!settings || !settings.twilio_account_sid || !settings.twilio_auth_token) {
-        throw new Error('Twilio credentials not found for this user');
+      const userSettings = await UserSettings.findOne({ user: campaign.userId });
+      const globalSettings = await db.Setting.findOne();
+      const twilioAccountSid = userSettings?.twilio_account_sid || globalSettings?.twilio_account_sid || process.env.TWILIO_ACCOUNT_SID;
+      const twilioAuthToken = userSettings?.twilio_auth_token || globalSettings?.twilio_auth_token || process.env.TWILIO_AUTH_TOKEN;
+      const elevenlabsApiKey = userSettings?.elevenlabs_api_key || globalSettings?.elevenlabs_api_key || process.env.ELEVENLABS_API_KEY;
+      const plivoAuthId = userSettings?.plivo_auth_id || globalSettings?.plivo_auth_id || process.env.PLIVO_AUTH_ID;
+      const plivoAuthToken = userSettings?.plivo_auth_token || globalSettings?.plivo_auth_token || process.env.PLIVO_AUTH_TOKEN;
+
+      if (!twilioAccountSid || !twilioAuthToken) {
+        console.warn('Twilio credentials not found in UserSettings, System Settings, or .env');
       }
 
       let phoneNumberDoc;
@@ -238,14 +245,33 @@ if (process.env.REDIS_URL) {
               console.log(`WhatsApp Call to ${to} initiated with ID: ${callSid}`);
               successCount++;
             } else if (phoneNumberDoc.type === 'sip' && phoneNumberDoc.elevenlabs_phone_number_id) {
-              if (!settings.elevenlabs_api_key) throw new Error('ElevenLabs API key not configured for SIP calling');
-              if (!agent.elevenlabs_agent_id) throw new Error('Selected agent is not configured for ElevenLabs SIP calling');
+              if (!elevenlabsApiKey) throw new Error('ElevenLabs API key not configured for SIP calling');
+              let elevenlabsAgentId = agent.elevenlabs_agent_id;
+              if (!elevenlabsAgentId) {
+                try {
+                  const newAgent = await elevenLabsService.createAgent({
+                    name: agent.name,
+                    conversation_config: {
+                      agent: {
+                        prompt: { prompt: agent.system_prompt || agent.personality || 'You are a helpful AI voice assistant.' },
+                        first_message: agent.first_message || 'Hello! How can I help you today?'
+                      }
+                    }
+                  }, elevenlabsApiKey);
+                  if (newAgent && (newAgent.agent_id || newAgent.id)) {
+                    elevenlabsAgentId = newAgent.agent_id || newAgent.id;
+                    await Agent.findByIdAndUpdate(agent._id, { elevenlabs_agent_id: elevenlabsAgentId });
+                  }
+                } catch (e) {
+                  console.error('Failed to auto-create ElevenLabs agent ID for campaign:', e);
+                }
+              }
 
               const sipResponse = await elevenLabsService.makeSipOutboundCall(
-                agent.elevenlabs_agent_id,
+                elevenlabsAgentId || agent.elevenlabs_agent_id,
                 phoneNumberDoc.elevenlabs_phone_number_id,
                 to,
-                settings.elevenlabs_api_key
+                elevenlabsApiKey
               );
 
               const callSid = sipResponse.sip_call_id || sipResponse.conversation_id || `sip_${Date.now()}`;
@@ -267,15 +293,15 @@ if (process.env.REDIS_URL) {
               console.log(`SIP Call to ${to} initiated with ID: ${callSid}`);
               successCount++;
             } else if (phoneNumberDoc.provider === 'plivo') {
-              if (!settings.plivo_auth_id || !settings.plivo_auth_token) {
+              if (!plivoAuthId || !plivoAuthToken) {
                 throw new Error('Plivo credentials not found for this user');
               }
               const xmlUrl = `${appUrl}/api/calls/plivo-xml?flowId=${flowId}&userId=${campaign.userId}&agentId=${campaign.agentId}`;
               const statusCallbackUrl = `${appUrl}/api/calls/plivo-status`;
 
               const plivoCall = await plivoService.makeCall(
-                settings.plivo_auth_id,
-                settings.plivo_auth_token,
+                plivoAuthId,
+                plivoAuthToken,
                 fromNumber,
                 to,
                 xmlUrl,
@@ -300,8 +326,8 @@ if (process.env.REDIS_URL) {
                 await new Promise(resolve => setTimeout(resolve, 10000));
                 try {
                   callStatus = await plivoService.getCallStatus(
-                    settings.plivo_auth_id,
-                    settings.plivo_auth_token,
+                    plivoAuthId,
+                    plivoAuthToken,
                     plivoCall.requestUuid
                   );
                 } catch (statusError) {
@@ -324,8 +350,8 @@ if (process.env.REDIS_URL) {
             } else {
               const statusCallbackUrl = `${appUrl}/api/calls/status`;
               const call = await twilioService.makeCall(
-                settings.twilio_account_sid,
-                settings.twilio_auth_token,
+                twilioAccountSid,
+                twilioAuthToken,
                 fromNumber,
                 to,
                 twimlUrl,
