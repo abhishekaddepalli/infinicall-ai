@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useGetAgentsQuery } from "@/redux/api/agentApi"
+import { useGetPhoneNumbersQuery } from "@/redux/api/phoneNumberApi"
 import { usePlaceCallMutation } from "@/redux/api/callApi"
 import { TestFlowModalProps } from "@/types/flow"
 import { Info, Phone, PhoneCall } from 'lucide-react';
@@ -22,13 +23,23 @@ const TestFlowModal = ({ flow, isOpen, onClose }: TestFlowModalProps) => {
   const [placeCall, { isLoading }] = usePlaceCallMutation()
 
   const { data: agentsData, isLoading: isLoadingAgents } = useGetAgentsQuery({ limit: 100 })
+  const { data: phoneNumbersRes, isLoading: isLoadingNumbers } = useGetPhoneNumbersQuery({ limit: 100 })
   const agents = agentsData?.data || []
+  const phoneNumbers = phoneNumbersRes?.data || []
 
   // Auto-select first available agent if none selected
   if (agents.length > 0 && !selectedAgentId) {
     const firstId = agents[0]._id || agents[0].id || ''
     if (firstId && selectedAgentId !== firstId) {
       setSelectedAgentId(firstId)
+    }
+  }
+
+  // Auto-select first available phone number or SIP trunk
+  if (phoneNumbers.length > 0 && !fromNumber) {
+    const defaultNum = phoneNumbers[0].phone_number || ''
+    if (defaultNum && fromNumber !== defaultNum) {
+      setFromNumber(defaultNum)
     }
   }
 
@@ -84,19 +95,34 @@ const TestFlowModal = ({ flow, isOpen, onClose }: TestFlowModalProps) => {
           <div className="space-y-4">
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-title ml-0.5">
-                {t('from_number')} <span className="text-destructive">*</span>
+                {t('from_number')} / SIP Trunk <span className="text-destructive">*</span>
               </Label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                  <Phone className="w-4 h-4" />
+              {phoneNumbers.length > 0 ? (
+                <Select value={fromNumber} onValueChange={setFromNumber}>
+                  <SelectTrigger className="w-full shadow-none rounded-lg bg-input-color border-input-border-color text-sm focus:ring-primary/20 transition-all">
+                    <SelectValue placeholder={isLoadingNumbers ? t('loading_numbers', { defaultValue: 'Loading phone numbers...' }) : t('select_phone_number_or_sip', { defaultValue: 'Select Phone Number / SIP Trunk' })} />
+                  </SelectTrigger>
+                  <SelectContent className="bg-bg-card border-input-border-color rounded-radius">
+                    {phoneNumbers.map((pn: any) => (
+                      <SelectItem key={pn._id || pn.id || pn.phone_number} value={pn.phone_number} className="cursor-pointer focus:bg-primary/5 rounded-md text-sm">
+                        {pn.phone_number} {pn.type === 'sip' ? '(ElevenLabs SIP)' : `(${pn.provider || 'Telephony'})`}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <div className="relative">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                    <Phone className="w-4 h-4" />
+                  </div>
+                  <Input
+                    placeholder="+1234567890"
+                    value={fromNumber}
+                    onChange={(e) => setFromNumber(e.target.value)}
+                    className="rounded-radius bg-input-color border-input-border-color pl-10 text-sm focus:ring-primary/20 transition-all"
+                  />
                 </div>
-                <Input
-                  placeholder="+1234567890"
-                  value={fromNumber}
-                  onChange={(e) => setFromNumber(e.target.value)}
-                  className="rounded-radius bg-input-color border-input-border-color pl-10 text-sm focus:ring-primary/20 transition-all"
-                />
-              </div>
+              )}
             </div>
 
             <div className="space-y-1.5">

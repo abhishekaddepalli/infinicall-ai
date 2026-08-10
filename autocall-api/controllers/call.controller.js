@@ -70,32 +70,54 @@ exports.placeCall = async (req, res) => {
     let callLog;
 
     if (sourceNumber.type === 'sip' && sourceNumber.elevenlabs_phone_number_id) {
-      if (!settings.elevenlabs_api_key) {
+      const apiKey = settings.elevenlabs_api_key || process.env.ELEVENLABS_API_KEY;
+      if (!apiKey) {
         return res.status(400).json({ success: false, message: 'ElevenLabs API key not configured' });
       }
-      if (!agent.elevenlabs_agent_id) {
-        return res.status(400).json({ success: false, message: 'Selected agent is not configured for ElevenLabs SIP calling' });
+
+      let elevenlabsAgentId = agent.elevenlabs_agent_id;
+      if (!elevenlabsAgentId) {
+        try {
+          const newAgent = await elevenLabsService.createAgent({
+            name: agent.name,
+            conversation_config: {
+              agent: {
+                prompt: { prompt: agent.system_prompt || agent.personality || 'You are a helpful AI voice assistant.' },
+                first_message: agent.first_message || 'Hello! How can I help you today?'
+              }
+            }
+          }, apiKey);
+          if (newAgent && (newAgent.agent_id || newAgent.id)) {
+            elevenlabsAgentId = newAgent.agent_id || newAgent.id;
+            await Agent.findByIdAndUpdate(agent._id, { elevenlabs_agent_id: elevenlabsAgentId });
+          }
+        } catch (e) {
+          console.error('Failed to auto-create ElevenLabs agent ID:', e);
+        }
       }
 
-      const sipResponse = await elevenLabsService.makeSipOutboundCall(
-        agent.elevenlabs_agent_id,
-        sourceNumber.elevenlabs_phone_number_id,
-        phoneNumber,
-        settings.elevenlabs_api_key
-      );
+      if (elevenlabsAgentId) {
+        const sipResponse = await elevenLabsService.makeSipOutboundCall(
+          elevenlabsAgentId,
+          sourceNumber.elevenlabs_phone_number_id,
+          phoneNumber,
+          apiKey
+        );
 
-      callLog = await Call.create({
-        user_id: userId,
-        flow_id: flowId,
-        agent_id: agent._id,
-        twilio_call_sid: sipResponse.sip_call_id || sipResponse.conversation_id || `sip_${Date.now()}`,
-        from_number: fromNumber,
-        to_number: phoneNumber,
-        status: 'queued',
-        direction: 'outbound',
-        contact_id: contact ? contact._id : null
-      });
-      webhookDispatcher.dispatchEvent(userId, 'Call Initiated', callLog);
+        callLog = await Call.create({
+          user_id: userId,
+          flow_id: flowId,
+          agent_id: agent._id,
+          twilio_call_sid: sipResponse.sip_call_id || sipResponse.conversation_id || `sip_${Date.now()}`,
+          from_number: fromNumber,
+          to_number: phoneNumber,
+          status: 'queued',
+          direction: 'outbound',
+          contact_id: contact ? contact._id : null
+        });
+        webhookDispatcher.dispatchEvent(userId, 'Call Initiated', callLog);
+        return res.status(200).json({ success: true, message: 'SIP call initiated successfully', data: callLog });
+      }
     } else if (sourceNumber.provider === 'plivo') {
       const authId = settings.plivo_auth_id || process.env.PLIVO_AUTH_ID;
       const authToken = settings.plivo_auth_token || process.env.PLIVO_AUTH_TOKEN;
