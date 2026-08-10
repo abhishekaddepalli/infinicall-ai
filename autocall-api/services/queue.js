@@ -40,14 +40,20 @@ if (process.env.REDIS_URL) {
   campaignQueue = new Queue('campaign-queue', { connection });
 
   const worker = new Worker('campaign-queue', async (job) => {
-    const app = require('../app');
     const { campaignId, type } = job.data;
 
     if (type === 'process-campaign') {
-      const campaign = await Campaign.findById(campaignId);
-      if (!campaign) throw new Error(`Campaign ${campaignId} not found`);
+      await executeCampaignDirectly(campaignId);
+    }
+  });
+}
 
-      console.log(`Executing campaign: ${campaign.name}`);
+async function executeCampaignDirectly(campaignId) {
+  const app = require('../app');
+  const campaign = await Campaign.findById(campaignId);
+  if (!campaign) throw new Error(`Campaign ${campaignId} not found`);
+
+  console.log(`Executing campaign: ${campaign.name}`);
 
       const userSettings = await UserSettings.findOne({ user: campaign.userId });
       const globalSettings = await db.Setting.findOne();
@@ -752,4 +758,4 @@ const removeCampaignJob = async (campaignId) => {
   }
 };
 
-module.exports = { campaignQueue, removeCampaignJob };
+module.exports = { campaignQueue, removeCampaignJob, executeCampaignDirectly };

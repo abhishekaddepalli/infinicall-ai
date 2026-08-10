@@ -302,44 +302,9 @@ exports.updatePhoneNumber = async (req, res) => {
     let elevenlabsAgentId = null;
 
     if (updateData.agent_id) {
-      if (phoneNumber.agent_id && phoneNumber.agent_id.toString() !== updateData.agent_id.toString()) {
-        return res.status(400).json({
-          success: false,
-          message: "You can't assign agent. This phone number already has an assigned agent."
-        });
-      }
-
-      const existCampaign = await Campaign.findOne({ 
-        phoneNumberId: id,
-        campaignStatus: { $nin: ['Completed', 'Failed', 'Cancelled'] } 
-      });
-      if (existCampaign) {
-        return res.status(400).json({
-          success: false,
-          message: `You can't assign agent. This phone number is already assigned to campaign "${existCampaign.name}".`
-        });
-      }
-
-      const existSMSCampaign = await SMSCampaign.findOne({ 
-        phoneNumberId: id,
-        status: { $nin: ['Completed', 'Failed', 'Cancelled'] }
-      });
-      if (existSMSCampaign) {
-        return res.status(400).json({
-          success: false,
-          message: `You can't assign agent. This phone number is already assigned to SMS campaign "${existSMSCampaign.name}".`
-        });
-      }
-
       const agent = await Agent.findById(updateData.agent_id);
       if (!agent) {
         return res.status(404).json({ success: false, message: 'Agent not found' });
-      }
-      if (agent.type !== 'incoming') {
-        return res.status(400).json({
-          success: false,
-          message: 'Only agents with type "incoming" can be assigned directly to a phone number. For "flow" type agents, please use them in a campaign.'
-        });
       }
 
       elevenlabsAgentId = agent.elevenlabs_agent_id;

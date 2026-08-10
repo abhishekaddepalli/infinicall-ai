@@ -422,27 +422,25 @@ exports.updateCampaign = async (req, res) => {
       }
     }
 
-    if (statusChangingToActive && campaignQueue) {
-      let delayMs = 0;
-      if (campaign.callSchedule && campaign.callSchedule.callStartTime) {
-        const [hours, minutes] = campaign.callSchedule.callStartTime.split(':').map(Number);
-        if (!isNaN(hours) && !isNaN(minutes)) {
-          const now = new Date();
-          const scheduleDate = new Date(now);
-          scheduleDate.setHours(hours, minutes, 0, 0);
-
-          if (scheduleDate <= now) {
-            scheduleDate.setDate(scheduleDate.getDate() + 1);
-          }
-          delayMs = Math.max(0, scheduleDate.getTime() - Date.now());
+    if (statusChangingToActive) {
+      const queueServices = require('../services/queue');
+      if (campaignQueue) {
+        try {
+          await campaignQueue.add(
+            'process-campaign',
+            { type: 'process-campaign', campaignId: campaign._id.toString() },
+            { delay: 0 }
+          );
+        } catch (e) {
+          console.error('Failed to add campaign to Redis queue, running inline fallback:', e);
         }
       }
 
-      await campaignQueue.add(
-        'process-campaign',
-        { type: 'process-campaign', campaignId: campaign._id.toString() },
-        { delay: delayMs }
-      );
+      if (queueServices.executeCampaignDirectly) {
+        setImmediate(() => {
+          queueServices.executeCampaignDirectly(campaign._id.toString()).catch(err => console.error('Campaign Direct Execution Error:', err));
+        });
+      }
     }
 
     let responseMessage = 'Campaign updated successfully';
