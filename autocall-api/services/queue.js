@@ -259,11 +259,33 @@ async function executeCampaignDirectly(campaignId) {
               await new Promise(resolve => setTimeout(resolve, 3000));
               console.log(`WhatsApp Call to ${to} initiated with ID: ${callSid}`);
               successCount++;
-            } else if (phoneNumberDoc.type === 'sip' && phoneNumberDoc.elevenlabs_phone_number_id && elevenlabsApiKey && (agent.elevenlabs_agent_id || elevenlabsAgentId)) {
+            } else if (phoneNumberDoc.type === 'sip' && phoneNumberDoc.elevenlabs_phone_number_id && elevenlabsApiKey) {
               try {
-                const targetAgentId = elevenlabsAgentId || agent.elevenlabs_agent_id;
+                let elevenlabsAgentId = agent ? agent.elevenlabs_agent_id : null;
+                if (!elevenlabsAgentId) {
+                  try {
+                    const newAgent = await elevenLabsService.createAgent({
+                      name: agent ? agent.name : 'AI Campaign Assistant',
+                      conversation_config: {
+                        agent: {
+                          prompt: { prompt: (agent && (agent.system_prompt || agent.personality)) || 'You are a helpful AI voice assistant.' },
+                          first_message: (agent && agent.first_message) || 'Hello! How can I help you today?'
+                        }
+                      }
+                    }, elevenlabsApiKey);
+                    if (newAgent && (newAgent.agent_id || newAgent.id)) {
+                      elevenlabsAgentId = newAgent.agent_id || newAgent.id;
+                      if (agent) await Agent.findByIdAndUpdate(agent._id, { elevenlabs_agent_id: elevenlabsAgentId });
+                    }
+                  } catch (e) {
+                    console.error('Failed to auto-create ElevenLabs agent ID for campaign:', e);
+                  }
+                }
+
+                if (!elevenlabsAgentId) throw new Error('ElevenLabs agent ID not configured');
+
                 const sipResponse = await elevenLabsService.makeSipOutboundCall(
-                  targetAgentId,
+                  elevenlabsAgentId,
                   phoneNumberDoc.elevenlabs_phone_number_id,
                   to,
                   elevenlabsApiKey
@@ -291,7 +313,9 @@ async function executeCampaignDirectly(campaignId) {
               } catch (sipErr) {
                 console.warn(`ElevenLabs SIP Outbound Call failed (${sipErr.message}), falling back to Twilio dispatch.`);
               }
-            } else if (phoneNumberDoc.provider === 'plivo') {
+            }
+
+            if (phoneNumberDoc.provider === 'plivo') {
               if (!plivoAuthId || !plivoAuthToken) {
                 throw new Error('Plivo credentials not found for this user');
               }
@@ -321,8 +345,10 @@ async function executeCampaignDirectly(campaignId) {
               });
 
               let callStatus = 'queued';
-              while (!['completed', 'failed', 'busy', 'no-answer', 'canceled', 'declined', 'missed'].includes(callStatus)) {
-                await new Promise(resolve => setTimeout(resolve, 10000));
+              let pollAttempts = 0;
+              while (!['completed', 'failed', 'busy', 'no-answer', 'canceled', 'declined', 'missed'].includes(callStatus) && pollAttempts < 12) {
+                await new Promise(resolve => setTimeout(resolve, 5000));
+                pollAttempts++;
                 try {
                   callStatus = await plivoService.getCallStatus(
                     plivoAuthId,
@@ -347,55 +373,87 @@ async function executeCampaignDirectly(campaignId) {
 
               successCount++;
             } else {
-              const statusCallbackUrl = `${appUrl}/api/calls/status`;
-              const call = await twilioService.makeCall(
-                twilioAccountSid,
-                twilioAuthToken,
-                fromNumber,
-                to,
-                twimlUrl,
-                statusCallbackUrl
-              );
-
-              await Call.create({
-                user_id: campaign.userId,
-                flow_id: flowId,
-                agent_id: campaign.agentId,
-                campaign_id: campaign._id,
-                twilio_call_sid: call.sid,
-                from_number: fromNumber,
-                to_number: to,
-                status: 'queued',
-                direction: 'outbound',
-                lead_name: name,
-              });
-
-              let callStatus = call.status;
-              while (!['completed', 'failed', 'busy', 'no-answer', 'canceled'].includes(callStatus)) {
-                await new Promise(resolve => setTimeout(resolve, 10000));
-                try {
-                  callStatus = await twilioService.getCallStatus(
-                    settings.twilio_account_sid,
-                    settings.twilio_auth_token,
-                    call.sid
-                  );
-                } catch (statusError) {
-                  console.error(`Error fetching status for call ${call.sid}:`, statusError);
-                  break;
+              try {
+                if (!twilioAccountSid || !twilioAuthToken) {
+                  throw new Error('Twilio credentials not configured in settings or .env');
                 }
+                const statusCallbackUrl = `${appUrl}/api/calls/status`;
+                const call = await twilioService.makeCall(
+                  twilioAccountSid,
+                  twilioAuthToken,
+                  fromNumber,
+                  to,
+                  twimlUrl,
+                  statusCallbackUrl
+                );
+
+                await Call.create({
+                  user_id: campaign.userId,
+                  flow_id: flowId,
+                  agent_id: campaign.agentId,
+                  campaign_id: campaign._id,
+                  twilio_call_sid: call.sid,
+                  from_number: fromNumber,
+                  to_number: to,
+                  status: 'queued',
+                  direction: 'outbound',
+                  lead_name: name,
+                });
+
+                let callStatus = call.status || 'queued';
+                let pollAttempts = 0;
+                while (!['completed', 'failed', 'busy', 'no-answer', 'canceled'].includes(callStatus) && pollAttempts < 12) {
+                  await new Promise(resolve => setTimeout(resolve, 5000));
+                  pollAttempts++;
+                  try {
+                    callStatus = await twilioService.getCallStatus(
+                      twilioAccountSid,
+                      twilioAuthToken,
+                      call.sid
+                    );
+                  } catch (statusError) {
+                    console.error(`Error fetching status for call ${call.sid}:`, statusError);
+                    break;
+                  }
+                }
+                console.log(`Call to ${to} finished with status: ${callStatus}`);
+
+                let mappedCallStatus = callStatus;
+                if (callStatus === 'busy') mappedCallStatus = 'declined';
+                if (callStatus === 'no-answer') mappedCallStatus = 'missed';
+
+                await Call.findOneAndUpdate(
+                  { twilio_call_sid: call.sid },
+                  { status: mappedCallStatus, ended_at: new Date() }
+                );
+
+                successCount++;
+              } catch (callErr) {
+                console.error(`Call failed for contact ${to}:`, callErr.message);
+                failCount++;
+                lastErrorMsg = callErr.message || 'Call failed';
+                await Call.create({
+                  user_id: campaign.userId,
+                  flow_id: flowId,
+                  agent_id: campaign.agentId,
+                  campaign_id: campaign._id,
+                  twilio_call_sid: 'failed_' + Date.now(),
+                  from_number: fromNumber,
+                  to_number: to,
+                  status: 'failed',
+                  direction: 'outbound',
+                  lead_name: name,
+                  fail_reason: lastErrorMsg
+                });
+                await db.CampaignHistory.create({
+                  campaignId: campaign._id,
+                  leadName: name,
+                  leadPhone: to,
+                  callStatus: 'CALL FAILED',
+                  callFailReason: lastErrorMsg,
+                  callTime: new Date()
+                });
               }
-              console.log(`Call to ${to} finished with status: ${callStatus}`);
-
-              let mappedCallStatus = callStatus;
-              if (callStatus === 'busy') mappedCallStatus = 'declined';
-              if (callStatus === 'no-answer') mappedCallStatus = 'missed';
-
-              await Call.findOneAndUpdate(
-                { twilio_call_sid: call.sid },
-                { status: mappedCallStatus, ended_at: new Date() }
-              );
-
-              successCount++;
             }
           } catch (error) {
             failCount++;
