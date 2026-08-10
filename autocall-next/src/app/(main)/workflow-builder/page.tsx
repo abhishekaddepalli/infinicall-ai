@@ -55,7 +55,8 @@ export default function FlowBuilderPage() {
         status: 'active'
       }).unwrap()
 
-      const newFlowId = res?.data?._id || res?.data?.id || res?.data?.virtualId
+      const flowData = res?.data as any
+      const newFlowId = flowData?._id || flowData?.id || flowData?.virtualId
       if (newFlowId) {
         router.push(`/workflow-builder/${newFlowId}`)
       } else {
