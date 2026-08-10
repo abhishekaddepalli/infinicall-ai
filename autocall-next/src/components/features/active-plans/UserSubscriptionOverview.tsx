@@ -98,7 +98,7 @@ const UserSubscriptionOverview = ({
               <StatusBadge status={sub.status} />
             </div>
             <div className="flex items-baseline gap-1 mt-4">
-              <span className="text-3xl font-black text-title">${amountPaid.toFixed(2)}</span>
+              <span className="text-3xl font-black text-title">₹{amountPaid.toFixed(2)}</span>
               <span className="text-base text-subtitle-color font-medium">/ {t('month', { defaultValue: 'month' })}</span>
             </div>
             <p className="text-md text-subtitle-color capitalize font-medium mt-1">{t(plan?.billing_cycle || '', { defaultValue: plan?.billing_cycle })} {t('billing', { defaultValue: 'Billing' })}</p>
@@ -152,7 +152,7 @@ const UserSubscriptionOverview = ({
                 <Wallet className="w-4 h-4" />
                 {t('amount_paid', { defaultValue: 'Amount Paid' })}
               </div>
-              <span className="font-bold text-title">${amountPaid.toFixed(2)}</span>
+              <span className="font-bold text-title">₹{amountPaid.toFixed(2)}</span>
             </div>
 
             <div className="flex items-center justify-between text-sm">

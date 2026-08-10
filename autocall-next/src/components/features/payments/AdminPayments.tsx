@@ -103,7 +103,7 @@ const AdminPayments = () => {
       className: 'xl1580:min-w-[160px] min-w-[100px]',
       cell: (row: any) => (
         <div className="font-bold text-sm whitespace-nowrap">
-          {row.currency === 'INR' ? '₹' : '$'}
+          {row.currency === 'USD' ? '$' : '₹'}
           {row.total_amount || row.amount}
         </div>
       ),

@@ -20,7 +20,7 @@ const AdminPlanCard = ({
 }: any) => {
   const { t } = useTranslation()
 
-  const currencySymbol = plan.currency === 'INR' ? '₹' : plan.currency === 'EUR' ? '€' : plan.currency === 'GBP' ? '£' : '$'
+  const currencySymbol = plan.currency === 'USD' ? '$' : plan.currency === 'EUR' ? '€' : plan.currency === 'GBP' ? '£' : '₹'
   const billingCycle = plan.billing_cycle || 'monthly'
   const formattedCycle = billingCycle === 'yearly' ? 'Year' : billingCycle === 'monthly' ? 'Month' : billingCycle
 

@@ -56,7 +56,7 @@ const UserPlans = () => {
     }
   }, [searchParams, t])
 
-  const plans = (plansResponse as unknown as { data?: Plan[] })?.data || []
+  const plans = Array.isArray(plansResponse) ? plansResponse : ((plansResponse as unknown as { data?: Plan[] })?.data || [])
 
   const displayedPlans = plans.flatMap((p: any) => {
     const planId = p.id || p._id

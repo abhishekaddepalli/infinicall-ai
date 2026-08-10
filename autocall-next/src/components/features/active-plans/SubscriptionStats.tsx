@@ -71,7 +71,7 @@ const SubscriptionStats = ({ statsData }: any) => {
               {/* Value and Label Bottom Left */}
               <div>
                 <p className="text-3xl font-black text-title group-hover:text-primary transition-colors duration-300">
-                  {stat.isCurrency ? `$${value}` : value}
+                  {stat.isCurrency ? `₹${value}` : value}
                 </p>
                 <p className="text-[15px] font-medium text-subtitle-color mt-1.5 transition-colors duration-300 group-hover:text-slate-600 dark:group-hover:text-slate-300">
                   {t(stat.labelKey)}

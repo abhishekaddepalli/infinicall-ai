@@ -38,7 +38,7 @@ const SubscriptionHistory = ({
       header: t('amount'),
       accessorKey: 'amount',
       className: 'font-semibold text-foreground whitespace-nowrap min-w-[100px]',
-      cell: (row) => `$${row.amount.toFixed(2)}`,
+      cell: (row) => `₹${row.amount.toFixed(2)}`,
     },
     {
       header: t('status'),

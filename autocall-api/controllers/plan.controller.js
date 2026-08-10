@@ -134,7 +134,54 @@ exports.getPlans = async (req, res) => {
     const query = {};
     if (status) query.status = status;
 
-    const plans = await Plan.find(query).sort({ created_at: -1 });
+    let plans = await Plan.find(query).sort({ created_at: -1 });
+
+    if (!plans || plans.length === 0) {
+      const defaultPlans = [
+        {
+          name: "Starter Plan",
+          slug: "starter-plan",
+          description: "Ideal for young startups and developers exploring Conversational AI calling options.",
+          plan_type: "recurring",
+          billing_cycle: "monthly",
+          validity_days: 30,
+          amount: 499,
+          currency: "INR",
+          total_credits: 500,
+          status: "active",
+          is_popular: false
+        },
+        {
+          name: "Pro Scale Plan",
+          slug: "pro-scale-plan",
+          description: "Perfect for expanding teams requiring high-performance concurrent calling limits.",
+          plan_type: "recurring",
+          billing_cycle: "monthly",
+          validity_days: 30,
+          amount: 999,
+          currency: "INR",
+          total_credits: 1200,
+          status: "active",
+          is_popular: true
+        },
+        {
+          name: "Enterprise Plan",
+          slug: "enterprise-plan",
+          description: "Tailored options for global corporations requiring dedicated trunk lines and SLAs.",
+          plan_type: "recurring",
+          billing_cycle: "monthly",
+          validity_days: 30,
+          amount: 4999,
+          currency: "INR",
+          total_credits: 7000,
+          status: "active",
+          is_popular: false
+        }
+      ];
+      await Plan.insertMany(defaultPlans);
+      plans = await Plan.find(query).sort({ created_at: -1 });
+    }
+
     res.status(200).json(plans);
   } catch (error) {
     console.error('Get Plans error:', error);

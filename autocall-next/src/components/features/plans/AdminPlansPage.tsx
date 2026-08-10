@@ -46,7 +46,7 @@ const AdminPlansPage = () => {
   const [deletePlan, { isLoading: isDeleting }] = useDeletePlanMutation()
   const [syncToGateways, { isLoading: isSyncing }] = useSyncPlansToGatewaysMutation()
 
-  const plans = plansResponse?.data || []
+  const plans = Array.isArray(plansResponse) ? plansResponse : (plansResponse?.data || [])
 
   const handleDeleteConfirm = async () => {
     if (plansToDelete.length === 0) return
