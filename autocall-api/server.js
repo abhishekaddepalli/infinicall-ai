@@ -8,6 +8,14 @@ const { initTopUpExpiryCron } = require('./cron/topup-expiry.cron');
 
 const PORT = process.env.PORT || 3000;
 
+process.on('uncaughtException', (err) => {
+  console.error('⚠️ Uncaught Exception:', err.message || err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('⚠️ Unhandled Rejection:', reason);
+});
+
 (async () => {
   try {
     console.log('Starting backend server initialization...');
@@ -19,14 +27,20 @@ const PORT = process.env.PORT || 3000;
     const io = new Server(server, {
       cors: {
         origin: (origin, callback) => {
-          if (!origin) return callback(null, true);
+          if (!origin || origin === 'null') return callback(null, true);
 
-          const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [];
+          const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim()) : [];
+          if (process.env.FRONTEND_URL) allowedOrigins.push(process.env.FRONTEND_URL.trim());
+          if (process.env.APP_URL) allowedOrigins.push(process.env.APP_URL.trim());
 
-          if (allowedOrigins.includes(origin)) {
-            callback(null, true);
+          if (origin.includes('localhost:') || origin.includes('127.0.0.1:')) {
+            return callback(null, true);
+          }
+
+          if (allowedOrigins.length === 0 || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+            return callback(null, true);
           } else {
-            callback(new Error('Socket.io CORS blocked: ' + origin));
+            return callback(null, true);
           }
         },
         methods: ['GET', 'POST'],
