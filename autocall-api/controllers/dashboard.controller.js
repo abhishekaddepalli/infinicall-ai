@@ -89,6 +89,28 @@ exports.getAdminDashboardData = async (req, res) => {
       ? { created_at: { $gte: range.start, $lte: range.end } }
       : {};
 
+    const safeCount = async (Model, filter) => {
+      try {
+        if (!Model) return 0;
+        return await Model.countDocuments(filter);
+      } catch (e) {
+        return 0;
+      }
+    };
+
+    const safeFind = async (Model, query, sort, limit, populates = []) => {
+      try {
+        if (!Model) return [];
+        let q = Model.find(query).sort(sort).limit(limit);
+        for (const pop of populates) {
+          q = q.populate(pop.path, pop.select);
+        }
+        return await q.lean();
+      } catch (e) {
+        return [];
+      }
+    };
+
     const today = new Date();
     const dayOfWeek = today.getDay();
     const distanceToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
@@ -100,73 +122,72 @@ exports.getAdminDashboardData = async (req, res) => {
       ? { created_at: { $gte: range.start, $lte: range.end } }
       : { created_at: { $gte: startOfWeek } };
 
-    const newUsersThisWeek = await User.countDocuments(newUsersFilter);
+    const newUsersThisWeek = await safeCount(User, newUsersFilter);
 
-    const revenueMatch = { payment_status: 'success', deleted_at: null };
-    if (range) {
-      revenueMatch.created_at = { $gte: range.start, $lte: range.end };
+    let totalRevenue = 0;
+    try {
+      const revenueMatch = { payment_status: 'success', deleted_at: null };
+      if (range) {
+        revenueMatch.created_at = { $gte: range.start, $lte: range.end };
+      }
+      const revenueResult = await PaymentHistory.aggregate([
+        { $match: revenueMatch },
+        { $group: { _id: null, total: { $sum: '$amount' } } }
+      ]);
+      totalRevenue = revenueResult[0]?.total || 0;
+    } catch (e) {
+      totalRevenue = 0;
     }
-    const revenueResult = await PaymentHistory.aggregate([
-      { $match: revenueMatch },
-      { $group: { _id: null, total: { $sum: '$amount' } } }
-    ]);
-    const totalRevenue = revenueResult[0]?.total || 0;
 
-    const activeSubscribers = await Subscription.countDocuments({
+    const activeSubscribers = await safeCount(Subscription, {
       status: { $in: ['active', 'trial'] },
       deleted_at: null,
       ...createdAtFilter
     });
-    const totalFlowsOfCurrentUser = await Flow.countDocuments({
+
+    const totalFlowsOfCurrentUser = await safeCount(Flow, {
       user_id: userId,
       system_flow: { $ne: true },
       deleted_at: null,
       ...createdAtFilter
     });
 
-    const totalTemplatesOfCurrentUser = await Template.countDocuments({ user_id: userId, ...createdAtFilter });
-
-    const totalContactOfCurrentUser = await Contact.countDocuments({ user_id: userId, ...createdAtFilter });
-
-    const totalAgentOfCurrentUser = await Agent.countDocuments({ user_id: userId, ...createdAtFilter });
-    const totalSmsAgentOfCurrentUser = await SMSAgent.countDocuments({ user_id: userId, ...createdAtFilter });
-    const totalTeamsAcrossAllUser = await Team.countDocuments({ ...createdAtFilter });
-    const totalSmsTemplateOfCurrentUser = await SMSTemplate.countDocuments({ user_id: userId, ...createdAtFilter });
-    const totalCallsOfCurrentUser = await Call.countDocuments({ user_id: userId, ...createdAtFilter });
-    const totalCampaignsOfCurrentUser = await Campaign.countDocuments({ userId: userId, ...createdAtFilter });
-    const totalSmsCampaignOfCurrentUser = await SMSCampaign.countDocuments({ user_id: userId, ...createdAtFilter });
-
+    const totalTemplatesOfCurrentUser = await safeCount(Template, { user_id: userId, ...createdAtFilter });
+    const totalContactOfCurrentUser = await safeCount(Contact, { user_id: userId, ...createdAtFilter });
+    const totalAgentOfCurrentUser = await safeCount(Agent, { user_id: userId, ...createdAtFilter });
+    const totalSmsAgentOfCurrentUser = await safeCount(SMSAgent, { user_id: userId, ...createdAtFilter });
+    const totalTeamsAcrossAllUser = await safeCount(Team, { ...createdAtFilter });
+    const totalSmsTemplateOfCurrentUser = await safeCount(SMSTemplate, { user_id: userId, ...createdAtFilter });
+    const totalCallsOfCurrentUser = await safeCount(Call, { user_id: userId, ...createdAtFilter });
+    const totalCampaignsOfCurrentUser = await safeCount(Campaign, { $or: [{ userId: userId }, { user_id: userId }], ...createdAtFilter });
+    const totalSmsCampaignOfCurrentUser = await safeCount(SMSCampaign, { $or: [{ userId: userId }, { user_id: userId }], ...createdAtFilter });
 
     const twelveMonthsAgo = new Date();
     twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 11);
     twelveMonthsAgo.setDate(1);
     twelveMonthsAgo.setHours(0, 0, 0, 0);
 
-    const revenueChartMatch = {
-      payment_status: 'success',
-      deleted_at: null
-    };
-    if (range) {
-      revenueChartMatch.created_at = { $gte: range.start, $lte: range.end };
-    } else {
-      revenueChartMatch.created_at = { $gte: twelveMonthsAgo };
+    let monthlyRevenue = [];
+    try {
+      const revenueChartMatch = { payment_status: 'success', deleted_at: null };
+      if (range) {
+        revenueChartMatch.created_at = { $gte: range.start, $lte: range.end };
+      } else {
+        revenueChartMatch.created_at = { $gte: twelveMonthsAgo };
+      }
+      monthlyRevenue = await PaymentHistory.aggregate([
+        { $match: revenueChartMatch },
+        {
+          $group: {
+            _id: { year: { $year: '$created_at' }, month: { $month: '$created_at' } },
+            revenue: { $sum: '$amount' }
+          }
+        },
+        { $sort: { '_id.year': 1, '_id.month': 1 } }
+      ]);
+    } catch (e) {
+      monthlyRevenue = [];
     }
-
-    const monthlyRevenue = await PaymentHistory.aggregate([
-      {
-        $match: revenueChartMatch
-      },
-      {
-        $group: {
-          _id: {
-            year: { $year: '$created_at' },
-            month: { $month: '$created_at' }
-          },
-          revenue: { $sum: '$amount' }
-        }
-      },
-      { $sort: { '_id.year': 1, '_id.month': 1 } }
-    ]);
 
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const monthWiseRevenueChart = [];
@@ -184,27 +205,26 @@ exports.getAdminDashboardData = async (req, res) => {
       });
     }
 
-    const callChartMatch = {};
-    if (range) {
-      callChartMatch.created_at = { $gte: range.start, $lte: range.end };
-    } else {
-      callChartMatch.created_at = { $gte: startOfWeek };
-    }
-
-    const calls = await Call.aggregate([
-      {
-        $match: callChartMatch
-      },
-      {
-        $group: {
-          _id: {
-            dayOfWeek: { $dayOfWeek: '$created_at' },
-            direction: '$direction'
-          },
-          count: { $sum: 1 }
-        }
+    let calls = [];
+    try {
+      const callChartMatch = {};
+      if (range) {
+        callChartMatch.created_at = { $gte: range.start, $lte: range.end };
+      } else {
+        callChartMatch.created_at = { $gte: startOfWeek };
       }
-    ]);
+      calls = await Call.aggregate([
+        { $match: callChartMatch },
+        {
+          $group: {
+            _id: { dayOfWeek: { $dayOfWeek: '$created_at' }, direction: '$direction' },
+            count: { $sum: 1 }
+          }
+        }
+      ]);
+    } catch (e) {
+      calls = [];
+    }
 
     const dayLabels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const getDayIndex = (mongoDayOfWeek) => {
@@ -231,12 +251,8 @@ exports.getAdminDashboardData = async (req, res) => {
       }
     });
 
-    const pieFilterAgent = range
-      ? { user_id: userId, created_at: { $gte: range.start, $lte: range.end } }
-      : { user_id: userId };
-
-    const totalAgentPie = await Agent.countDocuments(pieFilterAgent);
-    const totalSmsAgentPie = await SMSAgent.countDocuments(pieFilterAgent);
+    const totalAgentPie = totalAgentOfCurrentUser;
+    const totalSmsAgentPie = totalSmsAgentOfCurrentUser;
     const totalAgentPieCount = totalAgentPie + totalSmsAgentPie;
 
     const allTimeAgentPieChart = {
@@ -245,47 +261,12 @@ exports.getAdminDashboardData = async (req, res) => {
       sms_agent: totalAgentPieCount > 0 ? parseFloat(((totalSmsAgentPie / totalAgentPieCount) * 100).toFixed(2)) : 0
     };
 
-
-    const recentRegisteredUsers = await User.find()
-      .sort({ created_at: -1 })
-      .limit(5)
-      .populate('roleId', 'name')
-      .select('name email avatar roleId created_at isActive')
-      .lean();
-
-    const recentCallsOfCurrentUser = await Call.find({ user_id: userId })
-      .sort({ created_at: -1 })
-      .limit(5)
-      .populate('flow_id', 'name')
-      .populate('campaign_id', 'name')
-      .lean();
-
-    const recentCampaigns = await Campaign.find({ userId: userId })
-      .sort({ created_at: -1 })
-      .limit(5)
-      .populate('typeId', 'name')
-      .populate('agentId', 'name')
-      .populate('phoneNumberId', 'phone_number')
-      .lean();
-
-    const systemFlow = await Flow.find({ system_flow: true, deleted_at: null })
-      .sort({ created_at: -1 })
-      .limit(5)
-      .lean();
-
-    const recentSmsCampaignsOfCurrentUser = await SMSCampaign.find({ user_id: userId })
-      .sort({ created_at: -1 })
-      .limit(5)
-      .populate('typeId', 'name')
-      .populate('smsAgentId', 'name')
-      .populate('phoneNumberId', 'phone_number')
-      .lean();
-
-    const recentContactOfCurrentUser = await Contact.find({ user_id: userId })
-      .sort({ created_at: -1 })
-      .limit(5)
-      .lean();
-
+    const recentRegisteredUsers = await safeFind(User, {}, { created_at: -1 }, 5, [{ path: 'roleId', select: 'name' }]);
+    const recentCallsOfCurrentUser = await safeFind(Call, { user_id: userId }, { created_at: -1 }, 5, [{ path: 'flow_id', select: 'name' }, { path: 'campaign_id', select: 'name' }]);
+    const recentCampaigns = await safeFind(Campaign, { $or: [{ userId: userId }, { user_id: userId }] }, { created_at: -1 }, 5, [{ path: 'typeId', select: 'name' }, { path: 'agentId', select: 'name' }, { path: 'phoneNumberId', select: 'phone_number' }]);
+    const systemFlow = await safeFind(Flow, { system_flow: true, deleted_at: null }, { created_at: -1 }, 5);
+    const recentSmsCampaignsOfCurrentUser = await safeFind(SMSCampaign, { $or: [{ userId: userId }, { user_id: userId }] }, { created_at: -1 }, 5, [{ path: 'typeId', select: 'name' }, { path: 'smsAgentId', select: 'name' }, { path: 'phoneNumberId', select: 'phone_number' }]);
+    const recentContactOfCurrentUser = await safeFind(Contact, { user_id: userId }, { created_at: -1 }, 5);
 
     res.json({
       success: true,

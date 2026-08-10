@@ -17,7 +17,7 @@ export default function DynamicFavicon() {
     document.title = appTitle;
 
     const faviconUrl = settings?.favicon_url || settings?.favicon;
-    const resolvedUrl = (faviconUrl && !faviconUrl.includes('autocall')) ? getMediaUrl(faviconUrl) : "/favicon.png";
+    const resolvedUrl = (faviconUrl && !faviconUrl.includes('autocall')) ? (getMediaUrl(faviconUrl) || "/favicon.png") : "/favicon.png";
 
     // Helper to set link elements
     const setFavicon = (href: string) => {

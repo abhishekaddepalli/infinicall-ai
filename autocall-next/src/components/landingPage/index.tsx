@@ -106,6 +106,8 @@ export default function LandingPage() {
     : defaultFooterData;
 
   // Determine if we should use static fallbacks when lp is null or array sections are empty
+  const useStaticFallbacks = lp === null;
+
   const comparisonData = lp?.comparison ? {
     ...lp.comparison,
     robotImage: lp.comparison.robotImage || defaultComparisonData.robotImage
