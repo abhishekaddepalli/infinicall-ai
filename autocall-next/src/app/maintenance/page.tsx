@@ -37,7 +37,7 @@ export default function MaintenancePage() {
     );
   }
 
-  const appName = settings?.app_name || "AutoCall";
+  const appName = settings?.app_name || "InfiniCall AI";
   const title = settings?.maintenance_title || "System Under Maintenance";
   const message =
     settings?.maintenance_message ||

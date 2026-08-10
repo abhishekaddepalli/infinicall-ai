@@ -70,7 +70,7 @@ const LandingPageSchema = new Schema(
     },
 
     how_it_works: {
-      heading: { type: String, default: 'How AutoCall Works' },
+      heading: { type: String, default: 'How InfiniCall AI Works' },
       subtitle: { type: String, default: 'A seamless journey from setup to results, designed for your growth.' },
       steps: {
         type: [HowItWorksStepSchema],

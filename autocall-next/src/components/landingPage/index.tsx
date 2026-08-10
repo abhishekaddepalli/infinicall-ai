@@ -94,7 +94,7 @@ export default function LandingPage() {
 
   const footerData = lp?.footer
     ? {
-      title: "AutoCall",
+      title: "InfiniCall AI",
       subtitle: lp.footer.tagline,
       content: {
         instagram: getSocialHref("instagram", "#"),
@@ -105,9 +105,7 @@ export default function LandingPage() {
     }
     : defaultFooterData;
 
-  // Determine if we should use the database values or the static fallbacks
-  const useStaticFallbacks = lp === null;
-
+  // Determine if we should use static fallbacks when lp is null or array sections are empty
   const comparisonData = lp?.comparison ? {
     ...lp.comparison,
     robotImage: lp.comparison.robotImage || defaultComparisonData.robotImage
@@ -127,24 +125,24 @@ export default function LandingPage() {
   } : defaultHumanTransferData;
 
   // ── Plans ──
-  const plansData: any[] = useStaticFallbacks
+  const plansData: any[] = (!lp?.pricing?.plan_ids || !lp.pricing.plan_ids.length)
     ? defaultPlansData
-    : lp?.pricing?.plan_ids || [];
+    : lp.pricing.plan_ids;
 
   // ── Testimonials ──
-  const testimonialsData: any[] = useStaticFallbacks
+  const testimonialsData: any[] = (!lp?.testimonials?.testimonial_ids || !lp.testimonials.testimonial_ids.length)
     ? defaultTestimonialsData
-    : lp?.testimonials?.testimonial_ids || [];
+    : lp.testimonials.testimonial_ids;
 
   // ── FAQs ──
-  const faqsData: any[] = useStaticFallbacks
+  const faqsData: any[] = (!lp?.faq?.faq_ids || !lp.faq.faq_ids.length)
     ? defaultFaqsData
-    : lp?.faq?.faq_ids || [];
+    : lp.faq.faq_ids;
 
   // ── Blogs ──
-  const blogsData: any[] = useStaticFallbacks
+  const blogsData: any[] = (!lp?.blog?.blog_ids || !lp.blog.blog_ids.length)
     ? defaultBlogsData
-    : lp?.blog?.blog_ids || [];
+    : lp.blog.blog_ids;
 
   // ── Section labels ──
   const pricingSection = lp?.pricing || defaultPricingSection;

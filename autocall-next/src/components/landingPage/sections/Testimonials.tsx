@@ -52,7 +52,7 @@ export function Testimonials({ testimonialSection, testimonialsData }: Testimoni
           <div className="lg:col-span-5 flex flex-col items-start pr-0 lg:pr-8">
             <h2 className="text-[calc(26px+(42-26)*((100vw-320px)/(1920-320)))] font-extrabold text-white tracking-tight leading-[1.15] mb-[calc(16px+(24-16)*((100vw-320px)/(1920-320)))]">{testimonialSection.section_heading}</h2>
 
-            <p className="text-base text-slate-400 leading-relaxed mb-[calc(16px+(32-16)*((100vw-320px)/(1920-320)))]">{testimonialSection.section_subheading || "Explore how AutoCall empowers modern founders to turn raw customer databases into actionable, high-conversion AI-driven voice campaigns."}</p>
+            <p className="text-base text-slate-400 leading-relaxed mb-[calc(16px+(32-16)*((100vw-320px)/(1920-320)))]">{testimonialSection.section_subheading || "Explore how InfiniCall AI empowers modern founders to turn raw customer databases into actionable, high-conversion AI-driven voice campaigns."}</p>
 
           </div>
 

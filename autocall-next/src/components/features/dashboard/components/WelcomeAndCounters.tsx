@@ -35,7 +35,7 @@ export const WelcomeAndCounters: React.FC<WelcomeAndCountersProps> = ({ statisti
           icon={DollarSign}
           colorClass="from-primary/10 to-primary/10 text-primary border-primary/20"
           glowClass="shadow-primary/5 hover:border-primary/30"
-          prefix="$"
+          prefix="₹"
           href={ROUTES.TRANSACTIONS}
         />
 

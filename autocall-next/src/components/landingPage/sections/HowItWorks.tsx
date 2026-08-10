@@ -43,7 +43,7 @@ const STEP_COLORS = [
 ];
 
 export function HowItWorks({ howItWorksData }: HowItWorksProps) {
-  const heading = howItWorksData?.heading || "How AutoCall Works";
+  const heading = howItWorksData?.heading || "How InfiniCall AI Works";
   const subtitle = howItWorksData?.subtitle || "A seamless journey from setup to results, designed for your growth.";
   const steps = howItWorksData?.steps || [];
 

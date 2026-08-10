@@ -1,7 +1,7 @@
 const Setting = require('../models/setting.model');
 
 const defaultSettings = {
-  app_name: 'AutoCall',
+  app_name: 'InfiniCall AI',
   app_description: 'A modern AI Builder application',
   app_email: 'support@example.com',
   support_email: 'support@example.com',

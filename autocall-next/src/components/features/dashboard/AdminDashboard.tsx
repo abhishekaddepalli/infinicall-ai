@@ -54,7 +54,7 @@ export function AdminDashboard({ stats }: AdminDashboardProps) {
     },
     yaxis: {
       labels: {
-        formatter: (val: number) => `$${val}`,
+        formatter: (val: number) => `₹${val}`,
         style: {
           colors: '#64748b',
           fontSize: '11px',

@@ -119,7 +119,7 @@ export function Footer({ footerData }: FooterProps) {
 
         {/* Bottom row copyrights */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-[calc(25px+(40-25)*((100vw-320px)/(1920-320)))] text-[12px] text-white">
-          <p>© 2026 AutoCall AI. All rights reserved.</p>
+          <p>© 2026 InfiniCall AI. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-6">
             <Link href={ROUTES.PRIVACY_POLICY} target="_blank" rel="noopener noreferrer" className="text-white transition-colors duration-200">
               {t("privacy_policy")}

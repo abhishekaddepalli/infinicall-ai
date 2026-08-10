@@ -59,16 +59,16 @@ export const defaultContactData = {
   subtitle:
     "Have specific volume requirements or custom integration plans? Reach out and our engineering support team will respond in a few hours.",
   content: {
-    email: "support@AutoCall.ai",
+    email: "support@InfiniCall.ai",
     location: "123 AI Street, Tech City, TC 12345",
   },
 };
 
 // ── Footer ────────────────────────────────────────────────────────────────────
 export const defaultFooterData = {
-  title: "AutoCall",
+  title: "InfiniCall AI",
   subtitle:
-    "AutoCall is a unified business platform that combines CRM marketing, telephone carrier services, structured FAQs, and voice call automation into one connected conversational ecosystem.",
+    "InfiniCall AI is a unified business platform that combines CRM marketing, telephone carrier services, structured FAQs, and voice call automation into one connected conversational ecosystem.",
   content: { instagram: "#", facebook: "#", twitter: "#", linkedin: "#" },
 };
 
@@ -149,9 +149,9 @@ export const defaultTestimonialsData: any[] = [
 // ── FAQs ──────────────────────────────────────────────────────────────────────
 export const defaultFaqsData: any[] = [
   {
-    title: "What is AutoCall exactly?",
+    title: "What is InfiniCall AI exactly?",
     description:
-      "AutoCall is a unified business and calling automation suite that combines high-fidelity AI voice agents, smart CRM scheduling pipelines, unified conversation inboxes, and Google/WhatsApp marketing channels into one connected platform.",
+      "InfiniCall AI is a unified business and calling automation suite that combines high-fidelity AI voice agents, smart CRM scheduling pipelines, unified conversation inboxes, and Google/WhatsApp marketing channels into one connected platform.",
   },
   {
     title: "Who is the platform built for?",
@@ -161,7 +161,7 @@ export const defaultFaqsData: any[] = [
   {
     title: "Can we migrate from our current carriers?",
     description:
-      "Absolutely. AutoCall supports simple number porting, outbound calling via external SIP channels, and verified custom number procurement directly within our workspace.",
+      "Absolutely. InfiniCall AI supports simple number porting, outbound calling via external SIP channels, and verified custom number procurement directly within our workspace.",
   },
   {
     title: "Does the platform integrate with other software?",
@@ -169,7 +169,7 @@ export const defaultFaqsData: any[] = [
       "Yes. We sync out of the box with CRM leaders, Google Sheets, Google Calendars, and provide fully customizable Webhook endpoints and Developer API keys.",
   },
   {
-    title: "Is AutoCall secure?",
+    title: "Is InfiniCall AI secure?",
     description:
       "Yes. All voice packets, conversation transcript data, FAQs, customer phone numbers, and call logs are heavily encrypted at rest and in transit utilizing banking-grade protocols.",
   },
@@ -261,7 +261,7 @@ export const defaultComparisonData = {
 
 // ── How It Works ──────────────────────────────────────────────────────────────
 export const defaultHowItWorksData = {
-  heading: "How AutoCall Works",
+  heading: "How InfiniCall AI Works",
   subtitle: "A seamless journey from setup to results, designed for your growth.",
   steps: [
     {

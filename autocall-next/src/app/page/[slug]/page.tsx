@@ -128,7 +128,7 @@ export default function CMSPage({ params }: PageProps) {
       <footer className="w-full border-t border-input-border-color bg-bg-card/50 mt-auto">
         <div className="max-w-[1200px] mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm font-medium text-subtitle-color">
-            © {new Date().getFullYear()} {settings?.app_name || "AutoCall"} AI. {t('all_right_reserved')}
+            © {new Date().getFullYear()} {settings?.app_name || "InfiniCall AI"}. {t('all_right_reserved')}
           </p>
           <div className="flex gap-4">
             <Link href={ROUTES.PRIVACY_POLICY} className="text-sm font-medium text-subtitle-color hover:text-primary transition-colors">Privacy Policy</Link>

@@ -121,7 +121,7 @@ export function UserHeaderSection({
                     </div>
                   </div>
                   <span className="text-sm font-bold text-subtitle-color">
-                    ${(() => {
+                    ₹{(() => {
                       const planAmount = sub.plan?.amount ?? sub.plan?.price ?? (sub.plan_id as any)?.amount ?? (sub.plan_id as any)?.price ?? 0;
                       const amountPaid = sub.payment_gateway === 'manual'
                         ? (sub.amount_paid || sub.amount || planAmount || 0)
