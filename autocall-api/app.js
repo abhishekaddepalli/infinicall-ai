@@ -199,7 +199,10 @@ app.use('/api/widgets', widgetRoutes);
 app.use('/api/whatsapp', whatsappRoutes);
 app.use('/api/whatsapp-calls', whatsappCallRoutes);
 app.use('/api/whatsapp-template', whatsappTemplateRoutes);
+const leadIntelligenceRoutes = require('./routes/lead-intelligence.routes');
+
 app.use('/api/automation', automationRoutes);
+app.use('/api/lead-intelligence', leadIntelligenceRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/landing-page', landingPageRoutes);
 app.use('/api/upload', uploadRoutes);

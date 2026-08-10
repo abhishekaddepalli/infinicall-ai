@@ -17,6 +17,7 @@ import LanguageDropdown from './LanguageDropdown'
 import NotificationDropdown from './NotificationDropdown'
 import ThemeToggle from './ThemeToggle'
 import UserDropdown from './UserDropdown'
+import { SpotlightCommandPalette } from '@/components/reusable/SpotlightCommandPalette'
 
 const HeaderLogo = () => {
   const { settings, isLoading } = useSettings()
@@ -80,9 +81,10 @@ const Header = ({ onMenuToggle }: HeaderProps) => {
           </div>
         </div>
 
-        {/* Center: Search */}
-        <div className="flex-1 hidden md:flex justify-start lg:px-15 px-4">
+        {/* Center: Search + Spotlight */}
+        <div className="flex-1 hidden md:flex items-center gap-3 justify-start lg:px-15 px-4">
           <GlobalSearch />
+          <SpotlightCommandPalette />
         </div>
 
         {/* Right: Actions + User */}
