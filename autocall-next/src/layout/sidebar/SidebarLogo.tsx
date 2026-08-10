@@ -27,7 +27,7 @@ const SidebarLogo = ({ isCollapsed, onClick }: SidebarLogoProps) => {
     const isDark = theme === "dark" || resolvedTheme === "dark";
     const API_URL = process.env.NEXT_PUBLIC_STORAGE_URL ?? "";
     const resolveUrl = (url?: string) => {
-      if (!url || typeof url !== "string") return "";
+      if (!url || typeof url !== "string" || url.includes("autocall")) return "";
       if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:")) {
         return url;
       }

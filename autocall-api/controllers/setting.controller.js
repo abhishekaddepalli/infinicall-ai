@@ -57,9 +57,24 @@ exports.getSettings = async (req, res) => {
       settings = created.toObject();
     } else {
       await Setting.deleteMany({ _id: { $ne: settings._id } });
-      if (settings.app_name === 'AutoCall' || settings.app_name === 'My Application') {
-        await Setting.findByIdAndUpdate(settings._id, { app_name: 'InfiniCall AI' });
-        settings.app_name = 'InfiniCall AI';
+      let needsUpdate = false;
+      const updates = {};
+
+      if (settings.app_name !== 'InfiniCall AI') {
+        updates.app_name = 'InfiniCall AI';
+        needsUpdate = true;
+      }
+
+      ['favicon_url', 'logo_light_url', 'logo_dark_url', 'sidebar_logo_url', 'mobile_logo_url', 'landing_logo_url', 'favicon_notification_logo_url', 'onboarding_logo_url'].forEach(key => {
+        if (settings[key] && typeof settings[key] === 'string' && settings[key].includes('autocall')) {
+          updates[key] = null;
+          needsUpdate = true;
+        }
+      });
+
+      if (needsUpdate) {
+        await Setting.findByIdAndUpdate(settings._id, updates);
+        Object.assign(settings, updates);
       }
     }
 
@@ -388,9 +403,24 @@ exports.getPublicSettings = async (req, res) => {
       settings = created.toObject();
     } else {
       await Setting.deleteMany({ _id: { $ne: settings._id } });
-      if (settings.app_name === 'AutoCall' || settings.app_name === 'My Application') {
-        await Setting.findByIdAndUpdate(settings._id, { app_name: 'InfiniCall AI' });
-        settings.app_name = 'InfiniCall AI';
+      let needsUpdate = false;
+      const updates = {};
+
+      if (settings.app_name !== 'InfiniCall AI') {
+        updates.app_name = 'InfiniCall AI';
+        needsUpdate = true;
+      }
+
+      ['favicon_url', 'logo_light_url', 'logo_dark_url', 'sidebar_logo_url', 'mobile_logo_url', 'landing_logo_url', 'favicon_notification_logo_url', 'onboarding_logo_url'].forEach(key => {
+        if (settings[key] && typeof settings[key] === 'string' && settings[key].includes('autocall')) {
+          updates[key] = null;
+          needsUpdate = true;
+        }
+      });
+
+      if (needsUpdate) {
+        await Setting.findByIdAndUpdate(settings._id, updates);
+        Object.assign(settings, updates);
       }
     }
 

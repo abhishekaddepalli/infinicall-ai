@@ -25,7 +25,7 @@ export function UserHeaderSection({
     <div className="grid grid-cols-1 md:grid-cols-2 min-[1480px]:grid-cols-3 gap-6 items-stretch">
       {/* Item 1: Custom User Welcome Card (Deep Violet/Indigo themed) */}
       <WelcomeCard
-        badge={t('autocall_workspace')}
+        badge={t('infinicall_workspace', 'INFINICALL AI WORKSPACE')}
         title={t('hello_user', { name: userName || 'User' })}
         subtitle={t('user_subtitle_custom')}
         gradientClass=""

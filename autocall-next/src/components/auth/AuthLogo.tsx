@@ -44,7 +44,7 @@ export const AuthLogo = ({
         : (settings?.logo_light_url || settings?.logo_dark_url || settings?.landing_logo_url || settings?.sidebar_logo_url || settings?.mobile_logo_url);
     }
 
-    if (settingUrl) {
+    if (settingUrl && !settingUrl.includes("autocall")) {
       const resolved = getMediaUrl(settingUrl);
       if (resolved) return resolved;
     }
