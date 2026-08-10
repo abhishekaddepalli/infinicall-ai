@@ -3,6 +3,7 @@
 const { db } = require('../models');
 const Call = db.Call;
 const UserSettings = db.UserSettings;
+const Setting = db.Setting;
 const Agent = db.Agent;
 const CampaignHistory = db.CampaignHistory;
 const PhoneNumber = db.PhoneNumber;
