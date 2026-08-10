@@ -363,6 +363,14 @@ const SettingSchema = new Schema(
         { label: 'Tax Identification Document', type: 'File', placeholder: 'VAT/Tax ID certificate or official tax registration', required: true },
         { label: 'Company Consent Letter', type: 'File', placeholder: 'A signed letter on company letterhead authorizing the purchase', required: true }
       ]
+    },
+    vobiz_auth_id: {
+      type: String,
+      default: null
+    },
+    vobiz_auth_token: {
+      type: String,
+      default: null
     }
   },
   {

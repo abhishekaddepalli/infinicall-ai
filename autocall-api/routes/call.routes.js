@@ -16,6 +16,9 @@ router.post('/plivo-xml', callController.generatePlivoXML);
 router.post('/plivo-status', callController.handlePlivoStatusCallback);
 router.post('/plivo-inbound', callController.handlePlivoInboundCall);
 
+router.post('/vobiz-xml', callController.handleVobizXml);
+router.post('/vobiz-status', callController.handleVobizStatus);
+
 router.use(authenticate);
 
 router.post('/place', checkPermission('create.calls'), callController.placeCall);

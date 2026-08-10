@@ -118,7 +118,7 @@ const TestFlowModal = ({ flow, isOpen, onClose }: TestFlowModalProps) => {
                   <SelectContent className="bg-bg-card border-input-border-color rounded-radius">
                     {phoneNumbers.map((pn: any) => (
                       <SelectItem key={pn._id || pn.id || pn.phone_number} value={pn.phone_number} className="cursor-pointer focus:bg-primary/5 rounded-md text-sm">
-                        {pn.phone_number} {pn.type === 'sip' ? '(SIP Trunk)' : `(${pn.provider || 'Twilio'})`}
+                        {pn.phone_number} {pn.type === 'sip' ? '(SIP Trunk)' : `(${pn.provider ? (pn.provider.charAt(0).toUpperCase() + pn.provider.slice(1)) : 'Twilio'})`}
                       </SelectItem>
                     ))}
                   </SelectContent>

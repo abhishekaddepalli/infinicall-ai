@@ -54,6 +54,14 @@ const UserSettingsSchema = new Schema(
       type: String,
       default: null
     },
+    vobiz_auth_id: {
+      type: String,
+      default: null
+    },
+    vobiz_auth_token: {
+      type: String,
+      default: null
+    },
     google_client_id: {
       type: String,
       default: null

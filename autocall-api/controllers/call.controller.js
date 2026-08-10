@@ -16,28 +16,23 @@ const llmService = require('../services/llmService');
 const FormData = require('form-data');
 const webhookDispatcher = require('../services/webhookDispatcher');
 const plivoService = require('../services/plivoService');
+const vobizService = require('../services/vobizService');
 const deepgramService = require('../services/deepgramService');
 
 exports.placeCall = async (req, res) => {
   try {
     const { flowId, phoneNumber, fromNumber, agentId } = req.body;
-    console.log("🚀 ~ req.body:", req.body)
     const userId = req.user.id;
 
-    if (!flowId || !phoneNumber || !fromNumber) {
-      return res.status(400).json({ success: false, message: 'flowId, phoneNumber, and fromNumber are required' });
-    }
-
-    const contact = await Contact.findOne({ user_id: userId, phone_number: phoneNumber });
-    if (contact && contact.is_blocked) {
-      return res.status(403).json({ success: false, message: 'This contact is blocked due to policy violations.' });
+    if (!phoneNumber || !fromNumber) {
+      return res.status(400).json({ success: false, message: 'Phone numbers are required' });
     }
 
     let agent;
     if (agentId) {
-      agent = await Agent.findById(agentId);
+      agent = await Agent.findOne({ _id: agentId });
       if (!agent) {
-        return res.status(404).json({ success: false, message: 'Selected agent not found' });
+        agent = await Agent.findOne({ user_id: userId, status: 'active' });
       }
     } else {
       agent = await Agent.findOne({ flow_id: flowId, type: 'flow', status: 'active' });
@@ -57,6 +52,8 @@ exports.placeCall = async (req, res) => {
     const elevenlabsApiKey = userSettings?.elevenlabs_api_key || globalSettings?.elevenlabs_api_key || process.env.ELEVENLABS_API_KEY;
     const plivoAuthId = userSettings?.plivo_auth_id || globalSettings?.plivo_auth_id || process.env.PLIVO_AUTH_ID;
     const plivoAuthToken = userSettings?.plivo_auth_token || globalSettings?.plivo_auth_token || process.env.PLIVO_AUTH_TOKEN;
+    const vobizAuthId = userSettings?.vobiz_auth_id || globalSettings?.vobiz_auth_id || process.env.VOBIZ_AUTH_ID;
+    const vobizAuthToken = userSettings?.vobiz_auth_token || globalSettings?.vobiz_auth_token || process.env.VOBIZ_AUTH_TOKEN;
 
     const appUrl = process.env.APP_URL || 'https://voice.infiniforge.cloud';
 
@@ -143,6 +140,35 @@ exports.placeCall = async (req, res) => {
         flow_id: flowId,
         agent_id: agent._id,
         twilio_call_sid: plivoCall.requestUuid,
+        from_number: fromNumber,
+        to_number: phoneNumber,
+        status: 'queued',
+        direction: 'outbound',
+        contact_id: contact ? contact._id : null
+      });
+      webhookDispatcher.dispatchEvent(userId, 'Call Initiated', callLog);
+    } else if (sourceNumber.provider === 'vobiz') {
+      if (!vobizAuthId || !vobizAuthToken) {
+        return res.status(400).json({ success: false, message: 'Vobiz AI settings not configured in settings or .env' });
+      }
+
+      const xmlUrl = `${appUrl}/api/calls/vobiz-xml?flowId=${flowId}&userId=${userId}&agentId=${agent._id.toString()}`;
+      const statusCallbackUrl = `${appUrl}/api/calls/vobiz-status`;
+
+      const vobizCall = await vobizService.makeCall(
+        vobizAuthId,
+        vobizAuthToken,
+        fromNumber,
+        phoneNumber,
+        xmlUrl,
+        statusCallbackUrl
+      );
+
+      callLog = await Call.create({
+        user_id: userId,
+        flow_id: flowId,
+        agent_id: agent._id,
+        twilio_call_sid: vobizCall.requestUuid || vobizCall.sid,
         from_number: fromNumber,
         to_number: phoneNumber,
         status: 'queued',
@@ -934,6 +960,56 @@ exports.handlePlivoInboundCall = async (req, res) => {
   } catch (error) {
     console.error('Plivo Inbound Call Error:', error);
     res.status(500).send('Internal Server Error');
+  }
+};
+
+exports.handleVobizXml = async (req, res) => {
+  try {
+    const { flowId, userId, agentId } = req.query;
+    const wsUrl = (process.env.APP_URL || 'https://voice.infiniforge.cloud').replace('http', 'ws');
+
+    let parametersXml = '';
+    if (flowId && flowId !== 'undefined') {
+      parametersXml += `<Parameter name="flowId" value="${flowId}" />\n`;
+    }
+    if (agentId && agentId !== 'undefined') {
+      parametersXml += `<Parameter name="agentId" value="${agentId}" />\n`;
+    }
+    if (userId && userId !== 'undefined') {
+      parametersXml += `<Parameter name="userId" value="${userId}" />`;
+    }
+
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Stream url="${wsUrl}" keepCallAlive="true">
+        ${parametersXml}
+    </Stream>
+</Response>`;
+
+    res.type('text/xml');
+    res.send(xml);
+  } catch (error) {
+    console.error('Vobiz XML Webhook Error:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+exports.handleVobizStatus = async (req, res) => {
+  try {
+    const { CallUUID, CallStatus, Duration } = req.body;
+    if (CallUUID) {
+      const call = await Call.findOne({ twilio_call_sid: CallUUID });
+      if (call) {
+        call.status = CallStatus || 'completed';
+        if (Duration) call.duration = parseInt(Duration);
+        call.ended_at = new Date();
+        await call.save();
+      }
+    }
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Vobiz Status Webhook Error:', error);
+    res.status(500).json({ success: false });
   }
 };
 

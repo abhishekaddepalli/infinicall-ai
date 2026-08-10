@@ -12,6 +12,7 @@ const Contact = db.Contact;
 const SMSLog = db.SMSLog;
 const twilioService = require('./twilioService');
 const plivoService = require('./plivoService');
+const vobizService = require('./vobizService');
 const elevenLabsService = require('./elevenlabsService');
 const fs = require('fs');
 const csv = require('fast-csv');
@@ -368,6 +369,63 @@ async function executeCampaignDirectly(campaignId) {
 
               await Call.findOneAndUpdate(
                 { twilio_call_sid: plivoCall.requestUuid },
+                { status: mappedCallStatus, ended_at: new Date() }
+              );
+
+              successCount++;
+            } else if (phoneNumberDoc.provider === 'vobiz') {
+              if (!vobizAuthId || !vobizAuthToken) {
+                throw new Error('Vobiz credentials not found for this user');
+              }
+              const xmlUrl = `${appUrl}/api/calls/vobiz-xml?flowId=${flowId}&userId=${campaign.userId}&agentId=${campaign.agentId}`;
+              const statusCallbackUrl = `${appUrl}/api/calls/vobiz-status`;
+
+              const vobizCall = await vobizService.makeCall(
+                vobizAuthId,
+                vobizAuthToken,
+                fromNumber,
+                to,
+                xmlUrl,
+                statusCallbackUrl
+              );
+
+              await Call.create({
+                user_id: campaign.userId,
+                flow_id: flowId,
+                agent_id: campaign.agentId,
+                campaign_id: campaign._id,
+                twilio_call_sid: vobizCall.requestUuid,
+                from_number: fromNumber,
+                to_number: to,
+                status: 'queued',
+                direction: 'outbound',
+                lead_name: name,
+              });
+
+              let callStatus = 'queued';
+              let pollAttempts = 0;
+              while (!['completed', 'failed', 'busy', 'no-answer', 'canceled', 'declined', 'missed'].includes(callStatus) && pollAttempts < 12) {
+                await new Promise(resolve => setTimeout(resolve, 5000));
+                pollAttempts++;
+                try {
+                  callStatus = await vobizService.getCallStatus(
+                    vobizAuthId,
+                    vobizAuthToken,
+                    vobizCall.requestUuid
+                  );
+                } catch (statusError) {
+                  console.error(`Error fetching status for Vobiz call ${vobizCall.requestUuid}:`, statusError);
+                  break;
+                }
+              }
+              console.log(`Vobiz Call to ${to} finished with status: ${callStatus}`);
+
+              let mappedCallStatus = callStatus;
+              if (callStatus === 'busy') mappedCallStatus = 'declined';
+              if (callStatus === 'no-answer') mappedCallStatus = 'missed';
+
+              await Call.findOneAndUpdate(
+                { twilio_call_sid: vobizCall.requestUuid },
                 { status: mappedCallStatus, ended_at: new Date() }
               );
 
