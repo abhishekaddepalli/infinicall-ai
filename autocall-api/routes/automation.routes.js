@@ -1,14 +1,12 @@
+'use strict';
+
 const express = require('express');
 const router = express.Router();
 const automationController = require('../controllers/automation.controller');
-const { authenticate } = require('../middlewares/auth');
-const { checkPermission } = require('../middlewares/permission');
+const { verifyToken } = require('../middlewares/authJwt');
 
-router.post('/elevenlabs/tool', automationController.elevenLabsToolWebhook);
-
-router.use(authenticate);
-
-router.get('/email-templates', checkPermission('view.automation'), automationController.getEmailTemplates);
-router.post('/email-templates', checkPermission('create.automation'), automationController.createEmailTemplate);
+router.post('/n8n/test-trigger', verifyToken, automationController.testN8nWebhook);
+router.post('/ai-generate-script', verifyToken, automationController.generateAiScript);
+router.post('/send-post-call-upi', verifyToken, automationController.sendPostCallUpi);
 
 module.exports = router;

@@ -1,8 +1,29 @@
 import { ROUTES } from "@/constants/routes";
 import { ToolboxItem } from "@/types/toolbox";
-import { Calendar, FileText, Home, MessageCircle, MessageSquareCode, Webhook } from "lucide-react";
+import { Bot, Calendar, Cpu, FileText, Home, IndianRupee, MessageCircle, MessageSquareCode, Webhook } from "lucide-react";
 
 export const toolboxItems: ToolboxItem[] = [
+  {
+    id: "n8n_automation",
+    titleKey: "toolbox_n8n_title",
+    descriptionKey: "toolbox_n8n_description",
+    icon: Cpu,
+    redirectPath: `${ROUTES.TOOLBOX}/n8n-automation`,
+  },
+  {
+    id: "script_studio",
+    titleKey: "toolbox_script_studio_title",
+    descriptionKey: "toolbox_script_studio_description",
+    icon: Bot,
+    redirectPath: `${ROUTES.TOOLBOX}/script-studio`,
+  },
+  {
+    id: "upi_triggers",
+    titleKey: "toolbox_upi_title",
+    descriptionKey: "toolbox_upi_description",
+    icon: IndianRupee,
+    redirectPath: `${ROUTES.TOOLBOX}/upi-triggers`,
+  },
   {
     id: "forms",
     titleKey: "toolbox_forms_title",
