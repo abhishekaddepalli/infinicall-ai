@@ -44,7 +44,16 @@ if (process.env.REDIS_URL) {
 
     if (type === 'process-campaign') {
       await executeCampaignDirectly(campaignId);
+    } else if (type === 'process-sms-campaign') {
+      await executeSmsCampaignDirectly(campaignId);
     }
+  }, {
+    connection,
+    concurrency: 5
+  });
+
+  worker.on('failed', (job, err) => {
+    console.error(`Job ${job.id} failed:`, err);
   });
 }
 
@@ -478,11 +487,14 @@ async function executeCampaignDirectly(campaignId) {
             });
           } catch (waErr) {
             console.error(`Post-campaign WhatsApp failed for ${contact.to}:`, waErr.message);
-          }
-        }
       }
-    } else if (type === 'process-sms-campaign') {
-      const campaign = await SMSCampaign.findById(campaignId);
+    }
+  }
+}
+
+async function executeSmsCampaignDirectly(campaignId) {
+  const app = require('../app');
+  const campaign = await SMSCampaign.findById(campaignId);
       if (!campaign) throw new Error(`SMS Campaign ${campaignId} not found`);
 
       console.log(`Executing SMS campaign: ${campaign.name}`);
@@ -729,18 +741,8 @@ async function executeCampaignDirectly(campaignId) {
         } catch (notifErr) {
           console.error(`Failed to send notification for SMS campaign ${campaignId}:`, notifErr);
         }
+        }
       }
-    }
-
-  }, {
-    connection,
-    concurrency: 5
-  });
-
-  worker.on('failed', (job, err) => {
-    console.error(`Job ${job.id} failed:`, err);
-  });
-}
 
 const removeCampaignJob = async (campaignId) => {
   if (campaignQueue) {
