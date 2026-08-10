@@ -46,15 +46,10 @@ exports.createCampaign = async (req, res) => {
 
 
     if (agentId) {
-      const existAgent = await Agent.findOne({ _id: agentId, user_id: req.user._id })
+      const existAgent = await Agent.findOne({ _id: agentId });
       if (!existAgent) {
         return res.status(404).json({ success: false, message: 'Agent not found' });
       }
-
-      if (existAgent.type !== 'flow') {
-        return res.status(400).json({ success: false, message: `Only flow agents are allowed to create campaigns` });
-      }
-
     }
 
     let phoneModel = 'PhoneNumber';
@@ -273,9 +268,6 @@ exports.updateCampaign = async (req, res) => {
       const existAgent = await Agent.findById(agentId);
       if (!existAgent) {
         return res.status(400).json({ success: false, message: 'Agent not found' });
-      }
-      if (existAgent.type !== 'flow') {
-        return res.status(400).json({ success: false, message: `Only flow agents are allowed to create campaigns` });
       }
       campaign.agentId = agentId;
     }
