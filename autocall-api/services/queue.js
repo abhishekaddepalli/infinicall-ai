@@ -259,54 +259,38 @@ async function executeCampaignDirectly(campaignId) {
               await new Promise(resolve => setTimeout(resolve, 3000));
               console.log(`WhatsApp Call to ${to} initiated with ID: ${callSid}`);
               successCount++;
-            } else if (phoneNumberDoc.type === 'sip' && phoneNumberDoc.elevenlabs_phone_number_id) {
-              if (!elevenlabsApiKey) throw new Error('ElevenLabs API key not configured for SIP calling');
-              let elevenlabsAgentId = agent.elevenlabs_agent_id;
-              if (!elevenlabsAgentId) {
-                try {
-                  const newAgent = await elevenLabsService.createAgent({
-                    name: agent.name,
-                    conversation_config: {
-                      agent: {
-                        prompt: { prompt: agent.system_prompt || agent.personality || 'You are a helpful AI voice assistant.' },
-                        first_message: agent.first_message || 'Hello! How can I help you today?'
-                      }
-                    }
-                  }, elevenlabsApiKey);
-                  if (newAgent && (newAgent.agent_id || newAgent.id)) {
-                    elevenlabsAgentId = newAgent.agent_id || newAgent.id;
-                    await Agent.findByIdAndUpdate(agent._id, { elevenlabs_agent_id: elevenlabsAgentId });
-                  }
-                } catch (e) {
-                  console.error('Failed to auto-create ElevenLabs agent ID for campaign:', e);
-                }
+            } else if (phoneNumberDoc.type === 'sip' && phoneNumberDoc.elevenlabs_phone_number_id && elevenlabsApiKey && (agent.elevenlabs_agent_id || elevenlabsAgentId)) {
+              try {
+                const targetAgentId = elevenlabsAgentId || agent.elevenlabs_agent_id;
+                const sipResponse = await elevenLabsService.makeSipOutboundCall(
+                  targetAgentId,
+                  phoneNumberDoc.elevenlabs_phone_number_id,
+                  to,
+                  elevenlabsApiKey
+                );
+
+                const callSid = sipResponse.sip_call_id || sipResponse.conversation_id || `sip_${Date.now()}`;
+
+                await Call.create({
+                  user_id: campaign.userId,
+                  flow_id: flowId,
+                  agent_id: campaign.agentId,
+                  campaign_id: campaign._id,
+                  twilio_call_sid: callSid,
+                  from_number: fromNumber,
+                  to_number: to,
+                  status: 'queued',
+                  direction: 'outbound',
+                  lead_name: name,
+                });
+
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                console.log(`SIP Call to ${to} initiated with ID: ${callSid}`);
+                successCount++;
+                continue;
+              } catch (sipErr) {
+                console.warn(`ElevenLabs SIP Outbound Call failed (${sipErr.message}), falling back to Twilio dispatch.`);
               }
-
-              const sipResponse = await elevenLabsService.makeSipOutboundCall(
-                elevenlabsAgentId || agent.elevenlabs_agent_id,
-                phoneNumberDoc.elevenlabs_phone_number_id,
-                to,
-                elevenlabsApiKey
-              );
-
-              const callSid = sipResponse.sip_call_id || sipResponse.conversation_id || `sip_${Date.now()}`;
-
-              await Call.create({
-                user_id: campaign.userId,
-                flow_id: flowId,
-                agent_id: campaign.agentId,
-                campaign_id: campaign._id,
-                twilio_call_sid: callSid,
-                from_number: fromNumber,
-                to_number: to,
-                status: 'queued',
-                direction: 'outbound',
-                lead_name: name,
-              });
-
-              await new Promise(resolve => setTimeout(resolve, 3000));
-              console.log(`SIP Call to ${to} initiated with ID: ${callSid}`);
-              successCount++;
             } else if (phoneNumberDoc.provider === 'plivo') {
               if (!plivoAuthId || !plivoAuthToken) {
                 throw new Error('Plivo credentials not found for this user');
