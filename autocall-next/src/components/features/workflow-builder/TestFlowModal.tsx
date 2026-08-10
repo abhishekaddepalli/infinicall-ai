@@ -20,6 +20,7 @@ const TestFlowModal = ({ flow, isOpen, onClose }: TestFlowModalProps) => {
   const [fromNumber, setFromNumber] = useState('')
   const [toNumber, setToNumber] = useState('')
   const [selectedAgentId, setSelectedAgentId] = useState<string>('')
+  const [isCustomFrom, setIsCustomFrom] = useState(false)
   const [placeCall, { isLoading }] = usePlaceCallMutation()
 
   const { data: agentsData, isLoading: isLoadingAgents } = useGetAgentsQuery({ limit: 100 })
@@ -94,10 +95,22 @@ const TestFlowModal = ({ flow, isOpen, onClose }: TestFlowModalProps) => {
         <div className="p-4 sm:p-6 pt-0 space-y-5">
           <div className="space-y-4">
             <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-title ml-0.5">
-                {t('from_number')} / SIP Trunk <span className="text-destructive">*</span>
-              </Label>
-              {phoneNumbers.length > 0 ? (
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-medium text-title ml-0.5">
+                  Caller ID / SIP Trunk <span className="text-destructive">*</span>
+                </Label>
+                {phoneNumbers.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setIsCustomFrom(!isCustomFrom)}
+                    className="text-xs font-semibold text-primary hover:underline cursor-pointer"
+                  >
+                    {isCustomFrom ? "Select saved SIP/Phone number" : "+ Custom Caller ID"}
+                  </button>
+                )}
+              </div>
+
+              {!isCustomFrom && phoneNumbers.length > 0 ? (
                 <Select value={fromNumber} onValueChange={setFromNumber}>
                   <SelectTrigger className="w-full shadow-none rounded-lg bg-input-color border-input-border-color text-sm focus:ring-primary/20 transition-all">
                     <SelectValue placeholder={isLoadingNumbers ? t('loading_numbers', { defaultValue: 'Loading phone numbers...' }) : t('select_phone_number_or_sip', { defaultValue: 'Select Phone Number / SIP Trunk' })} />
@@ -105,7 +118,7 @@ const TestFlowModal = ({ flow, isOpen, onClose }: TestFlowModalProps) => {
                   <SelectContent className="bg-bg-card border-input-border-color rounded-radius">
                     {phoneNumbers.map((pn: any) => (
                       <SelectItem key={pn._id || pn.id || pn.phone_number} value={pn.phone_number} className="cursor-pointer focus:bg-primary/5 rounded-md text-sm">
-                        {pn.phone_number} {pn.type === 'sip' ? '(ElevenLabs SIP)' : `(${pn.provider || 'Telephony'})`}
+                        {pn.phone_number} {pn.type === 'sip' ? '(SIP Trunk)' : `(${pn.provider || 'Twilio'})`}
                       </SelectItem>
                     ))}
                   </SelectContent>

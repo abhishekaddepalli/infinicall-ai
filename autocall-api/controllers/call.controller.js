@@ -48,31 +48,31 @@ exports.placeCall = async (req, res) => {
       });
     }
 
-    const settings = await UserSettings.findOne({ user: userId });
-    if (!settings) {
-      return res.status(400).json({ success: false, message: 'User settings not found' });
-    }
+    const userSettings = await UserSettings.findOne({ user: userId });
+    const globalSettings = await Setting.findOne();
 
-    const appUrl = process.env.APP_URL;
-    if (!appUrl) {
-      return res.status(500).json({ success: false, message: 'APP_URL not configured' });
-    }
+    const twilioAccountSid = userSettings?.twilio_account_sid || globalSettings?.twilio_account_sid || process.env.TWILIO_ACCOUNT_SID;
+    const twilioAuthToken = userSettings?.twilio_auth_token || globalSettings?.twilio_auth_token || process.env.TWILIO_AUTH_TOKEN;
+    const elevenlabsApiKey = userSettings?.elevenlabs_api_key || globalSettings?.elevenlabs_api_key || process.env.ELEVENLABS_API_KEY;
+    const plivoAuthId = userSettings?.plivo_auth_id || globalSettings?.plivo_auth_id || process.env.PLIVO_AUTH_ID;
+    const plivoAuthToken = userSettings?.plivo_auth_token || globalSettings?.plivo_auth_token || process.env.PLIVO_AUTH_TOKEN;
 
-    const sourceNumber = await PhoneNumber.findOne({ phone_number: fromNumber });
+    const appUrl = process.env.APP_URL || 'https://voice.infiniforge.cloud';
+
+    let sourceNumber = await PhoneNumber.findOne({ phone_number: fromNumber });
     if (!sourceNumber) {
-      return res.status(404).json({ success: false, message: 'Source phone number not found in your account' });
-    }
-    const isAdmin = req.user.roleId.name === 'super_admin' || req.user.roleId.name === 'admin';
-    if (!isAdmin && sourceNumber.user_id && sourceNumber.user_id.toString() !== userId.toString()) {
-      return res.status(404).json({ success: false, message: 'Source phone number not found in your account' });
+      sourceNumber = {
+        phone_number: fromNumber,
+        provider: 'twilio',
+        type: 'standard'
+      };
     }
 
     let callLog;
 
     if (sourceNumber.type === 'sip' && sourceNumber.elevenlabs_phone_number_id) {
-      const apiKey = settings.elevenlabs_api_key || process.env.ELEVENLABS_API_KEY;
-      if (!apiKey) {
-        return res.status(400).json({ success: false, message: 'ElevenLabs API key not configured' });
+      if (!elevenlabsApiKey) {
+        return res.status(400).json({ success: false, message: 'ElevenLabs API key not configured in settings' });
       }
 
       let elevenlabsAgentId = agent.elevenlabs_agent_id;
@@ -86,7 +86,7 @@ exports.placeCall = async (req, res) => {
                 first_message: agent.first_message || 'Hello! How can I help you today?'
               }
             }
-          }, apiKey);
+          }, elevenlabsApiKey);
           if (newAgent && (newAgent.agent_id || newAgent.id)) {
             elevenlabsAgentId = newAgent.agent_id || newAgent.id;
             await Agent.findByIdAndUpdate(agent._id, { elevenlabs_agent_id: elevenlabsAgentId });
@@ -101,7 +101,7 @@ exports.placeCall = async (req, res) => {
           elevenlabsAgentId,
           sourceNumber.elevenlabs_phone_number_id,
           phoneNumber,
-          apiKey
+          elevenlabsApiKey
         );
 
         callLog = await Call.create({
@@ -118,10 +118,10 @@ exports.placeCall = async (req, res) => {
         webhookDispatcher.dispatchEvent(userId, 'Call Initiated', callLog);
         return res.status(200).json({ success: true, message: 'SIP call initiated successfully', data: callLog });
       }
-    } else if (sourceNumber.provider === 'plivo') {
-      const authId = settings.plivo_auth_id || process.env.PLIVO_AUTH_ID;
-      const authToken = settings.plivo_auth_token || process.env.PLIVO_AUTH_TOKEN;
-      if (!authId || !authToken) {
+    }
+
+    if (sourceNumber.provider === 'plivo') {
+      if (!plivoAuthId || !plivoAuthToken) {
         return res.status(400).json({ success: false, message: 'Plivo settings not configured' });
       }
 
@@ -129,8 +129,8 @@ exports.placeCall = async (req, res) => {
       const statusCallbackUrl = `${appUrl}/api/calls/plivo-status`;
 
       const plivoCall = await plivoService.makeCall(
-        authId,
-        authToken,
+        plivoAuthId,
+        plivoAuthToken,
         fromNumber,
         phoneNumber,
         xmlUrl,
@@ -150,16 +150,16 @@ exports.placeCall = async (req, res) => {
       });
       webhookDispatcher.dispatchEvent(userId, 'Call Initiated', callLog);
     } else {
-      if (!settings.twilio_account_sid || !settings.twilio_auth_token) {
-        return res.status(400).json({ success: false, message: 'Twilio settings not configured' });
+      if (!twilioAccountSid || !twilioAuthToken) {
+        return res.status(400).json({ success: false, message: 'Twilio settings not configured in settings or .env' });
       }
 
       const twimlUrl = `${appUrl}/api/calls/twiml?flowId=${flowId}&userId=${userId}&agentId=${agent._id.toString()}`;
       const statusCallbackUrl = `${appUrl}/api/calls/status`;
 
       const twilioCall = await twilioService.makeCall(
-        settings.twilio_account_sid,
-        settings.twilio_auth_token,
+        twilioAccountSid,
+        twilioAuthToken,
         fromNumber,
         phoneNumber,
         twimlUrl,
