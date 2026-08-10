@@ -8,6 +8,9 @@ export const usePermission = () => {
   const userRole = user?.role || 'user'
 
   const hasPermission = (permissionName: string): boolean => {
+    // Super admin has unrestricted access to all permissions and sidebar items
+    if (userRole === 'super_admin') return true
+
     // API Keys/APIs are essential for all users - granting default access
     if (permissionName === 'View API Keys' || permissionName === 'Manage APIs') return true
 
