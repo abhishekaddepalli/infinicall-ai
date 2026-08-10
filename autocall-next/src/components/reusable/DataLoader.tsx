@@ -13,7 +13,7 @@ const DataLoader = ({
   fullPage,
   variant = 'full',
 }: DataLoaderProps) => {
-  const app_name = 'AutoCall'
+  const app_name = 'InfiniCall AI'
 
   const containerClasses = cn(
     'flex items-center justify-center w-full',

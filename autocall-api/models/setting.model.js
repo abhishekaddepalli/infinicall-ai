@@ -6,7 +6,7 @@ const SettingSchema = new Schema(
   {
     app_name: {
       type: String,
-      default: 'My Application'
+      default: 'InfiniCall AI'
     },
     app_description: {
       type: String,
