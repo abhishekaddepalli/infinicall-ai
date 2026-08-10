@@ -37,6 +37,29 @@ const PORT = process.env.PORT || 3000;
     deleteExpiredOtp.start();
     initTopUpExpiryCron();
 
+    // Auto-migrate Setting collection branding in MongoDB
+    try {
+      const { db } = require('./models');
+      if (db && db.Setting) {
+        await db.Setting.updateMany({}, {
+          $set: {
+            app_name: 'InfiniCall AI'
+          },
+          $unset: {
+            logo_light_url: "",
+            logo_dark_url: "",
+            sidebar_logo_url: "",
+            landing_logo_url: "",
+            mobile_logo_url: "",
+            favicon_url: ""
+          }
+        });
+        console.log('✅ Setting collection migrated to InfiniCall AI');
+      }
+    } catch (migErr) {
+      console.error('Setting migration error:', migErr);
+    }
+
     app.set('io', io);
 
     const { WebSocketServer } = require('ws');
