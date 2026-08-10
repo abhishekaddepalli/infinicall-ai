@@ -80,7 +80,7 @@ export function HumanTransfer({ humanTransferData }: HumanTransferProps) {
           <motion.div variants={itemVariants} className="lg:w-[50%] w-full relative">
             <div className="relative w-full rounded-2xl bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center p-6 lg:p-8 backdrop-blur-sm">
               <Image
-                src={humanTransferData?.image && humanTransferData?.image !== "" ? getImageUrl(humanTransferData.image) : "https://placehold.co/1000x800/png"}
+                src={humanTransferData?.image && humanTransferData?.image !== "" ? getImageUrl(humanTransferData.image) : "/assets/images/human_transfer.png"}
                 alt={humanTransferData?.badge || "Human Transfer Flow"}
                 className="w-full h-auto object-contain max-w-[500px]"
                 width={1000}

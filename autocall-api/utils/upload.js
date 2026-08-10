@@ -61,7 +61,7 @@ const getTypePrefix = (mimetype) => {
 
 function ensureDirExists(dirPath) {
   if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
+    fs.mkdirSync(dirPath, { recursive: true, mode: 0o755 });
   }
 }
 
@@ -178,6 +178,10 @@ function uploader(subfolder = '') {
     }
 
     for (const file of files) {
+      try {
+        fs.chmodSync(file.path, 0o644);
+      } catch (e) {}
+
       const type = getTypePrefix(file.mimetype);
       const maxSize = limits[type] || limits.file;
 
