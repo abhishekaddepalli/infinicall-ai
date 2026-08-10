@@ -106,10 +106,10 @@ const AssignAgentModal = ({
                 }
                 options={agentOptions}
                 helperText={
-                  !isLoadingAgents && incomingAgents.length === 0
+                  !isLoadingAgents && availableAgents.length === 0
                     ? t('no_incoming_agents', {
                       defaultValue:
-                        'No incoming agents found. Create an Incoming agent first.',
+                        'No agents found. Create an AI assistant first.',
                     })
                     : undefined
                 }
