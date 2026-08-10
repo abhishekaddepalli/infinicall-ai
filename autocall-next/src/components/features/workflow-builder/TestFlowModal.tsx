@@ -21,8 +21,16 @@ const TestFlowModal = ({ flow, isOpen, onClose }: TestFlowModalProps) => {
   const [selectedAgentId, setSelectedAgentId] = useState<string>('')
   const [placeCall, { isLoading }] = usePlaceCallMutation()
 
-  const { data: agentsData, isLoading: isLoadingAgents } = useGetAgentsQuery({ type: 'flow', status: 'active' })
+  const { data: agentsData, isLoading: isLoadingAgents } = useGetAgentsQuery({ limit: 100 })
   const agents = agentsData?.data || []
+
+  // Auto-select first available agent if none selected
+  if (agents.length > 0 && !selectedAgentId) {
+    const firstId = agents[0]._id || agents[0].id || ''
+    if (firstId && selectedAgentId !== firstId) {
+      setSelectedAgentId(firstId)
+    }
+  }
 
   const handleStartTestCall = async () => {
     if (!flow) return
