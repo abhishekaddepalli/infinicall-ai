@@ -56,6 +56,67 @@ const PORT = process.env.PORT || 3000;
         });
         console.log('✅ Setting collection migrated to InfiniCall AI');
       }
+
+      if (db && db.Plan) {
+        const count = await db.Plan.countDocuments();
+        if (count === 0) {
+          await db.Plan.insertMany([
+            {
+              name: "Starter Plan",
+              slug: "starter-plan",
+              description: "Ideal for young startups and developers exploring Conversational AI calling options.",
+              plan_type: "subscription",
+              billing_cycle: "monthly",
+              validity_days: 30,
+              amount: 499,
+              currency: "INR",
+              total_credits: 500,
+              status: "active",
+              is_popular: false
+            },
+            {
+              name: "Pro Scale Plan",
+              slug: "pro-scale-plan",
+              description: "Perfect for expanding teams requiring high-performance concurrent calling limits.",
+              plan_type: "subscription",
+              billing_cycle: "monthly",
+              validity_days: 30,
+              amount: 999,
+              currency: "INR",
+              total_credits: 1200,
+              status: "active",
+              is_popular: true
+            },
+            {
+              name: "Enterprise Plan",
+              slug: "enterprise-plan",
+              description: "Tailored options for global corporations requiring dedicated trunk lines and SLAs.",
+              plan_type: "subscription",
+              billing_cycle: "monthly",
+              validity_days: 30,
+              amount: 4999,
+              currency: "INR",
+              total_credits: 7000,
+              status: "active",
+              is_popular: false
+            },
+            {
+              name: "Credit Top-Up Pack",
+              slug: "credit-top-up-pack",
+              description: "Add extra calling credits to your account balance anytime.",
+              plan_type: "top_up",
+              billing_cycle: "one_time",
+              validity_days: 90,
+              amount: 299,
+              currency: "INR",
+              total_credits: 300,
+              status: "active",
+              is_popular: false
+            }
+          ]);
+          console.log('✅ Default plans auto-seeded into MongoDB');
+        }
+      }
     } catch (migErr) {
       console.error('Setting migration error:', migErr);
     }

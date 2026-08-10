@@ -24,7 +24,7 @@ const PlanSchema = new mongoose.Schema(
     },
     plan_type: {
       type: String,
-      enum: ['subscription', 'prepaid', 'lifetime', 'top_up'],
+      enum: ['subscription', 'recurring', 'prepaid', 'lifetime', 'top_up'],
       default: 'subscription',
     },
     billing_cycle: {
