@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Textarea } from '@/components/ui/textarea'
+import { Textarea } from '@/components/ui/textArea'
 import { Node, Edge } from '@xyflow/react'
 import { Bot, Sparkles, Wand2, Zap, Check, ArrowRight } from 'lucide-react'
 import { useState } from 'react'
