@@ -66,12 +66,6 @@ exports.createCampaign = async (req, res) => {
         if (!isAdmin && existPhoneNumber.user_id && existPhoneNumber.user_id.toString() !== req.user._id.toString()) {
           return res.status(404).json({ success: false, message: 'Phone number not found in your account' });
         }
-        if (existPhoneNumber.agent_id) {
-          return res.status(400).json({
-            success: false,
-            message: "You can't assign this phone number to a campaign because it already has an assigned incoming agent."
-          });
-        }
       }
 
       const existCampaign = await Campaign.findOne({
@@ -284,12 +278,6 @@ exports.updateCampaign = async (req, res) => {
         const isAdmin = req.user.roleId.name === 'super_admin' || req.user.roleId.name === 'admin';
         if (!isAdmin && existPhoneNumber.user_id && existPhoneNumber.user_id.toString() !== req.user._id.toString()) {
           return res.status(404).json({ success: false, message: 'Phone number not found in your account' });
-        }
-        if (existPhoneNumber.agent_id) {
-          return res.status(400).json({
-            success: false,
-            message: "You can't assign this phone number to a campaign because it already has an assigned incoming agent."
-          });
         }
       }
 
