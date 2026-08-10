@@ -57,6 +57,10 @@ exports.getSettings = async (req, res) => {
       settings = created.toObject();
     } else {
       await Setting.deleteMany({ _id: { $ne: settings._id } });
+      if (settings.app_name === 'AutoCall' || settings.app_name === 'My Application') {
+        await Setting.findByIdAndUpdate(settings._id, { app_name: 'InfiniCall AI' });
+        settings.app_name = 'InfiniCall AI';
+      }
     }
 
     const userIp = req.ip?.replace(/^::ffff:/, '') || req.headers['x-forwarded-for']?.split(',')[0].trim();
@@ -384,6 +388,10 @@ exports.getPublicSettings = async (req, res) => {
       settings = created.toObject();
     } else {
       await Setting.deleteMany({ _id: { $ne: settings._id } });
+      if (settings.app_name === 'AutoCall' || settings.app_name === 'My Application') {
+        await Setting.findByIdAndUpdate(settings._id, { app_name: 'InfiniCall AI' });
+        settings.app_name = 'InfiniCall AI';
+      }
     }
 
     const userIp =
