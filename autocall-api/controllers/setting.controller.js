@@ -39,10 +39,21 @@ const updateEnvFile = (settings) => {
 
 exports.getSettings = async (req, res) => {
   try {
+    const defaultInitialSettings = {
+      app_name: 'AutoCall',
+      app_description: 'A modern AI Builder application',
+      app_email: 'support@example.com',
+      support_email: 'support@example.com',
+      favicon_url: 'uploads/logo/favicon.png',
+      logo_light_url: 'uploads/logo/autocall-logo.png',
+      sidebar_logo_url: 'uploads/logo/autocall-logo.png',
+      landing_logo_url: 'uploads/logo/autocall-logo.png',
+    };
+
     let settings = await Setting.findOne().populate('login_widget_key').lean();
 
     if (!settings) {
-      const created = await Setting.create({});
+      const created = await Setting.create(defaultInitialSettings);
       settings = created.toObject();
     } else {
       await Setting.deleteMany({ _id: { $ne: settings._id } });
@@ -67,9 +78,20 @@ exports.getSettings = async (req, res) => {
 
 exports.updateSettings = async (req, res) => {
   try {
+    const defaultInitialSettings = {
+      app_name: 'AutoCall',
+      app_description: 'A modern AI Builder application',
+      app_email: 'support@example.com',
+      support_email: 'support@example.com',
+      favicon_url: 'uploads/logo/favicon.png',
+      logo_light_url: 'uploads/logo/autocall-logo.png',
+      sidebar_logo_url: 'uploads/logo/autocall-logo.png',
+      landing_logo_url: 'uploads/logo/autocall-logo.png',
+    };
+
     let settings = await Setting.findOne().lean({ virtuals: true });
     if (!settings) {
-      const created = await Setting.create({});
+      const created = await Setting.create(defaultInitialSettings);
       settings = created.toObject();
     } else {
       await Setting.deleteMany({ _id: { $ne: settings._id } });
@@ -131,7 +153,7 @@ exports.updateSettings = async (req, res) => {
     };
 
     allFields.forEach((field) => {
-      if (req.body[field] !== undefined) {
+      if (req.body[field] !== undefined && req.body[field] !== null && req.body[field] !== '') {
         if (field === 'maintenance_allowed_ips' || field === 'allowed_file_upload_types' || field === 'bank_details' || field === 'kyc_form_fields') {
           try {
             updateData[field] = (typeof req.body[field] === 'object' && req.body[field] !== null) ? req.body[field] : JSON.parse(req.body[field] || (field === 'bank_details' ? '{}' : '[]'));
@@ -145,9 +167,9 @@ exports.updateSettings = async (req, res) => {
     });
 
     Object.keys(fieldMap).forEach((uploadField) => {
-      if (req.body[uploadField] === 'null' || req.body[uploadField] === null) {
+      if (req.body[uploadField] === 'null') {
         const dbField = fieldMap[uploadField];
-        if (settings[dbField]) {
+        if (settings && settings[dbField]) {
           const oldPath = path.join(process.cwd(), settings[dbField]);
           if (fs.existsSync(oldPath)) {
             try { fs.unlinkSync(oldPath); } catch (e) { console.error('Error deleting file:', e); }
@@ -346,8 +368,19 @@ exports.getPublicSettings = async (req, res) => {
       .populate('signup_agreement_target_page', 'slug title')
       .lean();
 
+    const defaultInitialSettings = {
+      app_name: 'AutoCall',
+      app_description: 'A modern AI Builder application',
+      app_email: 'support@example.com',
+      support_email: 'support@example.com',
+      favicon_url: 'uploads/logo/favicon.png',
+      logo_light_url: 'uploads/logo/autocall-logo.png',
+      sidebar_logo_url: 'uploads/logo/autocall-logo.png',
+      landing_logo_url: 'uploads/logo/autocall-logo.png',
+    };
+
     if (!settings) {
-      const created = await Setting.create({});
+      const created = await Setting.create(defaultInitialSettings);
       settings = created.toObject();
     } else {
       await Setting.deleteMany({ _id: { $ne: settings._id } });
