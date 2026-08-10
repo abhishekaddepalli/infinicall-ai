@@ -3,15 +3,21 @@
 import { useEffect } from "react";
 import useSettings from "@/hooks/useSettings";
 import { getMediaUrl } from "@/utils/auth";
+import { usePathname } from "next/navigation";
 
 export default function DynamicFavicon() {
   const { settings } = useSettings();
+  const pathname = usePathname();
 
   useEffect(() => {
-    const faviconUrl = settings?.favicon_url || settings?.favicon;
-    const resolvedUrl = faviconUrl ? getMediaUrl(faviconUrl) : "/favicon.png";
+    const appTitle = (settings?.app_name && settings.app_name !== "AutoCall" && settings.app_name !== "My Application")
+      ? settings.app_name 
+      : "InfiniCall AI";
 
-    if (!resolvedUrl) return;
+    document.title = appTitle;
+
+    const faviconUrl = settings?.favicon_url || settings?.favicon;
+    const resolvedUrl = (faviconUrl && !faviconUrl.includes('autocall')) ? getMediaUrl(faviconUrl) : "/favicon.png";
 
     // Helper to set link elements
     const setFavicon = (href: string) => {
@@ -44,7 +50,7 @@ export default function DynamicFavicon() {
     };
 
     setFavicon(resolvedUrl);
-  }, [settings]);
+  }, [settings, pathname]);
 
   return null;
 }
