@@ -11,6 +11,7 @@ router.use(authenticate);
 router.get('/', checkPermission('view.phone_numbers'), phoneNumberController.getPhoneNumbers);
 router.get('/load-twilio', checkPermission('create.phone_numbers'), phoneNumberController.loadFromTwilio);
 router.get('/load-plivo', checkPermission('create.phone_numbers'), phoneNumberController.loadFromPlivo);
+router.get('/load-vobiz', checkPermission('create.phone_numbers'), phoneNumberController.loadFromVobiz);
 router.post('/add', checkPermission('create.phone_numbers'), phoneNumberController.addNumbers);
 router.post('/import-sip', checkPermission('create.phone_numbers'), phoneNumberController.importSipPhoneNumber);
 router.post('/:id/sync-elevenlabs', checkPermission('update.phone_numbers'), phoneNumberController.syncPhoneNumberToElevenLabs);

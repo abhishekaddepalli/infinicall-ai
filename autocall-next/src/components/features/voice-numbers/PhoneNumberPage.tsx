@@ -13,6 +13,7 @@ import {
   useImportSipPhoneNumberMutation,
   useLoadFromPlivoMutation,
   useLoadFromTwilioMutation,
+  useLoadFromVobizMutation,
   useSyncToElevenLabsMutation,
   useUpdatePhoneNumberMutation,
   useUpdatePurchasePriceMutation,
@@ -81,6 +82,7 @@ const PhoneNumberPage = () => {
   const [deleteNumber, { isLoading: isDeleting }] = useDeletePhoneNumberMutation()
   const [loadTwilio, { isLoading: isLoadingTwilio }] = useLoadFromTwilioMutation()
   const [loadPlivo, { isLoading: isLoadingPlivo }] = useLoadFromPlivoMutation()
+  const [loadVobiz, { isLoading: isLoadingVobiz }] = useLoadFromVobizMutation()
   const [syncElevenLabs, { isLoading: isSyncingElevenLabs }] = useSyncToElevenLabsMutation()
   const [importSip, { isLoading: isImportingSip }] = useImportSipPhoneNumberMutation()
   const [updatePhoneNumber, { isLoading: isAssigningSip }] = useUpdatePhoneNumberMutation()
@@ -118,6 +120,16 @@ const PhoneNumberPage = () => {
     } catch (error) {
       const err = error as { data?: { message?: string } }
       toast.error(err?.data?.message || t('plivo_sync_failed', 'Plivo sync failed'))
+    }
+  }
+
+  const handleLoadVobiz = async () => {
+    try {
+      const res = await loadVobiz().unwrap()
+      toast.success(res.message || t('vobiz_sync_success', 'Vobiz sync successful'))
+    } catch (error) {
+      const err = error as { data?: { message?: string } }
+      toast.error(err?.data?.message || t('vobiz_sync_failed', 'Vobiz sync failed'))
     }
   }
 
@@ -459,6 +471,21 @@ const PhoneNumberPage = () => {
                   <CloudDownload className="w-4 h-4" />
                 )}
                 {isLoadingPlivo ? t('loading_plivo', 'Loading...') : t('sync_from_plivo', 'Sync from Plivo')}
+              </Button>
+            )}
+            {canCreatePhone && (
+              <Button
+                onClick={handleLoadVobiz}
+                disabled={isLoadingVobiz}
+                variant="outline"
+                className="h-12 gap-2 p-padding! rounded-radius bg-primary font-black text-sm text-white transition-all border-none"
+              >
+                {isLoadingVobiz ? (
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                ) : (
+                  <CloudDownload className="w-4 h-4" />
+                )}
+                {isLoadingVobiz ? t('loading_vobiz', 'Loading...') : t('sync_from_vobiz', 'Sync from Vobiz')}
               </Button>
             )}
           </div>

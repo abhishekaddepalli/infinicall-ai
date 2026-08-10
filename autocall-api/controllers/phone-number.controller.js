@@ -11,6 +11,7 @@ const SipTrunk = db.SipTrunk;
 const twilioService = require('../services/twilioService');
 const elevenlabsService = require('../services/elevenlabsService');
 const plivoService = require('../services/plivoService');
+const vobizService = require('../services/vobizService');
 
 exports.loadFromTwilio = async (req, res) => {
   try {
@@ -99,6 +100,57 @@ exports.loadFromPlivo = async (req, res) => {
     res.json({ success: true, message: `${syncedNumbers.length} numbers synced from Plivo`, data: syncedNumbers });
   } catch (error) {
     console.error('Load From Plivo Error:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.loadFromVobiz = async (req, res) => {
+  try {
+    const userSettings = await UserSettings.findOne({ user: req.user.id });
+    const globalSettings = await Setting.findOne();
+
+    const vobizAuthId = userSettings?.vobiz_auth_id || globalSettings?.vobiz_auth_id || process.env.VOBIZ_AUTH_ID;
+    const vobizAuthToken = userSettings?.vobiz_auth_token || globalSettings?.vobiz_auth_token || process.env.VOBIZ_AUTH_TOKEN;
+
+    if (!vobizAuthId || !vobizAuthToken) {
+      return res.status(400).json({ success: false, message: 'Vobiz credentials not configured in settings or .env' });
+    }
+
+    const vobizNumbers = await vobizService.getNumbers(vobizAuthId, vobizAuthToken);
+    const userId = req.user.id;
+    const isAdmin = req.user.roleId?.name === 'super_admin' || req.user.roleId?.name === 'admin';
+
+    const allVobizNumbers = [
+      ...vobizNumbers.purchased.map(n => ({ ...n, type: 'purchased' })),
+      ...vobizNumbers.verified.map(n => ({ ...n, type: 'verified' }))
+    ];
+
+    const syncedNumbers = [];
+    for (const num of allVobizNumbers) {
+      let phoneNumber = await PhoneNumber.findOne({ phone_number: num.phone_number });
+
+      if (!phoneNumber) {
+        phoneNumber = await PhoneNumber.create({
+          phone_number: num.phone_number,
+          sid: num.sid,
+          type: num.type,
+          user_id: isAdmin ? null : userId,
+          is_system_pool: isAdmin,
+          provider: 'vobiz'
+        });
+      } else {
+        phoneNumber.sid = num.sid;
+        phoneNumber.user_id = isAdmin ? null : userId;
+        phoneNumber.is_system_pool = isAdmin;
+        phoneNumber.provider = 'vobiz';
+        await phoneNumber.save();
+      }
+      syncedNumbers.push(phoneNumber);
+    }
+
+    res.json({ success: true, message: `${syncedNumbers.length} numbers synced from Vobiz AI`, data: syncedNumbers });
+  } catch (error) {
+    console.error('Load From Vobiz Error:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 };

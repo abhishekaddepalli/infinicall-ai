@@ -19,6 +19,7 @@ import FacebookAccountSettings from './tabs/FacebookAccountSettings'
 import GoogleAccountSetting from './tabs/GoogleAccountSettings'
 import TwilioSettings from './tabs/TwilioSettings'
 import PlivoSettings from './tabs/PlivoSettings'
+import VobizSettings from './tabs/VobizSettings'
 import WabaSettings from './tabs/WabaSettings'
 
 const SettingPage = () => {
@@ -60,6 +61,8 @@ const SettingPage = () => {
     plivo_auth_id: '',
     plivo_auth_token: '',
     plivo_app_id: '',
+    vobiz_auth_id: '',
+    vobiz_auth_token: '',
 
     // Google Integration (from user-settings)
     google_client_id: '',
@@ -107,6 +110,8 @@ const SettingPage = () => {
       plivo_auth_id: user.plivo_auth_id || '',
       plivo_auth_token: user.plivo_auth_token || '',
       plivo_app_id: user.plivo_app_id || '',
+      vobiz_auth_id: user.vobiz_auth_id || '',
+      vobiz_auth_token: user.vobiz_auth_token || '',
       google_client_id: user.google_client_id || '',
       google_client_secret: user.google_client_secret || '',
       google_redirect_uri: user.google_redirect_uri || '',
@@ -142,6 +147,8 @@ const SettingPage = () => {
         plivo_auth_id: values.plivo_auth_id,
         plivo_auth_token: values.plivo_auth_token,
         plivo_app_id: values.plivo_app_id,
+        vobiz_auth_id: values.vobiz_auth_id,
+        vobiz_auth_token: values.vobiz_auth_token,
         google_client_id: values.google_client_id,
         google_client_secret: values.google_client_secret,
         google_redirect_uri: values.google_redirect_uri,
@@ -171,6 +178,7 @@ const SettingPage = () => {
     { id: 'ai', label: 'AI Provider', icon: Cpu, description: 'Model & API keys' },
     { id: 'twilio', label: 'Twilio', icon: Phone, description: 'Telephony Configuration' },
     { id: 'plivo', label: 'Plivo', icon: PhoneCall, description: 'Plivo API Credentials' },
+    { id: 'vobiz', label: 'Vobiz AI', icon: PhoneCall, description: 'Vobiz AI Credentials' },
     { id: 'waba', label: 'WABA Configuration', icon: MessageSquare, description: 'WhatsApp Credentials' },
     { id: 'google_account', label: 'Google Accounts', icon: Shield, description: 'Google Workspace Credentials' },
     { id: 'facebook_account', label: 'Facebook Accounts', icon: Shield, description: 'Facebook App Credentials' },
@@ -196,6 +204,8 @@ const SettingPage = () => {
         return <TwilioSettings />
       case 'plivo':
         return <PlivoSettings />
+      case 'vobiz':
+        return <VobizSettings />
       case 'waba':
         return <WabaSettings />
       case "google_account":

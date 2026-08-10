@@ -31,6 +31,13 @@ export const phoneNumberApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['PhoneNumber'],
     }),
+    loadFromVobiz: builder.mutation<PhoneNumberMutationResponse, void>({
+      query: () => ({
+        url: '/phone-numbers/load-vobiz',
+        method: 'GET',
+      }),
+      invalidatesTags: ['PhoneNumber'],
+    }),
     addPhoneNumber: builder.mutation<PhoneNumberMutationResponse, CreatePhoneNumberPayload>({
       query: (data) => ({
         url: '/phone-numbers/add',
@@ -84,6 +91,7 @@ export const {
   useGetPhoneNumbersQuery,
   useLoadFromTwilioMutation,
   useLoadFromPlivoMutation,
+  useLoadFromVobizMutation,
   useAddPhoneNumberMutation,
   useUpdatePhoneNumberMutation,
   useUpdatePurchasePriceMutation,
