@@ -1,6 +1,7 @@
 "use client";
 
 import { useGetLandingPageQuery } from "@/redux/api/landingPageApi";
+import { useGetActivePlansQuery } from "@/redux/api/planApi";
 import {
   defaultAddonsData,
   defaultAutomateData,
@@ -38,6 +39,8 @@ import { Testimonials } from "./sections/Testimonials";
 
 export default function LandingPage() {
   const { data: lpData } = useGetLandingPageQuery(undefined);
+  const { data: dbPlansData } = useGetActivePlansQuery();
+  const activeDbPlans = dbPlansData?.data || (Array.isArray(dbPlansData) ? dbPlansData : []);
   const lp = lpData?.landing_page || null;
   const heroData = lp?.hero
     ? {
@@ -127,9 +130,11 @@ export default function LandingPage() {
   } : defaultHumanTransferData;
 
   // ── Plans ──
-  const plansData: any[] = (!lp?.pricing?.plan_ids || !lp.pricing.plan_ids.length)
-    ? defaultPlansData
-    : lp.pricing.plan_ids;
+  const plansData: any[] = (activeDbPlans && activeDbPlans.length > 0)
+    ? activeDbPlans.filter((p: any) => p.plan_type !== 'top_up')
+    : ((!lp?.pricing?.plan_ids || !lp.pricing.plan_ids.length)
+        ? defaultPlansData
+        : lp.pricing.plan_ids);
 
   // ── Testimonials ──
   const testimonialsData: any[] = (!lp?.testimonials?.testimonial_ids || !lp.testimonials.testimonial_ids.length)

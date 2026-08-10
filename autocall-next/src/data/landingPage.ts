@@ -79,7 +79,7 @@ export const defaultPlansData: any[] = [
     slug: "starter-plan",
     description:
       "Ideal for young startups and developers exploring Conversational AI calling options.",
-    amount: 49,
+    amount: 499,
     is_popular: false,
   },
   {
@@ -87,7 +87,7 @@ export const defaultPlansData: any[] = [
     slug: "pro-scale-plan",
     description:
       "Perfect for expanding teams requiring high-performance concurrent calling limits.",
-    amount: 99,
+    amount: 999,
     is_popular: true,
   },
   {
@@ -95,7 +95,7 @@ export const defaultPlansData: any[] = [
     slug: "enterprise-plan",
     description:
       "Tailored options for global corporations requiring dedicated trunk lines and SLAs.",
-    amount: 499,
+    amount: 4999,
     is_popular: false,
   },
 ];
