@@ -90,8 +90,16 @@ exports.createFlow = async (req, res) => {
     const currentFlowsCount = await Flow.countDocuments({ user_id: userId, deleted_at: null, system_flow: { $ne: true } });
     await checkFeatureLimit(userId, 'Flow', 'flow_limit', currentFlowsCount);
 
+    const sanitizedNodes = Array.isArray(req.body.nodes)
+      ? req.body.nodes.map(n => ({
+          ...n,
+          type: (n.type === 'flowNode' || !n.type) ? (n.data?.type || 'message_output') : n.type
+        }))
+      : [];
+
     const flowData = {
       ...req.body,
+      nodes: sanitizedNodes,
       user_id: userId
     };
 
@@ -108,6 +116,13 @@ exports.updateFlow = async (req, res) => {
     const { id } = req.params;
     const userId = req.user.id;
     const updateData = { ...req.body };
+
+    if (Array.isArray(updateData.nodes)) {
+      updateData.nodes = updateData.nodes.map(n => ({
+        ...n,
+        type: (n.type === 'flowNode' || !n.type) ? (n.data?.type || 'message_output') : n.type
+      }));
+    }
 
     const flow = await Flow.findOneAndUpdate(
       { _id: id, user_id: userId, deleted_at: null },

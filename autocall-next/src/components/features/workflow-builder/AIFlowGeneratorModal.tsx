@@ -183,15 +183,15 @@ function parsePromptToFlow(userPrompt: string): { name: string; description: str
 
   const timestamp = Date.now()
 
-  // Generated Graph Nodes
+  // Generated Graph Nodes with valid backend Schema Enums
   const nodes: Node[] = [
     {
       id: `start-${timestamp}`,
       type: 'flowNode',
       position: { x: 250, y: 50 },
       data: {
-        type: 'start',
-        label: 'Flow Trigger (Call Start)',
+        type: 'message_output',
+        label: 'Flow Trigger (Greeting Message)',
         description: 'Initiates conversation when inbound/outbound call connects.'
       }
     },
@@ -200,8 +200,8 @@ function parsePromptToFlow(userPrompt: string): { name: string; description: str
       type: 'flowNode',
       position: { x: 250, y: 190 },
       data: {
-        type: 'speech_input',
-        label: 'Greeting & Initial Question',
+        type: 'input_capture',
+        label: 'Capture Caller Speech Input',
         description: `Greetings! ${userPrompt.slice(0, 80)}... How can I assist you today?`
       }
     },
@@ -210,8 +210,8 @@ function parsePromptToFlow(userPrompt: string): { name: string; description: str
       type: 'flowNode',
       position: { x: 250, y: 330 },
       data: {
-        type: 'condition',
-        label: 'Evaluate Caller Intent & Urgency',
+        type: 'decision_split',
+        label: 'Evaluate Intent & Decision Split',
         description: 'Analyze transcript for qualified lead parameters or transfer keywords.'
       }
     },
@@ -220,8 +220,8 @@ function parsePromptToFlow(userPrompt: string): { name: string; description: str
       type: 'flowNode',
       position: { x: 80, y: 480 },
       data: {
-        type: 'webhook',
-        label: 'Log Data to CRM / Database',
+        type: 'api_request',
+        label: 'API Request & Webhook Sync',
         description: 'Send captured caller responses and details via REST API webhook.'
       }
     },
@@ -230,8 +230,8 @@ function parsePromptToFlow(userPrompt: string): { name: string; description: str
       type: 'flowNode',
       position: { x: 420, y: 480 },
       data: {
-        type: 'human_transfer',
-        label: 'Transfer to Live Agent',
+        type: 'redirect_call',
+        label: 'Redirect Call to Live Agent',
         description: 'Instantly transfer high-priority or urgent callers to human support team.'
       }
     },
@@ -240,8 +240,8 @@ function parsePromptToFlow(userPrompt: string): { name: string; description: str
       type: 'flowNode',
       position: { x: 250, y: 630 },
       data: {
-        type: 'hangup',
-        label: 'End Conversation & Wrap Up',
+        type: 'terminate_call',
+        label: 'Terminate Call & Wrap Up',
         description: 'Thank the caller, confirm details, and close the call session gracefully.'
       }
     }
