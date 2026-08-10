@@ -46,14 +46,13 @@ export default function EditCampaignPage() {
   const { data: whatsappPhoneNumbersRes } = useGetWhatsappPhoneNumbersQuery()
   const { data: contactsRes } = useGetContactsQuery({ limit: 500 })
 
-  // Filter only flow type agents
-  const flowAgents = (agentsRes?.data || []).filter((agent: any) => agent.type === 'flow')
-
+  // Include all created AI assistants and flow agents for campaign dispatch
   const campaignTypesOptions = (campaignTypesRes?.campaignTypes || [])
     .filter((ct: any) => ct.status)
     .map((ct: any) => ({ label: ct.name, value: ct.id || ct._id || "" }))
 
-  const agentsOptions = flowAgents.map((a: any) => ({ label: a.name, value: a.id || a._id || "" }))
+  const availableAgents = agentsRes?.data || []
+  const agentsOptions = availableAgents.map((a: any) => ({ label: a.name, value: a.id || a._id || "" }))
 
   const stdPhoneNumbers = (phoneNumbersRes?.data || []).map((p: any) => ({
     label: p.phone_number,

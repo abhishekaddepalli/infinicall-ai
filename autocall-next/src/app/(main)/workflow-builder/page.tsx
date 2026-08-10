@@ -1,5 +1,6 @@
 'use client'
 
+import AIFlowGeneratorModal from '@/components/features/workflow-builder/AIFlowGeneratorModal'
 import { FlowItem } from '@/components/features/workflow-builder/FlowItem'
 import TestFlowModal from '@/components/features/workflow-builder/TestFlowModal'
 import { DataViewEmptyState, DataViewLayout, DataViewPagination, DataViewToolbar } from '@/components/reusable/data-view'
@@ -9,9 +10,9 @@ import { Button } from '@/components/ui/button'
 import { ROUTES } from '@/constants/routes'
 import { useDebounce } from '@/hooks/useDebounce'
 import { cn } from '@/lib/utils'
-import { useDeleteFlowMutation, useGetFlowsQuery, useUpdateFlowMutation } from '@/redux/api/flowApi'
+import { useCreateFlowMutation, useDeleteFlowMutation, useGetFlowsQuery, useUpdateFlowMutation } from '@/redux/api/flowApi'
 import { Flow } from '@/types/flow'
-import { Network, Plus } from 'lucide-react'
+import { Network, Plus, Sparkles } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -33,14 +34,37 @@ export default function FlowBuilderPage() {
     search: debouncedSearch,
   })
 
+  const [createFlow] = useCreateFlowMutation()
   const [deleteFlow, { isLoading: isDeleting }] = useDeleteFlowMutation()
   const [updateFlow] = useUpdateFlowMutation()
 
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [idToDelete, setIdToDelete] = useState<string | null>(null)
 
   const [isTestModalOpen, setIsTestModalOpen] = useState(false)
   const [flowToTest, setFlowToTest] = useState<Flow | null>(null)
+
+  const handleAiGenerated = async (generatedData: any) => {
+    try {
+      const res = await createFlow({
+        name: generatedData.name,
+        description: generatedData.description,
+        nodes: generatedData.nodes,
+        edges: generatedData.edges,
+        status: 'active'
+      }).unwrap()
+
+      const newFlowId = res?.data?._id || res?.data?.id || res?.data?.virtualId
+      if (newFlowId) {
+        router.push(`/workflow-builder/${newFlowId}`)
+      } else {
+        router.push(ROUTES.WORKFLOW_BUILDER)
+      }
+    } catch (error: any) {
+      toast.error(error?.data?.message || 'Failed to create AI flow')
+    }
+  }
 
   const handleTest = (flow: Flow) => {
     setFlowToTest(flow)
@@ -100,6 +124,15 @@ export default function FlowBuilderPage() {
             icon: <Plus className="h-5 w-5" strokeWidth={2.5} />,
             className: 'bg-primary hover:bg-primary/90 text-white font-medium rounded-radius p-padding',
           }}
+          endContent={
+            <Button
+              onClick={() => setIsAiModalOpen(true)}
+              className="bg-gradient-to-r from-indigo-600 to-sky-600 hover:from-indigo-700 hover:to-sky-700 text-white font-bold rounded-radius p-padding gap-2 shadow-md"
+            >
+              <Sparkles className="w-4 h-4 animate-pulse text-amber-300" />
+              <span>AI Flow Generator</span>
+            </Button>
+          }
           showBackButton={false}
         />
       </div>
@@ -201,6 +234,12 @@ export default function FlowBuilderPage() {
           setIsTestModalOpen(false)
           setFlowToTest(null)
         }}
+      />
+
+      <AIFlowGeneratorModal
+        isOpen={isAiModalOpen}
+        onClose={() => setIsAiModalOpen(false)}
+        onGenerate={handleAiGenerated}
       />
     </>
   )

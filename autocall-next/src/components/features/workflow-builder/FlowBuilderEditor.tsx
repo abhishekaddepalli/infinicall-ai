@@ -27,12 +27,13 @@ import {
   useReactFlow
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
-import { ArrowLeft, MoreVertical, Save } from 'lucide-react'
+import { ArrowLeft, MoreVertical, Save, Sparkles } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { AddNodesSidebar } from './AddNodesSidebar'
+import AIFlowGeneratorModal from './AIFlowGeneratorModal'
 import { FlowBuilderEdge } from './FlowBuilderEdge'
 import { FlowBuilderNode } from './FlowBuilderNode'
 
@@ -65,6 +66,14 @@ function FlowBuilderEditorContent({ id }: FlowBuilderEditorProps) {
   const [name, setName] = useState(t('untitled_flow') || t('untitled_flow'))
   const [description, setDescription] = useState('')
   const [showNodesSidebar, setShowNodesSidebar] = useState(true)
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false)
+
+  const handleAiGenerated = (generatedData: { name: string; description: string; nodes: Node[]; edges: Edge[] }) => {
+    setName(generatedData.name)
+    setDescription(generatedData.description)
+    setNodes(generatedData.nodes)
+    setEdges(generatedData.edges)
+  }
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([])
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([])
@@ -264,6 +273,14 @@ function FlowBuilderEditorContent({ id }: FlowBuilderEditorProps) {
             {!isViewOnly && (
               <>
                 <Button
+                  type="button"
+                  onClick={() => setIsAiModalOpen(true)}
+                  className="p-padding! rounded-radius bg-gradient-to-r from-indigo-600 to-sky-600 hover:from-indigo-700 hover:to-sky-700 cursor-pointer text-white font-medium text-md gap-2 transition-all shadow-md"
+                >
+                  <Sparkles className="w-4 h-4 animate-pulse text-amber-300" />
+                  Generate with AI
+                </Button>
+                <Button
                   onClick={handleSave}
                   disabled={isUpdating || isCreating}
                   className="p-padding! rounded-radius bg-primary cursor-pointer text-white font-medium text-md gap-2 transition-all"
@@ -337,6 +354,12 @@ function FlowBuilderEditorContent({ id }: FlowBuilderEditorProps) {
           </div>
         )}
       </div>
+
+      <AIFlowGeneratorModal
+        isOpen={isAiModalOpen}
+        onClose={() => setIsAiModalOpen(false)}
+        onGenerate={handleAiGenerated}
+      />
     </div>
   )
 }
