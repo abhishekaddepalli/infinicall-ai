@@ -317,40 +317,56 @@ exports.getUserDashboardData = async (req, res) => {
       ? { created_at: { $gte: range.start, $lte: range.end } }
       : {};
 
-    const totalAppointmentsBooked = await Appointment.countDocuments({ user_id: userId, ...createdAtFilter });
+    const userFilter = { $or: [{ userId: userId }, { user_id: userId }] };
 
-    const totalFormSubmissions = await FormResponse.countDocuments({ user_id: userId, ...createdAtFilter });
+    const safeCount = async (Model, filter) => {
+      try {
+        if (!Model) return 0;
+        return await Model.countDocuments(filter);
+      } catch (e) {
+        return 0;
+      }
+    };
 
-    const totalKnowledgebase = await KnowledgeBase.countDocuments({ user_id: userId, ...createdAtFilter });
+    const safeFind = async (Model, query, sort, limit, populates = []) => {
+      try {
+        if (!Model) return [];
+        let q = Model.find(query).sort(sort).limit(limit);
+        for (const pop of populates) {
+          q = q.populate(pop.path, pop.select);
+        }
+        return await q.lean();
+      } catch (e) {
+        return [];
+      }
+    };
 
-    const totalTemplatesCreated = await Template.countDocuments({ user_id: userId, ...createdAtFilter });
-
-    const totalContacts = await Contact.countDocuments({ user_id: userId, ...createdAtFilter });
-
-    const totalFlowsCreated = await Flow.countDocuments({
+    const totalAppointmentsBooked = await safeCount(Appointment, { user_id: userId, ...createdAtFilter });
+    const totalFormSubmissions = await safeCount(FormResponse, { user_id: userId, ...createdAtFilter });
+    const totalKnowledgebase = await safeCount(KnowledgeBase, { user_id: userId, ...createdAtFilter });
+    const totalTemplatesCreated = await safeCount(Template, { user_id: userId, ...createdAtFilter });
+    const totalContacts = await safeCount(Contact, { user_id: userId, ...createdAtFilter });
+    const totalFlowsCreated = await safeCount(Flow, {
       user_id: userId,
       system_flow: { $ne: true },
       deleted_at: null,
       ...createdAtFilter
     });
 
-    const totalAiAgent = await Agent.countDocuments({ user_id: userId, ...createdAtFilter });
-
-    const totalSmsAgents = await SMSAgent.countDocuments({ user_id: userId, ...createdAtFilter });
-
-    const totalActiveCampaigns = await Campaign.countDocuments({ userId: userId, campaignStatus: 'Active', ...createdAtFilter });
-    
-    const totalActiveSmsCampaigns = await SMSCampaign.countDocuments({ user_id: userId, status: 'Active', ...createdAtFilter });
+    const totalAiAgent = await safeCount(Agent, { user_id: userId, ...createdAtFilter });
+    const totalSmsAgents = await safeCount(SMSAgent, { user_id: userId, ...createdAtFilter });
+    const totalActiveCampaigns = await safeCount(Campaign, { ...userFilter, campaignStatus: 'Active', ...createdAtFilter });
+    const totalActiveSmsCampaigns = await safeCount(SMSCampaign, { user_id: userId, status: 'Active', ...createdAtFilter });
 
     const startOfDayDaily = new Date();
     startOfDayDaily.setHours(0, 0, 0, 0);
-    const campaignsUsedToday = await Campaign.countDocuments({
-      userId: userId,
+    const campaignsUsedToday = await safeCount(Campaign, {
+      ...userFilter,
       campaignStatus: { $in: ['Active', 'Completed', 'Failed', 'Paused', 'Cancelled'] },
       updated_at: { $gte: startOfDayDaily }
     });
 
-    const totalCalls = await Call.countDocuments({ user_id: userId, ...createdAtFilter });
+    const totalCalls = await safeCount(Call, { user_id: userId, ...createdAtFilter });
 
     const today = new Date();
     const dayOfWeek = today.getDay();
@@ -359,25 +375,30 @@ exports.getUserDashboardData = async (req, res) => {
     startOfWeek.setDate(today.getDate() - distanceToMonday);
     startOfWeek.setHours(0, 0, 0, 0);
 
-    const calls = await Call.aggregate([
-      {
-        $match: {
-          user_id: userId,
-          ...(range
-            ? { created_at: { $gte: range.start, $lte: range.end } }
-            : { created_at: { $gte: startOfWeek } })
+    let calls = [];
+    try {
+      calls = await Call.aggregate([
+        {
+          $match: {
+            user_id: userId,
+            ...(range
+              ? { created_at: { $gte: range.start, $lte: range.end } }
+              : { created_at: { $gte: startOfWeek } })
+          }
+        },
+        {
+          $group: {
+            _id: {
+              dayOfWeek: { $dayOfWeek: '$created_at' },
+              direction: '$direction'
+            },
+            count: { $sum: 1 }
+          }
         }
-      },
-      {
-        $group: {
-          _id: {
-            dayOfWeek: { $dayOfWeek: '$created_at' },
-            direction: '$direction'
-          },
-          count: { $sum: 1 }
-        }
-      }
-    ]);
+      ]);
+    } catch (e) {
+      calls = [];
+    }
 
     const dayLabels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const getDayIndex = (mongoDayOfWeek) => {
@@ -404,22 +425,27 @@ exports.getUserDashboardData = async (req, res) => {
       }
     });
 
-    const campaignsAgg = await Campaign.aggregate([
-      {
-        $match: {
-          userId: userId,
-          ...(range
-            ? { created_at: { $gte: range.start, $lte: range.end } }
-            : { created_at: { $gte: startOfWeek } })
+    let campaignsAgg = [];
+    try {
+      campaignsAgg = await Campaign.aggregate([
+        {
+          $match: {
+            ...userFilter,
+            ...(range
+              ? { created_at: { $gte: range.start, $lte: range.end } }
+              : { created_at: { $gte: startOfWeek } })
+          }
+        },
+        {
+          $group: {
+            _id: { dayOfWeek: { $dayOfWeek: '$created_at' } },
+            count: { $sum: 1 }
+          }
         }
-      },
-      {
-        $group: {
-          _id: { dayOfWeek: { $dayOfWeek: '$created_at' } },
-          count: { $sum: 1 }
-        }
-      }
-    ]);
+      ]);
+    } catch (e) {
+      campaignsAgg = [];
+    }
 
     const currentWeekCampaignChart = dayLabels.map(day => ({ day, ai_campaigns: 0, sms_campaigns: 0 }));
     campaignsAgg.forEach(item => {
@@ -429,22 +455,27 @@ exports.getUserDashboardData = async (req, res) => {
       }
     });
 
-    const smsCampaignsAgg = await SMSCampaign.aggregate([
-      {
-        $match: {
-          user_id: userId,
-          ...(range
-            ? { created_at: { $gte: range.start, $lte: range.end } }
-            : { created_at: { $gte: startOfWeek } })
+    let smsCampaignsAgg = [];
+    try {
+      smsCampaignsAgg = await SMSCampaign.aggregate([
+        {
+          $match: {
+            user_id: userId,
+            ...(range
+              ? { created_at: { $gte: range.start, $lte: range.end } }
+              : { created_at: { $gte: startOfWeek } })
+          }
+        },
+        {
+          $group: {
+            _id: { dayOfWeek: { $dayOfWeek: '$created_at' } },
+            count: { $sum: 1 }
+          }
         }
-      },
-      {
-        $group: {
-          _id: { dayOfWeek: { $dayOfWeek: '$created_at' } },
-          count: { $sum: 1 }
-        }
-      }
-    ]);
+      ]);
+    } catch (e) {
+      smsCampaignsAgg = [];
+    }
 
     smsCampaignsAgg.forEach(item => {
       const idx = getDayIndex(item._id.dayOfWeek);
@@ -457,11 +488,9 @@ exports.getUserDashboardData = async (req, res) => {
       ? { user_id: userId, created_at: { $gte: range.start, $lte: range.end } }
       : { user_id: userId };
 
-    const [incomingCalls, campaignCalls, outgoingCalls] = await Promise.all([
-      Call.countDocuments({ ...pieFilter, direction: 'inbound' }),
-      Call.countDocuments({ ...pieFilter, campaign_id: { $ne: null } }),
-      Call.countDocuments({ ...pieFilter, direction: 'outbound', campaign_id: null })
-    ]);
+    const incomingCalls = await safeCount(Call, { ...pieFilter, direction: 'inbound' });
+    const campaignCalls = await safeCount(Call, { ...pieFilter, campaign_id: { $ne: null } });
+    const outgoingCalls = await safeCount(Call, { ...pieFilter, direction: 'outbound', campaign_id: null });
 
     const allTimeCallPieChart = {
       incoming: incomingCalls,
@@ -469,33 +498,27 @@ exports.getUserDashboardData = async (req, res) => {
       campaign: campaignCalls
     };
 
-    const recentCampaigns = await Campaign.find({ userId: userId })
-      .sort({ created_at: -1 })
-      .limit(5)
-      .populate('typeId', 'name')
-      .populate('agentId', 'name')
-      .populate('phoneNumberId', 'phone_number')
-      .lean();
+    const recentCampaigns = await safeFind(Campaign, userFilter, { created_at: -1 }, 5, [
+      { path: 'typeId', select: 'name' },
+      { path: 'agentId', select: 'name' },
+      { path: 'phoneNumberId', select: 'phone_number' }
+    ]);
 
-    const recentContacts = await Contact.find({ user_id: userId }).sort({ created_at: -1 }).limit(5).lean();
+    const recentContacts = await safeFind(Contact, { user_id: userId }, { created_at: -1 }, 5);
 
-    const recentSmsCampaigns = await SMSCampaign.find({ user_id: userId })
-      .sort({ created_at: -1 })
-      .limit(5)
-      .populate('typeId', 'name')
-      .populate('smsAgentId', 'name')
-      .populate('phoneNumberId', 'phone_number')
-      .lean();
+    const recentSmsCampaigns = await safeFind(SMSCampaign, { user_id: userId }, { created_at: -1 }, 5, [
+      { path: 'typeId', select: 'name' },
+      { path: 'smsAgentId', select: 'name' },
+      { path: 'phoneNumberId', select: 'phone_number' }
+    ]);
 
-    const recentTeamMembers = await TeamMember.find({ user_id: userId })
-      .sort({ created_at: -1 })
-      .limit(5)
-      .populate('team_id', 'name description')
-      .lean();
+    const recentTeamMembers = await safeFind(TeamMember, { user_id: userId }, { created_at: -1 }, 5, [
+      { path: 'team_id', select: 'name description' }
+    ]);
 
     const recentActivitiesArray = [];
 
-    const recentAiCampaignsForActivity = await Campaign.find({ userId: userId }).sort({ created_at: -1 }).limit(5).populate('userId', 'name').lean();
+    const recentAiCampaignsForActivity = await safeFind(Campaign, userFilter, { created_at: -1 }, 5, [{ path: 'userId', select: 'name' }]);
     recentAiCampaignsForActivity.forEach(c => {
       recentActivitiesArray.push({
         type: 'ai_campaign',
@@ -505,7 +528,7 @@ exports.getUserDashboardData = async (req, res) => {
       });
     });
 
-    const recentSmsCampsForActivity = await SMSCampaign.find({ user_id: userId }).sort({ created_at: -1 }).limit(5).populate('user_id', 'name').lean();
+    const recentSmsCampsForActivity = await safeFind(SMSCampaign, { user_id: userId }, { created_at: -1 }, 5, [{ path: 'user_id', select: 'name' }]);
     recentSmsCampsForActivity.forEach(c => {
       recentActivitiesArray.push({
         type: 'sms_campaign',
@@ -515,7 +538,7 @@ exports.getUserDashboardData = async (req, res) => {
       });
     });
 
-    const recentContsForActivity = await Contact.find({ user_id: userId }).sort({ created_at: -1 }).limit(5).populate('user_id', 'name').lean();
+    const recentContsForActivity = await safeFind(Contact, { user_id: userId }, { created_at: -1 }, 5, [{ path: 'user_id', select: 'name' }]);
     recentContsForActivity.forEach(c => {
       recentActivitiesArray.push({
         type: 'contact',
@@ -525,7 +548,7 @@ exports.getUserDashboardData = async (req, res) => {
       });
     });
 
-    const recentAgentsForActivity = await Agent.find({ user_id: userId }).sort({ created_at: -1 }).limit(5).populate('user_id', 'name').lean();
+    const recentAgentsForActivity = await safeFind(Agent, { user_id: userId }, { created_at: -1 }, 5, [{ path: 'user_id', select: 'name' }]);
     recentAgentsForActivity.forEach(a => {
       recentActivitiesArray.push({
         type: 'agent',
@@ -535,7 +558,7 @@ exports.getUserDashboardData = async (req, res) => {
       });
     });
 
-    const recentFlowsForActivity = await Flow.find({ user_id: userId, system_flow: { $ne: true } }).sort({ created_at: -1 }).limit(5).populate('user_id', 'name').lean();
+    const recentFlowsForActivity = await safeFind(Flow, { user_id: userId, system_flow: { $ne: true } }, { created_at: -1 }, 5, [{ path: 'user_id', select: 'name' }]);
     recentFlowsForActivity.forEach(f => {
       recentActivitiesArray.push({
         type: 'flow',
@@ -548,7 +571,20 @@ exports.getUserDashboardData = async (req, res) => {
     recentActivitiesArray.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
     const recentActivity = recentActivitiesArray.slice(0, 5);
 
-    const creditStats = await creditService.getCreditStatistics(userId);
+    let creditStats = {
+      total_credits: 0,
+      used_credits: 0,
+      available_credits: 0,
+      monthly_credits_used: 0,
+      total_completed_calls_this_month: 0
+    };
+    try {
+      if (creditService && typeof creditService.getCreditStatistics === 'function') {
+        creditStats = await creditService.getCreditStatistics(userId);
+      }
+    } catch (cErr) {
+      console.warn('Credit stats fetch warning:', cErr.message);
+    }
 
     res.json({
       success: true,
@@ -584,7 +620,7 @@ exports.getUserDashboardData = async (req, res) => {
     });
   } catch (error) {
     console.error('Get User Dashboard Data Error:', error);
-    res.status(500).json({ success: false, message: 'Internal Server Error', });
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
 
