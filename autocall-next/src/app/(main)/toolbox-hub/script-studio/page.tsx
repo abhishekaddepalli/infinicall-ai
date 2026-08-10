@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/reusable/PageHeader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Textarea } from '@/components/ui/textArea';
 import { Badge } from '@/components/ui/badge';
 import { useGenerateAiScriptMutation } from '@/redux/api/automationApi';
 import { Bot, Sparkles, Copy, Check, MessageSquare, ShieldAlert, ArrowLeft } from 'lucide-react';
