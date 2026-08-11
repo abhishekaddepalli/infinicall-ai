@@ -13,11 +13,12 @@ class VobizService {
 
     const baseUrls = [
       process.env.VOBIZ_API_BASE_URL,
+      'https://console.vobiz.ai/api/v1',
+      'https://console.vobiz.ai/v1',
+      'https://console.vobiz.ai',
       'https://api.vobiz.ai/v1',
       'https://api.vobiz.ai/api/v1',
-      'https://api.vobiz.ai',
-      'https://vobiz.ai/api/v1',
-      'https://vobiz.ai/v1'
+      'https://api.vobiz.ai'
     ].filter(Boolean);
 
     const authConfigs = [
@@ -39,8 +40,13 @@ class VobizService {
       for (const url of endpoints) {
         for (const config of authConfigs) {
           try {
-            response = await axios.get(url, config);
-            if (response && response.data) {
+            const res = await axios.get(url, config);
+            // Ensure response is JSON object, not HTML marketing page
+            if (res && res.data && typeof res.data === 'object' && !Array.isArray(res.data) && !String(res.data).includes('<!DOCTYPE')) {
+              response = res;
+              break;
+            } else if (res && res.data && Array.isArray(res.data)) {
+              response = res;
               break;
             }
           } catch (err) {
@@ -55,6 +61,9 @@ class VobizService {
     if (!response || !response.data) {
       let rawErr = lastError?.response?.data?.message || lastError?.response?.data?.error || lastError?.response?.data || lastError?.message || 'Failed to connect to Vobiz API';
       let errMsg = typeof rawErr === 'object' ? (rawErr.message || rawErr.error || JSON.stringify(rawErr)) : String(rawErr);
+      if (errMsg.includes('<!DOCTYPE') || errMsg.includes('<html') || errMsg.includes('<!doctype')) {
+        errMsg = 'Vobiz API returned HTML page. Please verify your Vobiz Auth ID and Auth Token in Settings.';
+      }
       console.error('Vobiz Get Numbers Error:', errMsg);
       throw new Error(`Vobiz API Error: ${errMsg}`);
     }
