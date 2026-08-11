@@ -10,7 +10,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { AssignPriceModalProps } from '@/types/number-purchase-components'
-import { CalendarDays, DollarSign } from 'lucide-react';
+import { CalendarDays, IndianRupee } from 'lucide-react';
 import { Loader2 } from '@/components/reusable/Loader2';
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -63,9 +63,9 @@ export default function AssignPriceModal({
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
           <div className="space-y-2">
-            <Label className="text-sm font-semibold">{t('price_usd', 'Price (USD)')}</Label>
+            <Label className="text-sm font-semibold">{t('price_inr', 'Price (INR / ₹)')}</Label>
             <div className="relative">
-              <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-subtitle-color" />
+              <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-subtitle-color" />
               <Input
                 type="number"
                 min="0"
