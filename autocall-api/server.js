@@ -71,6 +71,80 @@ process.on('unhandledRejection', (reason, promise) => {
         console.log('✅ Setting collection migrated to InfiniCall AI');
       }
 
+      if (db && db.Role && db.User) {
+        const bcrypt = require('bcryptjs');
+        let superAdminRole = await db.Role.findOne({ name: 'super_admin' });
+        if (!superAdminRole) {
+          superAdminRole = await db.Role.create({
+            name: 'super_admin',
+            description: 'Super Administrator with full access',
+            system_reserved: true
+          });
+          console.log('✅ Super Admin Role created');
+        }
+
+        let userRole = await db.Role.findOne({ name: 'user' });
+        if (!userRole) {
+          userRole = await db.Role.create({
+            name: 'user',
+            description: 'Standard Platform User',
+            system_reserved: true
+          });
+          console.log('✅ User Role created');
+        }
+
+        const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
+        const adminPassword = process.env.ADMIN_PASSWORD || 'Admin@123456';
+        const adminUser = await db.User.findOne({ email: adminEmail });
+
+        if (!adminUser) {
+          const hashedPassword = await bcrypt.hash(adminPassword, 10);
+          await db.User.create({
+            name: process.env.ADMIN_NAME || 'Super Admin',
+            email: adminEmail,
+            password: hashedPassword,
+            roleId: superAdminRole._id,
+            role: 'super_admin',
+            isVerified: true,
+            isActive: true
+          });
+          console.log(`✅ Default admin created: ${adminEmail}`);
+        } else {
+          // Reset password to ensure Admin@123456 works
+          const hashedPassword = await bcrypt.hash(adminPassword, 10);
+          await db.User.updateOne(
+            { _id: adminUser._id },
+            { $set: { password: hashedPassword, roleId: superAdminRole._id, role: 'super_admin', isActive: true } }
+          );
+          console.log(`✅ Admin credentials synchronized: ${adminEmail}`);
+        }
+
+        const defaultUserEmail = process.env.DEFAULT_USER_EMAIL || 'user@example.com';
+        const defaultUserPassword = process.env.DEFAULT_USER_PASSWORD || 'User@123456';
+        const normalUser = await db.User.findOne({ email: defaultUserEmail });
+
+        if (!normalUser) {
+          const hashedPassword = await bcrypt.hash(defaultUserPassword, 10);
+          await db.User.create({
+            name: process.env.DEFAULT_USER_NAME || 'Default User',
+            email: defaultUserEmail,
+            password: hashedPassword,
+            roleId: userRole._id,
+            role: 'user',
+            isVerified: true,
+            isActive: true
+          });
+          console.log(`✅ Default user created: ${defaultUserEmail}`);
+        } else {
+          const hashedPassword = await bcrypt.hash(defaultUserPassword, 10);
+          await db.User.updateOne(
+            { _id: normalUser._id },
+            { $set: { password: hashedPassword, roleId: userRole._id, role: 'user', isActive: true } }
+          );
+          console.log(`✅ Default user credentials synchronized: ${defaultUserEmail}`);
+        }
+      }
+
       if (db && db.Plan) {
         const count = await db.Plan.countDocuments();
         if (count === 0) {
