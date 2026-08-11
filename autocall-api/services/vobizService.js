@@ -39,7 +39,8 @@ class VobizService {
     }
 
     if (!response || !response.data) {
-      const errMsg = lastError?.response?.data?.message || lastError?.response?.data?.error || lastError?.message || 'Failed to connect to Vobiz API';
+      let rawErr = lastError?.response?.data?.message || lastError?.response?.data?.error || lastError?.response?.data || lastError?.message || 'Failed to connect to Vobiz API';
+      let errMsg = typeof rawErr === 'object' ? (rawErr.message || rawErr.error || JSON.stringify(rawErr)) : String(rawErr);
       console.error('Vobiz Get Numbers Error:', errMsg);
       throw new Error(`Vobiz API Error: ${errMsg}`);
     }
