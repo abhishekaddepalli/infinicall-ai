@@ -13,11 +13,9 @@ class VobizService {
 
     const baseUrls = [
       process.env.VOBIZ_API_BASE_URL,
-      'https://console.vobiz.ai/api/v1',
-      'https://console.vobiz.ai/v1',
-      'https://console.vobiz.ai',
-      'https://api.vobiz.ai/v1',
       'https://api.vobiz.ai/api/v1',
+      'https://api.vobiz.ai/api',
+      'https://api.vobiz.ai/v1',
       'https://api.vobiz.ai'
     ].filter(Boolean);
 
@@ -29,23 +27,20 @@ class VobizService {
 
     for (const baseUrl of baseUrls) {
       const endpoints = [
+        `${baseUrl}/Account/${authId}/numbers`,
+        `${baseUrl}/Account/${authId}/numbers/`,
         `${baseUrl}/Account/${authId}/Number/`,
         `${baseUrl}/Account/${authId}/PhoneNumber/`,
-        `${baseUrl}/Account/${authId}/Numbers/`,
         `${baseUrl}/Number/`,
-        `${baseUrl}/Numbers/`,
-        `${baseUrl}/phone-numbers/`
+        `${baseUrl}/Numbers/`
       ];
 
       for (const url of endpoints) {
         for (const config of authConfigs) {
           try {
             const res = await axios.get(url, config);
-            // Ensure response is JSON object, not HTML marketing page
-            if (res && res.data && typeof res.data === 'object' && !Array.isArray(res.data) && !String(res.data).includes('<!DOCTYPE')) {
-              response = res;
-              break;
-            } else if (res && res.data && Array.isArray(res.data)) {
+            // Ensure response is JSON object, not HTML page
+            if (res && res.data && typeof res.data === 'object' && !String(res.data).includes('<!DOCTYPE')) {
               response = res;
               break;
             }
@@ -68,17 +63,17 @@ class VobizService {
       throw new Error(`Vobiz API Error: ${errMsg}`);
     }
 
-    const rawList = response.data?.objects || response.data?.numbers || response.data?.data || (Array.isArray(response.data) ? response.data : []);
+    const rawList = response.data?.items || response.data?.objects || response.data?.numbers || response.data?.data || (Array.isArray(response.data) ? response.data : []);
     const parsedList = Array.isArray(rawList) ? rawList : [];
 
     return {
       purchased: parsedList.map(n => {
-        const rawNum = typeof n === 'string' ? n : (n.number || n.phone_number || n.phoneNumber || n.e164 || '');
+        const rawNum = typeof n === 'string' ? n : (n.e164 || n.number || n.phone_number || n.phoneNumber || '');
         const numStr = String(rawNum).trim();
         const formattedNum = numStr.startsWith('+') ? numStr : '+' + numStr;
         return {
           phone_number: formattedNum,
-          sid: n.number || n.id || n.uuid || n.sid || `vobiz_${formattedNum}`,
+          sid: n.id || n.uuid || n.number || n.sid || `vobiz_${formattedNum}`,
           friendly_name: n.alias || n.friendly_name || n.name || formattedNum,
           type: 'purchased',
           provider: 'vobiz'
