@@ -51,24 +51,15 @@ process.on('unhandledRejection', (reason, promise) => {
     deleteExpiredOtp.start();
     initTopUpExpiryCron();
 
-    // Auto-migrate Setting collection branding in MongoDB
+    // Safe, non-destructive startup initialization (preserves all user settings, logos, and passwords)
     try {
       const { db } = require('./models');
       if (db && db.Setting) {
-        await db.Setting.updateMany({}, {
-          $set: {
-            app_name: 'InfiniCall AI'
-          },
-          $unset: {
-            logo_light_url: "",
-            logo_dark_url: "",
-            sidebar_logo_url: "",
-            landing_logo_url: "",
-            mobile_logo_url: "",
-            favicon_url: ""
-          }
-        });
-        console.log('✅ Setting collection migrated to InfiniCall AI');
+        const existingSetting = await db.Setting.findOne();
+        if (!existingSetting) {
+          await db.Setting.create({ app_name: 'InfiniCall AI' });
+          console.log('✅ Default settings initialized');
+        }
       }
 
       if (db && db.Role && db.User) {
@@ -80,7 +71,6 @@ process.on('unhandledRejection', (reason, promise) => {
             description: 'Super Administrator with full access',
             system_reserved: true
           });
-          console.log('✅ Super Admin Role created');
         }
 
         let userRole = await db.Role.findOne({ name: 'user' });
@@ -90,7 +80,6 @@ process.on('unhandledRejection', (reason, promise) => {
             description: 'Standard Platform User',
             system_reserved: true
           });
-          console.log('✅ User Role created');
         }
 
         const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
@@ -109,14 +98,6 @@ process.on('unhandledRejection', (reason, promise) => {
             isActive: true
           });
           console.log(`✅ Default admin created: ${adminEmail}`);
-        } else {
-          // Reset password to ensure Admin@123456 works
-          const hashedPassword = await bcrypt.hash(adminPassword, 10);
-          await db.User.updateOne(
-            { _id: adminUser._id },
-            { $set: { password: hashedPassword, roleId: superAdminRole._id, role: 'super_admin', isActive: true } }
-          );
-          console.log(`✅ Admin credentials synchronized: ${adminEmail}`);
         }
 
         const defaultUserEmail = process.env.DEFAULT_USER_EMAIL || 'user@example.com';
@@ -135,13 +116,6 @@ process.on('unhandledRejection', (reason, promise) => {
             isActive: true
           });
           console.log(`✅ Default user created: ${defaultUserEmail}`);
-        } else {
-          const hashedPassword = await bcrypt.hash(defaultUserPassword, 10);
-          await db.User.updateOne(
-            { _id: normalUser._id },
-            { $set: { password: hashedPassword, roleId: userRole._id, role: 'user', isActive: true } }
-          );
-          console.log(`✅ Default user credentials synchronized: ${defaultUserEmail}`);
         }
       }
 
