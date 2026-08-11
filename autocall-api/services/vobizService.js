@@ -8,30 +8,60 @@ class VobizService {
   }
 
   async getNumbers(authId, authToken) {
-    try {
-      const response = await axios.get(`${this.baseUrl}/Account/${authId}/Number/`, {
-        headers: {
-          'X-Auth-ID': authId,
-          'X-Auth-Token': authToken,
-          'Content-Type': 'application/json'
-        }
-      });
+    let response;
+    let lastError = null;
 
-      const numbers = response.data?.objects || response.data?.numbers || response.data || [];
-      return {
-        purchased: numbers.map(n => ({
-          phone_number: (n.number || n.phone_number || '').startsWith('+') ? (n.number || n.phone_number) : '+' + (n.number || n.phone_number),
-          sid: n.number || n.id || n.uuid,
-          friendly_name: n.alias || n.friendly_name || n.number,
+    const endpoints = [
+      `${this.baseUrl}/Account/${authId}/Number/`,
+      `${this.baseUrl}/Account/${authId}/PhoneNumber/`,
+      `${this.baseUrl}/Numbers/`,
+      `${this.baseUrl}/phone-numbers/`
+    ];
+
+    const authConfigs = [
+      { headers: { 'X-Auth-ID': authId, 'X-Auth-Token': authToken, 'Content-Type': 'application/json' } },
+      { headers: { 'Authorization': `Bearer ${authToken}`, 'Content-Type': 'application/json' } },
+      { auth: { username: authId, password: authToken }, headers: { 'Content-Type': 'application/json' } }
+    ];
+
+    for (const url of endpoints) {
+      for (const config of authConfigs) {
+        try {
+          response = await axios.get(url, config);
+          if (response && response.data) {
+            break;
+          }
+        } catch (err) {
+          lastError = err;
+        }
+      }
+      if (response && response.data) break;
+    }
+
+    if (!response || !response.data) {
+      const errMsg = lastError?.response?.data?.message || lastError?.response?.data?.error || lastError?.message || 'Failed to connect to Vobiz API';
+      console.error('Vobiz Get Numbers Error:', errMsg);
+      throw new Error(`Vobiz API Error: ${errMsg}`);
+    }
+
+    const rawList = response.data?.objects || response.data?.numbers || response.data?.data || (Array.isArray(response.data) ? response.data : []);
+    const parsedList = Array.isArray(rawList) ? rawList : [];
+
+    return {
+      purchased: parsedList.map(n => {
+        const rawNum = typeof n === 'string' ? n : (n.number || n.phone_number || n.phoneNumber || n.e164 || '');
+        const numStr = String(rawNum).trim();
+        const formattedNum = numStr.startsWith('+') ? numStr : '+' + numStr;
+        return {
+          phone_number: formattedNum,
+          sid: n.number || n.id || n.uuid || n.sid || `vobiz_${formattedNum}`,
+          friendly_name: n.alias || n.friendly_name || n.name || formattedNum,
           type: 'purchased',
           provider: 'vobiz'
-        })),
-        verified: []
-      };
-    } catch (error) {
-      console.error('Vobiz Get Numbers Error:', error?.response?.data || error.message);
-      return { purchased: [], verified: [] };
-    }
+        };
+      }).filter(n => n.phone_number.length > 3),
+      verified: []
+    };
   }
 
   async makeCall(authId, authToken, from, to, answerUrl, statusCallbackUrl = null) {
