@@ -11,12 +11,14 @@ class VobizService {
     let response;
     let lastError = null;
 
-    const endpoints = [
-      `${this.baseUrl}/Account/${authId}/Number/`,
-      `${this.baseUrl}/Account/${authId}/PhoneNumber/`,
-      `${this.baseUrl}/Numbers/`,
-      `${this.baseUrl}/phone-numbers/`
-    ];
+    const baseUrls = [
+      process.env.VOBIZ_API_BASE_URL,
+      'https://api.vobiz.ai/v1',
+      'https://api.vobiz.ai/api/v1',
+      'https://api.vobiz.ai',
+      'https://vobiz.ai/api/v1',
+      'https://vobiz.ai/v1'
+    ].filter(Boolean);
 
     const authConfigs = [
       { headers: { 'X-Auth-ID': authId, 'X-Auth-Token': authToken, 'Content-Type': 'application/json' } },
@@ -24,16 +26,28 @@ class VobizService {
       { auth: { username: authId, password: authToken }, headers: { 'Content-Type': 'application/json' } }
     ];
 
-    for (const url of endpoints) {
-      for (const config of authConfigs) {
-        try {
-          response = await axios.get(url, config);
-          if (response && response.data) {
-            break;
+    for (const baseUrl of baseUrls) {
+      const endpoints = [
+        `${baseUrl}/Account/${authId}/Number/`,
+        `${baseUrl}/Account/${authId}/PhoneNumber/`,
+        `${baseUrl}/Account/${authId}/Numbers/`,
+        `${baseUrl}/Number/`,
+        `${baseUrl}/Numbers/`,
+        `${baseUrl}/phone-numbers/`
+      ];
+
+      for (const url of endpoints) {
+        for (const config of authConfigs) {
+          try {
+            response = await axios.get(url, config);
+            if (response && response.data) {
+              break;
+            }
+          } catch (err) {
+            lastError = err;
           }
-        } catch (err) {
-          lastError = err;
         }
+        if (response && response.data) break;
       }
       if (response && response.data) break;
     }
