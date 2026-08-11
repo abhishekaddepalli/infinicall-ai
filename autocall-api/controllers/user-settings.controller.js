@@ -51,7 +51,9 @@ exports.updateUserSetting = async (req, res) => {
       post_call_whatsapp_template,
       whatsapp_app_id,
       whatsapp_app_secret,
-      configuration_id
+      configuration_id,
+      vobiz_auth_id,
+      vobiz_auth_token
     } = req.body;
 
     let userSettings = await UserSettings.findOne({ user: userId });
@@ -70,6 +72,8 @@ exports.updateUserSetting = async (req, res) => {
     if (plivo_auth_id !== undefined) userSettings.plivo_auth_id = plivo_auth_id;
     if (plivo_auth_token !== undefined && !isMasked(plivo_auth_token)) userSettings.plivo_auth_token = plivo_auth_token;
     if (plivo_app_id !== undefined) userSettings.plivo_app_id = plivo_app_id;
+    if (vobiz_auth_id !== undefined) userSettings.vobiz_auth_id = vobiz_auth_id;
+    if (vobiz_auth_token !== undefined && !isMasked(vobiz_auth_token)) userSettings.vobiz_auth_token = vobiz_auth_token;
     if (ai_model !== undefined) userSettings.ai_model = ai_model;
     if (ai_api_key !== undefined && !isMasked(ai_api_key)) userSettings.ai_api_key = ai_api_key;
     if (openai_api_key !== undefined && !isMasked(openai_api_key)) userSettings.openai_api_key = openai_api_key;
@@ -136,6 +140,7 @@ exports.getUserSetting = async (req, res) => {
     if (settingsObj.twilio_api_key) settingsObj.twilio_api_key = sanitizeSecret(settingsObj.twilio_api_key);
     if (settingsObj.twilio_api_secret) settingsObj.twilio_api_secret = sanitizeSecret(settingsObj.twilio_api_secret);
     if (settingsObj.plivo_auth_token) settingsObj.plivo_auth_token = sanitizeSecret(settingsObj.plivo_auth_token);
+    if (settingsObj.vobiz_auth_token) settingsObj.vobiz_auth_token = sanitizeSecret(settingsObj.vobiz_auth_token);
     if (settingsObj.google_client_secret) settingsObj.google_client_secret = sanitizeSecret(settingsObj.google_client_secret);
     if (settingsObj.facebook_app_secret) settingsObj.facebook_app_secret = sanitizeSecret(settingsObj.facebook_app_secret);
     if (settingsObj.whatsapp_app_secret) settingsObj.whatsapp_app_secret = sanitizeSecret(settingsObj.whatsapp_app_secret);

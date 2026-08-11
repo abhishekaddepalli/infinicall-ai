@@ -151,10 +151,11 @@ exports.updateSettings = async (req, res) => {
     const creditFields = ['credit_deduction_type', 'credits_per_call', 'credits_per_minute', 'free_credits_on_registration', 'credits_per_sms'];
     const agreementFields = ['signup_agreement_enabled', 'signup_agreement_prefix_text', 'signup_agreement_link_text', 'signup_agreement_target_page'];
     const kycFields = ['kyc_allow_pdf_upload', 'kyc_required', 'kyc_max_files', 'kyc_form_fields'];
+    const vobizFields = ['vobiz_auth_id', 'vobiz_auth_token'];
 
     const allFields = [
       ...basicFields, ...logoFields, ...maintenanceFields, ...pageFields, ...emailFields,
-      ...chatFields, ...subscriptionFields, ...paymentFields, ...storageFields, ...aiFields, ...demoFields, ...widgetFields, ...creditFields, ...agreementFields, ...kycFields
+      ...chatFields, ...subscriptionFields, ...paymentFields, ...storageFields, ...aiFields, ...demoFields, ...widgetFields, ...creditFields, ...agreementFields, ...kycFields, ...vobizFields
     ];
 
     const fieldMap = {
