@@ -208,51 +208,71 @@ exports.login = async (req, res) => {
 
     const token = generateToken({ id: user._id, email: user.email });
 
-    const settings = await getSettings();
-
-    const sessionLimit = settings?.session_limit || 10
-    const activeSessions = await Session.find({
-      user_id: user._id,
-      status: 'active',
-      device_info: req.headers['user-agent'],
-    }).sort({ created_at: 1 });
-
-    if (activeSessions.length >= sessionLimit) {
-      await activeSessions[0].deleteOne();
+    let settings = {};
+    try {
+      settings = await getSettings();
+    } catch (sErr) {
+      console.warn('Login settings warning:', sErr.message);
     }
 
-    const expires_at = new Date(Date.now() + (settings?.session_expiration_days || 7) * 24 * 60 * 60 * 1000);
+    try {
+      const sessionLimit = settings?.session_limit || 10;
+      const activeSessions = await Session.find({
+        user_id: user._id,
+        status: 'active',
+        device_info: req.headers['user-agent'] || 'unknown',
+      }).sort({ created_at: 1 }).catch(() => []);
 
-    await Session.create({
-      user_id: user._id,
-      session_token: token,
-      device_info: req.headers['user-agent'],
-      ip_address: req.ip,
-      agenda: 'login',
-      expires_at
-    });
+      if (activeSessions && activeSessions.length >= sessionLimit) {
+        await activeSessions[0].deleteOne().catch(() => {});
+      }
 
-    const roleId = user.roleId ? (user.roleId._id || user.roleId) : null;
-    if (roleId) {
-      const rolePerms = await RolePermission.find({ role_id: roleId })
-        .populate('permission_id', 'slug name description')
-        .lean();
-      user.permissionSlugs = rolePerms
-        .filter(rp => rp.permission_id)
-        .map(rp => ({
-          _id: rp.permission_id._id,
-          slug: rp.permission_id.slug,
-          name: rp.permission_id.name,
-          description: rp.permission_id.description,
-          __v: rp.permission_id.__v,
-          created_at: rp.permission_id.created_at,
-          updated_at: rp.permission_id.updated_at
-        }));
-    } else {
+      const expires_at = new Date(Date.now() + (settings?.session_expiration_days || 7) * 24 * 60 * 60 * 1000);
+
+      await Session.create({
+        user_id: user._id,
+        session_token: token,
+        device_info: req.headers['user-agent'] || 'unknown',
+        ip_address: req.ip || '127.0.0.1',
+        agenda: 'login',
+        expires_at
+      }).catch(() => {});
+    } catch (sessionErr) {
+      console.warn('Login session creation warning:', sessionErr.message);
+    }
+
+    try {
+      const roleId = user.roleId ? (user.roleId._id || user.roleId) : null;
+      if (roleId) {
+        const rolePerms = await RolePermission.find({ role_id: roleId })
+          .populate('permission_id', 'slug name description')
+          .lean();
+        user.permissionSlugs = rolePerms
+          .filter(rp => rp && rp.permission_id)
+          .map(rp => ({
+            _id: rp.permission_id._id,
+            slug: rp.permission_id.slug,
+            name: rp.permission_id.name,
+            description: rp.permission_id.description,
+            __v: rp.permission_id.__v,
+            created_at: rp.permission_id.created_at,
+            updated_at: rp.permission_id.updated_at
+          }));
+      } else {
+        user.permissionSlugs = [];
+      }
+    } catch (permErr) {
       user.permissionSlugs = [];
     }
 
-    const creditBalance = await creditService.getCreditBalance(user._id);
+    let creditBalance = { total_credits: 0, used_credits: 0, available_credits: 0 };
+    try {
+      if (creditService && typeof creditService.getCreditBalance === 'function') {
+        creditBalance = await creditService.getCreditBalance(user._id);
+      }
+    } catch (cErr) {
+      console.warn('Login credit balance warning:', cErr.message);
+    }
 
     return res.status(200).json({
       message: 'Login successful!',
