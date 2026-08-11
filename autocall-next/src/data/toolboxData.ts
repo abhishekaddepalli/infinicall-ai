@@ -1,6 +1,6 @@
 import { ROUTES } from "@/constants/routes";
 import { ToolboxItem } from "@/types/toolbox";
-import { Bot, Calendar, Cpu, FileText, Home, IndianRupee, MessageCircle, MessageSquareCode, Webhook } from "lucide-react";
+import { Bot, Calendar, Cpu, FileText, Home, IndianRupee, MessageCircle, MessageSquareCode, Webhook, Radio, KeyRound } from "lucide-react";
 
 export const toolboxItems: ToolboxItem[] = [
   {
@@ -23,6 +23,13 @@ export const toolboxItems: ToolboxItem[] = [
     descriptionKey: "toolbox_upi_description",
     icon: IndianRupee,
     redirectPath: `${ROUTES.TOOLBOX}/upi-triggers`,
+  },
+  {
+    id: "telephony_broadcaster",
+    titleKey: "toolbox_broadcaster_title",
+    descriptionKey: "toolbox_broadcaster_description",
+    icon: Radio,
+    redirectPath: `${ROUTES.TOOLBOX}/telephony-broadcaster`,
   },
   {
     id: "forms",
