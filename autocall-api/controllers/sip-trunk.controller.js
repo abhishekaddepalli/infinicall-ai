@@ -89,7 +89,7 @@ exports.createSipTrunk = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Name and SIP host are required' });
     }
 
-    if (engine && !['elevenlabs_sip', 'deepgram_sip', 'custom'].includes(engine)) {
+    if (engine && !['vobiz_sip', 'sarvam_sip', 'elevenlabs_sip', 'deepgram_sip', 'custom'].includes(engine)) {
       return res.status(400).json({ success: false, message: 'Invalid SIP trunk engine selected.' });
     }
 
@@ -135,7 +135,7 @@ exports.updateSipTrunk = async (req, res) => {
       return res.status(404).json({ success: false, message: 'SIP trunk not found' });
     }
 
-    if (updateData.engine && !['elevenlabs_sip', 'deepgram_sip', 'custom'].includes(updateData.engine)) {
+    if (updateData.engine && !['vobiz_sip', 'sarvam_sip', 'elevenlabs_sip', 'deepgram_sip', 'custom'].includes(updateData.engine)) {
       return res.status(400).json({ success: false, message: 'Invalid SIP trunk engine selected.' });
     }
 

@@ -70,7 +70,7 @@ const SipTrunkForm = ({
   const defaultValues = {
     preset: 'custom',
     name: '',
-    engine: 'elevenlabs_sip',
+    engine: 'vobiz_sip',
     provider: 'twilio',
     sip_host: '',
     port: 5061,
@@ -170,8 +170,17 @@ const SipTrunkForm = ({
                         { label: t('inactive'), value: 'inactive' },
                       ]}
                     />
-                    <TextInput name="provider" label={t('provider')} />
-                    <TextInput name="engine" label={t('engine')} />
+                    <SelectField
+                      name="engine"
+                      label={t('engine', 'Voice / Trunk Engine')}
+                      options={[
+                        { label: 'Vobiz AI SIP Engine', value: 'vobiz_sip' },
+                        { label: 'Sarvam AI SIP Engine', value: 'sarvam_sip' },
+                        { label: 'ElevenLabs SIP Engine', value: 'elevenlabs_sip' },
+                        { label: 'Deepgram SIP Engine', value: 'deepgram_sip' },
+                        { label: 'Custom SIP Engine', value: 'custom' },
+                      ]}
+                    />
                   </div>
                 </CardContent>
               </Card>

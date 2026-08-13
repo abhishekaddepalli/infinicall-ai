@@ -262,7 +262,119 @@ async function executeCampaignDirectly(campaignId) {
               await new Promise(resolve => setTimeout(resolve, 3000));
               console.log(`WhatsApp Call to ${to} initiated with ID: ${callSid}`);
               successCount++;
-            } else if (phoneNumberDoc.type === 'sip' && phoneNumberDoc.elevenlabs_phone_number_id && elevenlabsApiKey) {
+            } else if (phoneNumberDoc.provider === 'vobiz' || agent?.telephony_provider === 'vobiz') {
+              if (!vobizAuthId || !vobizAuthToken) {
+                throw new Error('Vobiz credentials not found in User Settings or System Settings');
+              }
+              const xmlUrl = `${appUrl}/api/calls/vobiz-xml?flowId=${flowId || ''}&userId=${campaign.userId}&agentId=${campaign.agentId}`;
+              const statusCallbackUrl = `${appUrl}/api/calls/vobiz-status`;
+
+              const vobizCall = await vobizService.makeCall(
+                vobizAuthId,
+                vobizAuthToken,
+                fromNumber,
+                to,
+                xmlUrl,
+                statusCallbackUrl
+              );
+
+              await Call.create({
+                user_id: campaign.userId,
+                flow_id: flowId,
+                agent_id: campaign.agentId,
+                campaign_id: campaign._id,
+                twilio_call_sid: vobizCall.requestUuid || vobizCall.sid,
+                from_number: fromNumber,
+                to_number: to,
+                status: 'queued',
+                direction: 'outbound',
+                lead_name: name,
+              });
+
+              let callStatus = 'queued';
+              let pollAttempts = 0;
+              while (!['completed', 'failed', 'busy', 'no-answer', 'canceled', 'declined', 'missed'].includes(callStatus) && pollAttempts < 12) {
+                await new Promise(resolve => setTimeout(resolve, 5000));
+                pollAttempts++;
+                try {
+                  callStatus = await vobizService.getCallStatus(
+                    vobizAuthId,
+                    vobizAuthToken,
+                    vobizCall.requestUuid || vobizCall.sid
+                  );
+                } catch (statusError) {
+                  break;
+                }
+              }
+              console.log(`Vobiz Call to ${to} finished with status: ${callStatus}`);
+
+              let mappedCallStatus = callStatus;
+              if (callStatus === 'busy') mappedCallStatus = 'declined';
+              if (callStatus === 'no-answer') mappedCallStatus = 'missed';
+
+              await Call.findOneAndUpdate(
+                { twilio_call_sid: vobizCall.requestUuid || vobizCall.sid },
+                { status: mappedCallStatus, ended_at: new Date() }
+              );
+
+              successCount++;
+            } else if (phoneNumberDoc.provider === 'plivo' || agent?.telephony_provider === 'plivo') {
+              if (!plivoAuthId || !plivoAuthToken) {
+                throw new Error('Plivo credentials not found for this user');
+              }
+              const xmlUrl = `${appUrl}/api/calls/plivo-xml?flowId=${flowId || ''}&userId=${campaign.userId}&agentId=${campaign.agentId}`;
+              const statusCallbackUrl = `${appUrl}/api/calls/plivo-status`;
+
+              const plivoCall = await plivoService.makeCall(
+                plivoAuthId,
+                plivoAuthToken,
+                fromNumber,
+                to,
+                xmlUrl,
+                statusCallbackUrl
+              );
+
+              await Call.create({
+                user_id: campaign.userId,
+                flow_id: flowId,
+                agent_id: campaign.agentId,
+                campaign_id: campaign._id,
+                twilio_call_sid: plivoCall.requestUuid,
+                from_number: fromNumber,
+                to_number: to,
+                status: 'queued',
+                direction: 'outbound',
+                lead_name: name,
+              });
+
+              let callStatus = 'queued';
+              let pollAttempts = 0;
+              while (!['completed', 'failed', 'busy', 'no-answer', 'canceled', 'declined', 'missed'].includes(callStatus) && pollAttempts < 12) {
+                await new Promise(resolve => setTimeout(resolve, 5000));
+                pollAttempts++;
+                try {
+                  callStatus = await plivoService.getCallStatus(
+                    plivoAuthId,
+                    plivoAuthToken,
+                    plivoCall.requestUuid
+                  );
+                } catch (statusError) {
+                  break;
+                }
+              }
+              console.log(`Plivo Call to ${to} finished with status: ${callStatus}`);
+
+              let mappedCallStatus = callStatus;
+              if (callStatus === 'busy') mappedCallStatus = 'declined';
+              if (callStatus === 'no-answer') mappedCallStatus = 'missed';
+
+              await Call.findOneAndUpdate(
+                { twilio_call_sid: plivoCall.requestUuid },
+                { status: mappedCallStatus, ended_at: new Date() }
+              );
+
+              successCount++;
+            } else if (phoneNumberDoc.type === 'sip' && phoneNumberDoc.elevenlabs_phone_number_id && elevenlabsApiKey && agent?.voice_provider === 'elevenlabs') {
               try {
                 let elevenlabsAgentId = agent ? agent.elevenlabs_agent_id : null;
                 if (!elevenlabsAgentId) {

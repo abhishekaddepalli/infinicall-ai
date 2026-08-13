@@ -11,8 +11,8 @@ const SipTrunkSchema = new Schema(
     },
     engine: {
       type: String,
-      enum: ['elevenlabs_sip', 'deepgram_sip', 'custom'],
-      default: 'elevenlabs_sip'
+      enum: ['vobiz_sip', 'sarvam_sip', 'elevenlabs_sip', 'deepgram_sip', 'custom'],
+      default: 'vobiz_sip'
     },
     provider: {
       type: String,
