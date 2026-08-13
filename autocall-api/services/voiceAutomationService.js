@@ -45,30 +45,58 @@ class VoiceAutomationService extends EventEmitter {
     return null;
   }
 
-  handleMediaStream(ws) {
+  handleMediaStream(ws, req) {
+    const url = require('url');
+    const parsedUrl = req?.url ? url.parse(req.url, true) : { query: {} };
+    const query = parsedUrl.query || {};
+
     let callSid = null;
     let streamSid = null;
-    let flowId = null;
-    let agentId = null;
-    let userId = null;
+    let flowId = query.flowId && query.flowId !== 'undefined' && query.flowId !== 'null' ? query.flowId : null;
+    let agentId = query.agentId && query.agentId !== 'undefined' && query.agentId !== 'null' ? query.agentId : null;
+    let userId = query.userId && query.userId !== 'undefined' && query.userId !== 'null' ? query.userId : null;
+    let isVobiz = false;
 
     ws.on('message', async (message) => {
-      const msg = JSON.parse(message);
+      let msg;
+      try {
+        msg = JSON.parse(message);
+      } catch (e) {
+        return;
+      }
 
       switch (msg.event) {
         case 'start':
-          callSid = msg.start.callSid;
-          streamSid = msg.start.streamSid;
-          const customData = msg.start.customParameters || {};
-          flowId = customData.flowId && customData.flowId !== 'undefined' && customData.flowId !== 'null' ? customData.flowId : null;
-          agentId = customData.agentId && customData.agentId !== 'undefined' && customData.agentId !== 'null' ? customData.agentId : null;
-          userId = customData.userId && customData.userId !== 'undefined' && customData.userId !== 'null' ? customData.userId : null;
+          callSid = msg.start?.callSid || msg.start?.callId;
+          streamSid = msg.start?.streamSid || msg.start?.streamId || callSid;
+          isVobiz = !!msg.start?.callId || !!(msg.start && 'mediaFormat' in msg.start);
+
+          const customData = msg.start?.customParameters || {};
+          if (!flowId && customData.flowId && customData.flowId !== 'undefined' && customData.flowId !== 'null') flowId = customData.flowId;
+          if (!agentId && customData.agentId && customData.agentId !== 'undefined' && customData.agentId !== 'null') agentId = customData.agentId;
+          if (!userId && customData.userId && customData.userId !== 'undefined' && customData.userId !== 'null') userId = customData.userId;
+
+          let callLog = await Call.findOne({ twilio_call_sid: callSid });
+          if (!callLog && isVobiz) {
+            callLog = await Call.findOne({
+              status: { $in: ['queued', 'in-progress'] },
+              direction: 'outbound'
+            }).sort({ created_at: -1 });
+          }
+
+          if (callLog) {
+            if (!userId && callLog.user_id) userId = callLog.user_id?.toString();
+            if (!agentId && callLog.agent_id) agentId = callLog.agent_id?.toString();
+            if (!flowId && callLog.flow_id) flowId = callLog.flow_id?.toString();
+          }
 
           this.activeStreams.set(streamSid, {
             callSid,
+            streamSid,
             flowId,
             agentId,
             userId,
+            isVobiz,
             audioBuffer: [],
             lastProcessedAt: Date.now(),
             currentNodeId: null,
@@ -78,9 +106,8 @@ class VoiceAutomationService extends EventEmitter {
             callStartTime: Date.now()
           });
 
-          console.log(`Stream started: CallSid=${callSid}, FlowId=${flowId}, AgentId=${agentId}, UserId=${userId}`);
+          console.log(`Stream started (${isVobiz ? 'Vobiz' : 'Twilio'}): CallSid=${callSid}, FlowId=${flowId}, AgentId=${agentId}, UserId=${userId}`);
           try {
-            const callLog = await Call.findOne({ twilio_call_sid: callSid });
             const userSettings = (userId && db.mongoose.Types.ObjectId.isValid(userId)) ? await UserSettings.findOne({ user: userId }).populate('ai_model') : null;
 
             if (flowId && db.mongoose.Types.ObjectId.isValid(flowId)) {
@@ -296,6 +323,7 @@ class VoiceAutomationService extends EventEmitter {
           break;
 
         case 'mark':
+        case 'playedStream':
           const streamForMark = this.activeStreams.get(streamSid);
           if (streamForMark && streamForMark.pendingTransfer) {
             console.log(`[Flow] Speech completed, executing pending transfer to: ${streamForMark.pendingTransfer}`);
@@ -754,6 +782,36 @@ class VoiceAutomationService extends EventEmitter {
     }
   }
 
+  sendAudioChunk(ws, streamSid, base64Audio, isVobiz = false) {
+    if (isVobiz) {
+      ws.send(JSON.stringify({
+        event: 'playAudio',
+        streamId: streamSid,
+        media: {
+          contentType: 'audio/x-mulaw',
+          sampleRate: 8000,
+          payload: base64Audio
+        }
+      }));
+      ws.send(JSON.stringify({
+        event: 'checkpoint',
+        streamId: streamSid,
+        name: 'agent-speech-completed'
+      }));
+    } else {
+      ws.send(JSON.stringify({
+        event: 'media',
+        streamSid: streamSid,
+        media: { payload: base64Audio }
+      }));
+      ws.send(JSON.stringify({
+        event: 'mark',
+        streamSid: streamSid,
+        mark: { name: 'agent-speech-completed' }
+      }));
+    }
+  }
+
   async speak(ws, streamSid, text, voiceId, apiKey, provider = 'elevenlabs', deepgramApiKey = null) {
     try {
       console.log(`Speaking: "${text}"`);
@@ -797,14 +855,7 @@ class VoiceAutomationService extends EventEmitter {
         const pcmBuffer = await deepgramService.generateSpeech(text, activeVoiceId || 'aura-asteria-en', {}, dgApiKey, 8000);
         const ulawBuffer = this.encodePcmToUlaw(pcmBuffer, 8000);
         const base64Audio = ulawBuffer.toString('base64');
-        ws.send(JSON.stringify({ event: 'media', streamSid, media: { payload: base64Audio } }));
-
-        const markMessage = {
-          event: 'mark',
-          streamSid: streamSid,
-          mark: { name: 'agent-speech-completed' }
-        };
-        ws.send(JSON.stringify(markMessage));
+        this.sendAudioChunk(ws, streamSid, base64Audio, stream?.isVobiz);
         return;
       }
 
@@ -825,14 +876,7 @@ class VoiceAutomationService extends EventEmitter {
         const pcmBuffer = await sarvamService.generateSpeech(text, activeVoiceId || 'shubh', {}, sarvamApiKey, 8000);
         const ulawBuffer = this.encodePcmToUlaw(pcmBuffer, pcmBuffer.sampleRate || 8000);
         const base64Audio = ulawBuffer.toString('base64');
-        ws.send(JSON.stringify({ event: 'media', streamSid, media: { payload: base64Audio } }));
-
-        const markMessage = {
-          event: 'mark',
-          streamSid: streamSid,
-          mark: { name: 'agent-speech-completed' }
-        };
-        ws.send(JSON.stringify(markMessage));
+        this.sendAudioChunk(ws, streamSid, base64Audio, stream?.isVobiz);
         return;
       }
 
@@ -849,14 +893,7 @@ class VoiceAutomationService extends EventEmitter {
       const pcmBuffer = await elevenLabsService.generateSpeech(text, activeVoiceId || 'JBFqnCBsd6RMkjVDRZzb', {}, elApiKey);
       const ulawBuffer = this.encodePcmToUlaw(pcmBuffer, 16000);
       const base64Audio = ulawBuffer.toString('base64');
-      ws.send(JSON.stringify({ event: 'media', streamSid, media: { payload: base64Audio } }));
-      
-      const markMessage = {
-        event: 'mark',
-        streamSid: streamSid,
-        mark: { name: 'agent-speech-completed' }
-      };
-      ws.send(JSON.stringify(markMessage));
+      this.sendAudioChunk(ws, streamSid, base64Audio, stream?.isVobiz);
     } catch (err) {
       console.error(`[${provider || activeProvider || 'ElevenLabs'}] TTS failed, falling back to Twilio <Say>:`, err.message);
       await this.speakViaTwiml(streamSid, text);

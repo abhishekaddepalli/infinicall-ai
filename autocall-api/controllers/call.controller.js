@@ -968,21 +968,17 @@ exports.handleVobizXml = async (req, res) => {
     const { flowId, userId, agentId } = req.query;
     const wsUrl = (process.env.APP_URL || 'https://voice.infiniforge.cloud').replace('http', 'ws');
 
-    let parametersXml = '';
-    if (flowId && flowId !== 'undefined') {
-      parametersXml += `<Parameter name="flowId" value="${flowId}" />\n`;
-    }
-    if (agentId && agentId !== 'undefined') {
-      parametersXml += `<Parameter name="agentId" value="${agentId}" />\n`;
-    }
-    if (userId && userId !== 'undefined') {
-      parametersXml += `<Parameter name="userId" value="${userId}" />`;
-    }
+    const queryParams = [];
+    if (flowId && flowId !== 'undefined') queryParams.push(`flowId=${flowId}`);
+    if (agentId && agentId !== 'undefined') queryParams.push(`agentId=${agentId}`);
+    if (userId && userId !== 'undefined') queryParams.push(`userId=${userId}`);
+
+    const streamUrl = queryParams.length > 0 ? `${wsUrl}?${queryParams.join('&amp;')}` : wsUrl;
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-    <Stream url="${wsUrl}" keepCallAlive="true">
-        ${parametersXml}
+    <Stream bidirectional="true" keepCallAlive="true" contentType="audio/x-mulaw;rate=8000">
+        ${streamUrl}
     </Stream>
 </Response>`;
 
