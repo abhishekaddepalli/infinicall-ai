@@ -72,6 +72,8 @@ async function executeCampaignDirectly(campaignId) {
       const elevenlabsApiKey = userSettings?.elevenlabs_api_key || globalSettings?.elevenlabs_api_key || process.env.ELEVENLABS_API_KEY;
       const plivoAuthId = userSettings?.plivo_auth_id || globalSettings?.plivo_auth_id || process.env.PLIVO_AUTH_ID;
       const plivoAuthToken = userSettings?.plivo_auth_token || globalSettings?.plivo_auth_token || process.env.PLIVO_AUTH_TOKEN;
+      const vobizAuthId = userSettings?.vobiz_auth_id || globalSettings?.vobiz_auth_id || process.env.VOBIZ_AUTH_ID;
+      const vobizAuthToken = userSettings?.vobiz_auth_token || globalSettings?.vobiz_auth_token || process.env.VOBIZ_AUTH_TOKEN;
 
       if (!twilioAccountSid || !twilioAuthToken) {
         console.warn('Twilio credentials not found in UserSettings, System Settings, or .env');
