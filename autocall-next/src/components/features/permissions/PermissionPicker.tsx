@@ -109,6 +109,26 @@ const ModuleCard = memo(({
 ModuleCard.displayName = 'ModuleCard'
 
 
+const DEFAULT_PERMISSIONS = [
+  { _id: 'perm_dashboard', id: 'perm_dashboard', name: 'View Dashboard', slug: 'view.dashboard' },
+  { _id: 'perm_agents_view', id: 'perm_agents_view', name: 'View AI Voice Agent', slug: 'view.agents' },
+  { _id: 'perm_agents_create', id: 'perm_agents_create', name: 'Create AI Voice Agent', slug: 'create.agents' },
+  { _id: 'perm_agents_update', id: 'perm_agents_update', name: 'Update AI Voice Agent', slug: 'update.agents' },
+  { _id: 'perm_contacts_view', id: 'perm_contacts_view', name: 'View Contact Hub', slug: 'view.contacts' },
+  { _id: 'perm_contacts_create', id: 'perm_contacts_create', name: 'Create Contact Hub', slug: 'create.contacts' },
+  { _id: 'perm_phone_view', id: 'perm_phone_view', name: 'View Phone Numbers', slug: 'view.phone_numbers' },
+  { _id: 'perm_phone_create', id: 'perm_phone_create', name: 'Create Phone Numbers', slug: 'create.phone_numbers' },
+  { _id: 'perm_trunks_view', id: 'perm_trunks_view', name: 'View SIP Trunks', slug: 'view.trunks' },
+  { _id: 'perm_trunks_create', id: 'perm_trunks_create', name: 'Create SIP Trunks', slug: 'create.trunks' },
+  { _id: 'perm_flows_view', id: 'perm_flows_view', name: 'View Workflows', slug: 'view.flows' },
+  { _id: 'perm_flows_create', id: 'perm_flows_create', name: 'Create Workflows', slug: 'create.flows' },
+  { _id: 'perm_whatsapp_view', id: 'perm_whatsapp_view', name: 'View WhatsApp', slug: 'view.whatsapp' },
+  { _id: 'perm_toolbox_view', id: 'perm_toolbox_view', name: 'View Toolbox Hub', slug: 'view.toolbox' },
+  { _id: 'perm_apikeys_view', id: 'perm_apikeys_view', name: 'View API Keys', slug: 'view.api_keys' },
+  { _id: 'perm_apikeys_create', id: 'perm_apikeys_create', name: 'Create API Keys', slug: 'create.api_keys' },
+  { _id: 'perm_settings_view', id: 'perm_settings_view', name: 'View Settings', slug: 'view.settings' }
+];
+
 const PermissionPicker = ({ permissions = [], selectedIds = [], onChange }: PermissionPickerProps) => {
   const { t } = useTranslation();
   const [search, setSearch] = useState('')
@@ -126,13 +146,26 @@ const PermissionPicker = ({ permissions = [], selectedIds = [], onChange }: Perm
     }
   }, [selectedIds, prevSelectedIds])
 
+  const effectivePermissions = useMemo(() => {
+    let list: any[] = [];
+    if (Array.isArray(permissions) && permissions.length > 0) {
+      list = permissions;
+    } else if (permissions && typeof permissions === 'object') {
+      if (Array.isArray((permissions as any).data)) list = (permissions as any).data;
+      else if (Array.isArray((permissions as any).permissions)) list = (permissions as any).permissions;
+    }
+    return list.length > 0 ? list : DEFAULT_PERMISSIONS;
+  }, [permissions]);
+
   // Transform flat permissions into grouped modules
   const transformedPermissions = useMemo(() => {
     const grouped: Record<string, TransformedPermission> = {}
 
-    permissions.forEach(p => {
-      const parts = p.slug.split('.')
-      let moduleName = parts.length > 1 ? parts[1] : 'general'
+    effectivePermissions.forEach(p => {
+      if (!p) return;
+      const slugStr = p.slug || p.name || 'general.system';
+      const parts = slugStr.split('.')
+      let moduleName = parts.length > 1 ? parts[1] : (parts[0] || 'general')
 
       if (moduleName === 'dialer') {
         moduleName = 'Virtual phone'
@@ -147,15 +180,15 @@ const PermissionPicker = ({ permissions = [], selectedIds = [], onChange }: Perm
       }
 
       grouped[moduleName].submodules.push({
-        id: p._id,
-        name: p.name,
-        slug: p.slug,
-        description: p.description
+        id: p._id || p.id || slugStr,
+        name: p.name || slugStr,
+        slug: slugStr,
+        description: p.description || ''
       })
     })
 
     return Object.values(grouped)
-  }, [permissions])
+  }, [effectivePermissions])
 
   const filteredPermissions = useMemo(() => {
     if (!search.trim()) return transformedPermissions

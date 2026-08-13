@@ -6,7 +6,7 @@ const { checkPermission } = require('../middlewares/permission');
 
 router.use(authenticate);
 
-router.get('/permissions/all', checkPermission('view.roles'), roleController.getAllPermissions);
+router.get('/permissions/all', roleController.getAllPermissions);
 
 router.get('/', checkPermission('view.roles'), roleController.getRoles);
 router.get('/active/all', checkPermission('view.roles'), roleController.getActiveRoles);
