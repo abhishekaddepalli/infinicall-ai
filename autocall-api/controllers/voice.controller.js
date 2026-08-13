@@ -155,9 +155,11 @@ exports.syncVoices = async (req, res) => {
     } catch (elevenError) {
       console.error('ElevenLabs Sync Error:', elevenError.response?.status || elevenError.message);
       const msg = elevenError.response?.status === 401
-        ? 'ElevenLabs API Key is invalid or unauthorized (401)'
-        : (elevenError.message || 'Failed to sync ElevenLabs voices');
-      errors.push(`ElevenLabs: ${msg}`);
+        ? 'API Key is invalid or unauthorized (401)'
+        : (elevenError.message || 'Check your ElevenLabs API Key in Settings');
+      if (userSettings?.elevenlabs_api_key || process.env.ELEVENLABS_API_KEY) {
+        errors.push(`ElevenLabs: ${msg}`);
+      }
     }
 
     try {

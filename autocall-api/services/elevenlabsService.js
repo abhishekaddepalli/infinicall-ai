@@ -81,30 +81,33 @@ class ElevenLabsService {
 
   async fetchVoices(apiKey = null) {
     const activeApiKey = apiKey || this.apiKey;
+    if (!activeApiKey) {
+      console.warn('ElevenLabs API key not configured.');
+      return [];
+    }
     try {
       const response = await axios({
         method: 'GET',
         url: `${this.baseUrl}/voices`,
         headers: { 'xi-api-key': activeApiKey }
       });
-      return response.data.voices;
+      return response.data?.voices || [];
     } catch (error) {
-      if (error.response?.status === 401 && apiKey && apiKey !== this.apiKey && this.apiKey) {
-        console.warn('Custom ElevenLabs API key returned 401 Unauthorized. Retrying with system ELEVENLABS_API_KEY...');
+      if ((error.response?.status === 401 || error.response?.status === 400) && apiKey && apiKey !== this.apiKey && this.apiKey) {
+        console.warn('Custom ElevenLabs API key returned error. Retrying with system ELEVENLABS_API_KEY...');
         try {
           const fallbackResponse = await axios({
             method: 'GET',
             url: `${this.baseUrl}/voices`,
             headers: { 'xi-api-key': this.apiKey }
           });
-          return fallbackResponse.data.voices;
+          return fallbackResponse.data?.voices || [];
         } catch (fallbackError) {
           console.error('ElevenLabs Fallback Fetch Voices Error:', fallbackError.message);
-          throw fallbackError;
         }
       }
-      console.error('ElevenLabs Fetch Voices Error:', error.message);
-      throw error;
+      console.error('ElevenLabs Fetch Voices Error:', error.response?.data?.detail?.message || error.message);
+      throw new Error(error.response?.data?.detail?.message || error.message || 'ElevenLabs API request failed');
     }
   }
 
@@ -392,7 +395,7 @@ class ElevenLabsService {
     const activeApiKey = apiKey || this.apiKey;
     try {
       const formData = new FormData();
-      formData.append('model_id', 'scribe_v2');
+      formData.append('model_id', 'scribe_v1');
       formData.append('file', audioBuffer, { filename: 'speech.wav', contentType: 'audio/wav' });
 
       const response = await axios.post(
