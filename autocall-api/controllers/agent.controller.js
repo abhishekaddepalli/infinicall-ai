@@ -186,7 +186,7 @@ exports.createAgent = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Enable call transcription must be a boolean value' });
     }
 
-    if (agentData.telephony_provider && !['twilio', 'sip', 'meta_whatsapp', 'plivo'].includes(agentData.telephony_provider)) {
+    if (agentData.telephony_provider && !['vobiz', 'twilio', 'sip', 'meta_whatsapp', 'plivo'].includes(agentData.telephony_provider)) {
       return res.status(400).json({ success: false, message: 'Invalid telephony provider selected.' });
     }
 
@@ -310,7 +310,7 @@ exports.updateAgent = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Enable call transcription must be a boolean value' });
     }
 
-    if (updateData.telephony_provider && !['twilio', 'sip', 'meta_whatsapp', 'plivo'].includes(updateData.telephony_provider)) {
+    if (updateData.telephony_provider && !['vobiz', 'twilio', 'sip', 'meta_whatsapp', 'plivo'].includes(updateData.telephony_provider)) {
       return res.status(400).json({ success: false, message: 'Invalid telephony provider selected.' });
     }
 

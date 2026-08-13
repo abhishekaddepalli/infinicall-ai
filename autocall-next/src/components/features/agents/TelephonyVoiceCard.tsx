@@ -1,6 +1,7 @@
 'use client'
 
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -11,8 +12,11 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
+import { ROUTES } from '@/constants/routes'
+import { useGetSipTrunksQuery } from '@/redux/api/sipTrunkApi'
 import { TelephonyProvider, TelephonyVoiceCardProps, VoiceProvider } from '@/types/agent'
-import { X } from 'lucide-react'
+import { ExternalLink, Server, X } from 'lucide-react'
+import Link from 'next/link'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { TransferTeamSelector } from './TransferTeamSelector'
@@ -20,6 +24,8 @@ import { TransferTeamSelector } from './TransferTeamSelector'
 export function TelephonyVoiceCard({
   telephonyProvider,
   setTelephonyProvider,
+  sipTrunkId,
+  setSipTrunkId,
   voiceProvider,
   setVoiceProvider,
   voiceId,
@@ -43,6 +49,7 @@ export function TelephonyVoiceCard({
   setMemberId,
 }: TelephonyVoiceCardProps) {
   const { t } = useTranslation()
+  const { data: sipTrunksData, isLoading: isLoadingTrunks } = useGetSipTrunksQuery({ limit: 100 })
 
   const handleKeywordAdd = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -59,6 +66,8 @@ export function TelephonyVoiceCard({
     setTransferKeywords(transferKeywords.filter((k) => k !== kw))
   }
 
+  const sipTrunks = sipTrunksData?.data || []
+
   return (
     <div className="bg-bg-card p-4 sm:p-6 rounded-radius border border-input-border-color">
       <h2 className="text-title text-lg font-black flex items-center gap-2.5 mb-6">
@@ -69,34 +78,72 @@ export function TelephonyVoiceCard({
         {/* ── Providers ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <Label className="text-md font-medium text-title">{t('telephony_provider')}</Label>
+            <Label className="text-md font-medium text-title">{t('telephony_route_provider', 'Telephony Route Provider')}</Label>
             <Select value={telephonyProvider} onValueChange={(val) => setTelephonyProvider(val as TelephonyProvider)}>
               <SelectTrigger className="h-10 rounded-radius bg-input-color shadow-none border-input-border-color font-bold dark:bg-white/5 dark:border-white/10">
                 <SelectValue placeholder={t('select_telephony_provider')} />
               </SelectTrigger>
               <SelectContent className="rounded-radius border-input-border-color">
-                <SelectItem value={TelephonyProvider.TWILIO}>{t('twilio')}</SelectItem>
-                <SelectItem value={TelephonyProvider.SIP}>{t('sip_trunk')}</SelectItem>
-                <SelectItem value={TelephonyProvider.META_WHATSAPP}>{t('meta_whatsapp')}</SelectItem>
-                <SelectItem value={TelephonyProvider.PLIVO}>{t('plivo', 'Plivo')}</SelectItem>
+                <SelectItem value={TelephonyProvider.VOBIZ} className="font-bold">Vobiz AI</SelectItem>
+                <SelectItem value={TelephonyProvider.SIP} className="font-bold">{t('sip_trunk')}</SelectItem>
+                <SelectItem value={TelephonyProvider.TWILIO} className="font-bold">{t('twilio')}</SelectItem>
+                <SelectItem value={TelephonyProvider.PLIVO} className="font-bold">{t('plivo', 'Plivo')}</SelectItem>
+                <SelectItem value={TelephonyProvider.META_WHATSAPP} className="font-bold">{t('meta_whatsapp')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-3">
-            <Label className="text-md font-medium text-title">{t('voice_provider')}</Label>
+            <Label className="text-md font-medium text-title">{t('tts_voice_synthesis_engine', 'TTS / Voice Synthesis Engine')}</Label>
             <Select value={voiceProvider} onValueChange={(val) => { setVoiceProvider(val as VoiceProvider); setVoiceId(''); }}>
               <SelectTrigger className="h-10 rounded-radius bg-input-color shadow-none border-input-border-color font-bold dark:bg-white/5 dark:border-white/10">
                 <SelectValue placeholder={t('select_voice_provider')} />
               </SelectTrigger>
               <SelectContent className="rounded-radius border-input-border-color">
-                <SelectItem value={VoiceProvider.ELEVENLABS}>{t('elevenlabs')}</SelectItem>
-                <SelectItem value={VoiceProvider.DEEPGRAM}>{t('deepgram')}</SelectItem>
-                <SelectItem value={VoiceProvider.SARVAM_AI}>{t('sarvam_ai')}</SelectItem>
+                <SelectItem value={VoiceProvider.ELEVENLABS} className="font-bold">{t('elevenlabs')}</SelectItem>
+                <SelectItem value={VoiceProvider.DEEPGRAM} className="font-bold">{t('deepgram')}</SelectItem>
+                <SelectItem value={VoiceProvider.SARVAM_AI} className="font-bold">{t('sarvam_ai')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
+
+        {/* ── Selectable SIP Trunk (Renders when SIP Provider is chosen) ── */}
+        {(telephonyProvider === TelephonyProvider.SIP || (telephonyProvider as string) === 'sip') && (
+          <div className="space-y-3 pt-6 border-t border-slate-100 dark:border-white/5 animate-in fade-in slide-in-from-top-2">
+            <div className="flex items-center justify-between">
+              <Label className="text-md font-bold text-title flex items-center gap-2">
+                <Server className="w-4 h-4 text-primary" />
+                <span>{t('select_sip_trunk', 'Select SIP Trunk Integration')}</span>
+              </Label>
+              <Link href={ROUTES.TRUNK_INTEGRATION} target="_blank" className="text-xs text-primary font-bold hover:underline flex items-center gap-1">
+                <span>{t('manage_trunks', 'Manage Trunks')}</span>
+                <ExternalLink className="w-3 h-3" />
+              </Link>
+            </div>
+
+            <Select value={sipTrunkId || ''} onValueChange={(val) => setSipTrunkId && setSipTrunkId(val)}>
+              <SelectTrigger className="h-10 rounded-radius bg-input-color shadow-none border-input-border-color font-bold dark:bg-white/5 dark:border-white/10">
+                <SelectValue placeholder={isLoadingTrunks ? t('loading', 'Loading Trunks...') : (sipTrunks.length === 0 ? t('no_trunks_available', 'No active SIP trunks found') : t('choose_sip_trunk', 'Choose SIP Trunk'))} />
+              </SelectTrigger>
+              <SelectContent className="rounded-radius border-input-border-color max-h-60">
+                {sipTrunks.map((trunk) => (
+                  <SelectItem key={trunk._id || trunk.id} value={trunk._id || trunk.id || ''} className="font-bold py-2.5">
+                    <div className="flex items-center justify-between gap-4 w-full">
+                      <span className="text-sm font-bold text-title">{trunk.name}</span>
+                      <span className="text-xs text-subtitle-color font-mono">({trunk.sip_host})</span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {sipTrunks.length === 0 && !isLoadingTrunks && (
+              <p className="text-xs text-amber-600 dark:text-amber-400 font-bold mt-1 flex items-center gap-1">
+                <span>⚠️ {t('no_trunks_hint', 'No active SIP trunks found. Please add a SIP trunk in Trunk Integration.')}</span>
+              </p>
+            )}
+          </div>
+        )}
 
         {/* ── Voice ID Selection ── */}
         <div className="space-y-3 pt-6 border-t border-slate-100 dark:border-white/5">

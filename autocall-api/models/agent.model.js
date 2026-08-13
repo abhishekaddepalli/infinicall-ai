@@ -85,8 +85,13 @@ const AgentSchema = new Schema(
     },
     telephony_provider: {
       type: String,
-      enum: ['twilio', 'sip', 'meta_whatsapp', 'plivo'],
-      default: 'twilio'
+      enum: ['vobiz', 'twilio', 'sip', 'meta_whatsapp', 'plivo'],
+      default: 'vobiz'
+    },
+    sip_trunk_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'SipTrunk',
+      default: null
     },
     elevenlabs_agent_id: {
       type: String,

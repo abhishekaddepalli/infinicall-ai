@@ -1,6 +1,7 @@
 import { PromptTemplate } from "./prompt-template"
 
 export enum TelephonyProvider {
+  VOBIZ = 'vobiz',
   TWILIO = 'twilio',
   SIP = 'sip',
   META_WHATSAPP = 'meta_whatsapp',
@@ -22,6 +23,7 @@ export interface Agent {
   voice_tone?: string | null
   personality?: string | null
   telephony_provider: TelephonyProvider
+  sip_trunk_id?: string | null
   voice_provider: VoiceProvider
   voice_id?: string | null
   language: string
@@ -107,6 +109,7 @@ export interface CreateAgentPayload {
   voice_tone?: string | null
   personality?: string | null
   telephony_provider?: TelephonyProvider
+  sip_trunk_id?: string | null
   voice_provider?: VoiceProvider
   voice_id?: string | null
   language?: string
@@ -226,6 +229,8 @@ export interface PromptTemplatesSectionProps {
 export interface TelephonyVoiceCardProps {
   telephonyProvider: TelephonyProvider
   setTelephonyProvider: (provider: TelephonyProvider) => void
+  sipTrunkId?: string
+  setSipTrunkId?: (id: string) => void
   voiceProvider: VoiceProvider
   setVoiceProvider: (provider: VoiceProvider) => void
   voiceId: string

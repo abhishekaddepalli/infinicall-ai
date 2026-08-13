@@ -41,7 +41,8 @@ export default function CreateAgentPage() {
   const [description, setDescription] = useState('')
   const [voiceTone, setVoiceTone] = useState('Professional')
   const [personality, setPersonality] = useState('Helpful')
-  const [telephonyProvider, setTelephonyProvider] = useState<TelephonyProvider>(TelephonyProvider.TWILIO)
+  const [telephonyProvider, setTelephonyProvider] = useState<TelephonyProvider>(TelephonyProvider.VOBIZ)
+  const [sipTrunkId, setSipTrunkId] = useState('')
   const [voiceProvider, setVoiceProvider] = useState<VoiceProvider>(VoiceProvider.ELEVENLABS)
   const [flowId, setFlowId] = useState('')
   const [voiceId, setVoiceId] = useState('')
@@ -96,7 +97,8 @@ export default function CreateAgentPage() {
       setType(agent.type || 'incoming')
       setVoiceTone(agent.voice_tone || 'Professional')
       setPersonality(agent.personality || 'Helpful')
-      setTelephonyProvider(agent.telephony_provider || TelephonyProvider.TWILIO)
+      setTelephonyProvider(agent.telephony_provider || TelephonyProvider.VOBIZ)
+      setSipTrunkId(agent.sip_trunk_id || '')
       setVoiceProvider(agent.voice_provider || VoiceProvider.ELEVENLABS)
       setFlowId(agent.flow_id || '')
       setVoiceId(agent.voice_id || '')
@@ -153,6 +155,7 @@ export default function CreateAgentPage() {
         voice_tone: type === 'incoming' ? voiceTone : null,
         personality: type === 'incoming' ? personality : null,
         telephony_provider: telephonyProvider,
+        sip_trunk_id: (telephonyProvider === TelephonyProvider.SIP || (telephonyProvider as string) === 'sip') ? (sipTrunkId || null) : null,
         voice_provider: voiceProvider,
         voice_id: voiceId || null,
         language,
@@ -286,6 +289,8 @@ export default function CreateAgentPage() {
             <TelephonyVoiceCard
               telephonyProvider={telephonyProvider}
               setTelephonyProvider={setTelephonyProvider}
+              sipTrunkId={sipTrunkId}
+              setSipTrunkId={setSipTrunkId}
               voiceProvider={voiceProvider}
               setVoiceProvider={setVoiceProvider}
               voiceId={voiceId}
