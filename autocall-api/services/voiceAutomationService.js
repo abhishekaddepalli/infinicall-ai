@@ -77,6 +77,9 @@ class VoiceAutomationService extends EventEmitter {
           if (!userId && customData.userId && customData.userId !== 'undefined' && customData.userId !== 'null') userId = customData.userId;
 
           let callLog = await Call.findOne({ twilio_call_sid: callSid });
+          if (!callLog && streamSid) {
+            callLog = await Call.findOne({ twilio_call_sid: streamSid });
+          }
           if (!callLog && isVobiz) {
             callLog = await Call.findOne({
               status: { $in: ['queued', 'in-progress'] },
@@ -85,9 +88,27 @@ class VoiceAutomationService extends EventEmitter {
           }
 
           if (callLog) {
+            if (!callLog.twilio_call_sid || callLog.twilio_call_sid.startsWith('queued_') || callLog.twilio_call_sid.startsWith('vobiz_')) {
+              callLog.twilio_call_sid = callSid || streamSid;
+            }
+            callLog.status = 'in-progress';
+            callLog.started_at = callLog.started_at || new Date();
             if (!userId && callLog.user_id) userId = callLog.user_id?.toString();
             if (!agentId && callLog.agent_id) agentId = callLog.agent_id?.toString();
             if (!flowId && callLog.flow_id) flowId = callLog.flow_id?.toString();
+            await callLog.save();
+          } else if (userId || agentId) {
+            callLog = await Call.create({
+              user_id: userId,
+              agent_id: agentId,
+              flow_id: flowId,
+              twilio_call_sid: callSid || streamSid,
+              from_number: 'System',
+              to_number: 'Recipient',
+              status: 'in-progress',
+              direction: 'outbound',
+              started_at: new Date()
+            });
           }
 
           this.activeStreams.set(streamSid, {
@@ -180,9 +201,9 @@ class VoiceAutomationService extends EventEmitter {
                   const transferNum = redirectLog.output.transfer_to;
                   console.log(`[Flow Start] Redirect call triggered to: ${transferNum}`);
                   if (redirectLog.output.transfer_text) {
-                    await this.speak(ws, streamSid, redirectLog.output.transfer_text, flow.nodes[0]?.data?.voice_id || null, userSettings?.elevenlabs_api_key);
+                    await this.speak(ws, streamSid, redirectLog.output.transfer_text, flow.nodes[0]?.data?.voice_id || null, userSettings?.elevenlabs_api_key, agent?.voice_provider);
                   } else {
-                    await this.speak(ws, streamSid, "Please hold while I transfer your call.", flow.nodes[0]?.data?.voice_id || null, userSettings?.elevenlabs_api_key);
+                    await this.speak(ws, streamSid, "Please hold while I transfer your call.", flow.nodes[0]?.data?.voice_id || null, userSettings?.elevenlabs_api_key, agent?.voice_provider);
                   }
                   const actionUrl = process.env.APP_URL ? `${process.env.APP_URL}/api/calls/transfer-status` : '';
                   const recordAttribute = (agent?.enable_call_recording || agent?.enable_call_transcription) ? ' record="record-from-answer-dual"' : '';
@@ -245,7 +266,7 @@ class VoiceAutomationService extends EventEmitter {
                     const streamObj = this.activeStreams.get(streamSid);
                     if (streamObj) streamObj.pendingTerminate = true;
                   }
-                  await this.speak(ws, streamSid, fullMessage, flow.nodes[0]?.data?.voice_id, userSettings?.elevenlabs_api_key);
+                  await this.speak(ws, streamSid, fullMessage, flow.nodes[0]?.data?.voice_id, userSettings?.elevenlabs_api_key, agent?.voice_provider);
                 } else if (terminateLog) {
                   const client = await this.getTwilioClient(userId);
                   if (client && callSid) {
@@ -260,7 +281,7 @@ class VoiceAutomationService extends EventEmitter {
             } else if (agentId && db.mongoose.Types.ObjectId.isValid(agentId)) {
               const agent = await Agent.findById(agentId).populate('llm_model', 'model_id provider name');
 
-              if (agent && callLog) {
+              if (agent) {
                 const greeting = agent.first_message || `Hello! I'm ${agent.name}. How can I help you today?`;
                 const stream = this.activeStreams.get(streamSid);
                 if (stream) {
@@ -268,11 +289,12 @@ class VoiceAutomationService extends EventEmitter {
                     { role: 'assistant', text: greeting }
                   ];
                 }
-                if (agent?.enable_call_transcription) {
+                if (callLog && agent?.enable_call_transcription !== false) {
                   callLog.transcript.push({ role: 'agent', text: greeting });
+                  await callLog.save();
                 }
-                await callLog.save();
-                await this.speak(ws, streamSid, greeting, agent.voice_id, userSettings?.elevenlabs_api_key);
+                const elApiKey = userSettings?.elevenlabs_api_key || process.env.ELEVENLABS_API_KEY;
+                await this.speak(ws, streamSid, greeting, agent.voice_id, elApiKey, agent.voice_provider);
               }
             }
           } catch (err) {
@@ -364,8 +386,43 @@ class VoiceAutomationService extends EventEmitter {
       }
     });
 
-    ws.on('close', () => {
-      console.log('Twilio Media Stream WebSocket closed');
+    ws.on('close', async () => {
+      console.log(`Media Stream WebSocket closed: ${streamSid}`);
+      const closingStream = streamSid ? this.activeStreams.get(streamSid) : null;
+      if (closingStream) {
+        try {
+          const querySids = [closingStream.callSid, closingStream.streamSid].filter(Boolean);
+          const callLog = await Call.findOne({ twilio_call_sid: { $in: querySids } });
+          if (callLog) {
+            callLog.status = 'completed';
+            callLog.ended_at = new Date();
+            if (closingStream.callStartTime) {
+              callLog.duration = Math.max(1, Math.round((Date.now() - closingStream.callStartTime) / 1000));
+            }
+            await callLog.save();
+
+            if (callLog.campaign_id) {
+              await db.CampaignHistory.findOneAndUpdate(
+                { campaignId: callLog.campaign_id, leadPhone: callLog.to_number },
+                {
+                  callStatus: 'CONTACT SUCCESSFUL',
+                  callDuration: callLog.duration || 0,
+                  recordingUrl: callLog.recording_url || null
+                },
+                { new: true }
+              );
+            }
+          }
+          if (closingStream.callSid && closingStream.userId) {
+            await this.handlePostCallIntegrations(closingStream.callSid, closingStream.userId);
+          }
+        } catch (closeErr) {
+          console.error('Error finalizing call on WS close:', closeErr);
+        }
+      }
+      if (streamSid) {
+        this.activeStreams.delete(streamSid);
+      }
     });
 
     ws.on('error', (err) => {
