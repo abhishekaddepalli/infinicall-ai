@@ -16,13 +16,18 @@ exports.create = async (req, res) => {
                 return res.status(400).json({ success: false, message: 'At least one permission is required' });
             }
 
-            const validPermisison = await db.RolePermission.find({
-                role_id: req.user.roleId,
-                permission_id: { $in: permissions }
-            })
+            const roleId = req.user.roleId?._id || req.user.roleId;
+            const isSuperAdmin = req.user.roleId?.name === 'super_admin' || req.user.roleId?.name === 'admin' || req.user.role === 'admin' || req.user.role === 'super_admin';
 
-            if (validPermisison.length === 0) {
-                return res.status(400).json({ success: false, message: 'Invalid permission(s) specified' });
+            if (!isSuperAdmin && roleId) {
+                const validPermission = await db.RolePermission.find({
+                    role_id: roleId,
+                    permission_id: { $in: permissions }
+                });
+
+                if (validPermission.length === 0) {
+                    return res.status(400).json({ success: false, message: 'Invalid permission(s) specified' });
+                }
             }
         }
 

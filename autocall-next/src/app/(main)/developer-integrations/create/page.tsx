@@ -12,6 +12,7 @@ import { ROUTES } from "@/constants/routes";
 import { usePermission } from "@/hooks/usePermission";
 import { useProfile } from "@/hooks/useProfile";
 import { useCreateApiKeyMutation } from "@/redux/api/apiKeyApi";
+import { useGetAllPermissionsQuery } from "@/redux/api/roleApi";
 import { ApiError } from "@/types/api";
 import { Form, Formik } from "formik";
 import { AlertTriangle, ArrowLeft } from 'lucide-react';
@@ -28,7 +29,8 @@ export default function CreateApiKeyPage() {
 
   const canCreate = hasPermission(PERMISSIONS.CREATE_API_KEY);
 
-  const { data: profileData, isLoading: isLoadingPermissions } = useProfile();
+  const { data: profileData } = useProfile();
+  const { data: permissionsData, isLoading: isLoadingPermissions } = useGetAllPermissionsQuery();
 
   const [createApiKey, { isLoading: isCreating }] = useCreateApiKeyMutation();
 
@@ -107,7 +109,7 @@ export default function CreateApiKeyPage() {
                   <Spinner />
                 </div>
               ) : (
-                <PermissionPicker permissions={profileData?.user?.permissions || []} selectedIds={values.permissions} onChange={(ids) => setFieldValue("permissions", ids)} />
+                <PermissionPicker permissions={permissionsData?.data || []} selectedIds={values.permissions} onChange={(ids) => setFieldValue("permissions", ids)} />
               )}
             </div>
 
