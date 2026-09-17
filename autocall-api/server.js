@@ -6,7 +6,8 @@ const { Server } = require('socket.io');
 const deleteExpiredOtp = require('./cron/deleteExpiredOtps');
 const { initTopUpExpiryCron } = require('./cron/topup-expiry.cron');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3100;
+const HOST = process.env.HOST || '127.0.0.1';
 
 process.on('uncaughtException', (err) => {
   console.error('⚠️ Uncaught Exception:', err.message || err);
@@ -194,8 +195,8 @@ process.on('unhandledRejection', (reason, promise) => {
       voiceAutomationService.handleMediaStream(ws, req);
     });
 
-    server.listen(PORT, '0.0.0.0', () => {
-      console.log(`Server running at http://0.0.0.0:${PORT}`);
+    server.listen(PORT, HOST, () => {
+      console.log(`Server running at http://${HOST}:${PORT}`);
     });
   } catch (err) {
     console.error('❌ Startup error:', err);

@@ -1,0 +1,29 @@
+[Unit]
+Description=InfiniCall AI Backend Node.js API Service
+After=network.target mongod.service redis.service
+Wants=mongod.service redis.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/www/apps/infinicall/autocall-api
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=5
+KillMode=process
+
+# Internal Port and Host Binding
+Environment=NODE_ENV=production
+Environment=PORT=3100
+Environment=HOST=127.0.0.1
+EnvironmentFile=-/www/apps/infinicall/autocall-api/.env
+
+# Security and Resource Limits
+LimitNOFILE=65535
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=infinicall-backend
+
+[Install]
+WantedBy=multi-user.target

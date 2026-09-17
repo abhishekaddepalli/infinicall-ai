@@ -27,7 +27,7 @@ exports.testN8nWebhook = async (req, res) => {
         sentiment: 'Hot Lead 🔥',
         call_summary: 'Customer expressed strong interest in Pro Scale plan (₹999) and requested a payment link.',
         disposition: 'Interested',
-        recording_url: 'https://voice.infiniforge.cloud/uploads/recordings/sample.mp3',
+        recording_url: `${process.env.APP_URL || (req.protocol + '://' + req.get('host'))}/uploads/recordings/sample.mp3`,
         variables: {
           budget: '₹10,000 / month',
           timeline: 'Immediate'
@@ -125,7 +125,8 @@ exports.sendPostCallUpi = async (req, res) => {
     }
 
     const link_id = 'upi_pay_' + Math.random().toString(36).substring(2, 10);
-    const upi_payment_url = `https://voice.infiniforge.cloud/pay/${link_id}`;
+    const baseAppUrl = process.env.APP_URL || `${req.protocol}://${req.get('host')}`;
+    const upi_payment_url = `${baseAppUrl}/pay/${link_id}`;
     const qr_code_url = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upi_payment_url)}`;
 
     const sms_message = `Hi ${customer_name || 'Valued Customer'}, thank you for speaking with InfiniCall AI! Here is your instant UPI Payment link for ${plan_name} (₹${amount}): ${upi_payment_url} - Team InfiniCall AI`;

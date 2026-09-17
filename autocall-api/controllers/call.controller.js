@@ -55,7 +55,7 @@ exports.placeCall = async (req, res) => {
     const vobizAuthId = userSettings?.vobiz_auth_id || globalSettings?.vobiz_auth_id || process.env.VOBIZ_AUTH_ID;
     const vobizAuthToken = userSettings?.vobiz_auth_token || globalSettings?.vobiz_auth_token || process.env.VOBIZ_AUTH_TOKEN;
 
-    const appUrl = process.env.APP_URL || 'https://voice.infiniforge.cloud';
+    const appUrl = process.env.APP_URL || `${req.protocol}://${req.get('host')}`;
 
     let sourceNumber = await PhoneNumber.findOne({ phone_number: fromNumber });
     if (!sourceNumber) {
@@ -965,8 +965,8 @@ exports.handlePlivoInboundCall = async (req, res) => {
 
 exports.handleVobizXml = async (req, res) => {
   try {
-    const { flowId, userId, agentId } = req.query;
-    const wsUrl = (process.env.APP_URL || 'https://voice.infiniforge.cloud').replace('http', 'ws');
+    const baseUrl = process.env.APP_URL || `${req.protocol}://${req.get('host')}`;
+    const wsUrl = baseUrl.replace('http', 'ws');
 
     const queryParams = [];
     if (flowId && flowId !== 'undefined') queryParams.push(`flowId=${flowId}`);

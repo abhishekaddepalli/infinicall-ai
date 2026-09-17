@@ -232,6 +232,38 @@ app.get("/", (req, res) => {
   res.json({ message: "App is running successfully" });
 });
 
+app.get("/api/health", async (req, res) => {
+  try {
+    const mongoose = require('mongoose');
+    const dbState = mongoose.connection.readyState;
+    const dbStatusMap = {
+      0: 'disconnected',
+      1: 'connected',
+      2: 'connecting',
+      3: 'disconnecting'
+    };
+    const dbStatus = dbStatusMap[dbState] || 'unknown';
+    const isHealthy = dbState === 1;
+
+    res.status(isHealthy ? 200 : 503).json({
+      status: isHealthy ? 'healthy' : 'unhealthy',
+      timestamp: new Date().toISOString(),
+      uptime: Math.floor(process.uptime()),
+      services: {
+        api: 'up',
+        database: dbStatus,
+        redis: process.env.REDIS_URL ? 'configured' : 'disabled'
+      }
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: 'unhealthy',
+      timestamp: new Date().toISOString(),
+      error: 'Health check failed'
+    });
+  }
+});
+
 app.get('/api/demo', async (req, res) => {
   const Setting = require('./models/setting.model');
   const settings = await Setting.findOne().select('demo_user_email demo_user_password is_demo_mode').lean();
